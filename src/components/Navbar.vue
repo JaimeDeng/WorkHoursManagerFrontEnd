@@ -1,10 +1,10 @@
 <script>
 export default {
-  data() {
-    return {
-      notificationCount: 7
-    };
-  }
+    data() {
+        return {
+            notificationCount: 11
+        };
+    }
 };
 </script>
 
@@ -18,10 +18,10 @@ export default {
             </div>
             <div class="right">
                 <h3>某某某 |<button>登出</button></h3>
-                <i class="bell fa-regular fa-bell">
-                    
-                </i>
-                <div class="badge"><span v-if="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span></div>
+                <i class="bell fa-regular fa-bell"></i>
+                <div class="badge" :style="{ display: notificationCount > 0 ? 'block' : 'none' }">
+                    <span v-if="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span>
+                </div>
             </div>
 
 
@@ -74,18 +74,16 @@ export default {
 
             .badge {
                 position: relative;
-                width: 18px;
-                height: 18px;
+                width: 19px;
+                height: 19px;
                 border-radius: 50%;
                 background-color: red;
                 color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
+                text-align: center;
                 top: -8px;
                 right: 6px;
-               
             }
+            
         }
 
 
@@ -99,4 +97,5 @@ export default {
 
     }
 
-}</style>
+}
+</style>

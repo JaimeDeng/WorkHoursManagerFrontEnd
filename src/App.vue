@@ -10,6 +10,7 @@ import ManaCheckDailyView from "./views/ManaCheckDailyView.vue"
 import ManaApproveView from "./views/ManaApproveView.vue"
 import SystemAddEmploListView from "./views/SystemAddEmploListView.vue"
 import StstemEditInfoView from "./views/StstemEditInfoView.vue"
+import EmploEditDailyTimeView from "./views/EmploEditDailyTimeView.vue"
 export default{
     components:{
         LoginView,
@@ -21,7 +22,8 @@ export default{
         ManaCheckDailyView,
         ManaApproveView,
         SystemAddEmploListView,
-        StstemEditInfoView
+        StstemEditInfoView,
+        EmploEditDailyTimeView
     }
 }
 </script>
@@ -32,7 +34,9 @@ export default{
         <EmployeeHomeView />
         <EmploAddWorkInfoView />
         <EmploCheckDailyTimeView />
+        <EmploEditDailyTimeView />
         <EmploChangePsdView />
+       
 
         <!-- 主管 -->
         <ManagerHomeView />

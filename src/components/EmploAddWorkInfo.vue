@@ -7,8 +7,6 @@
             <div class="area1">
                 <!-- 左側填寫區 -->
                 <div class="info">
-                    <label for="formNum">工時表單號</label>
-                    <input type="text" id="formNum">
                     <label for="date">日期</label>
                     <input type="date" id="date">
                     <label for="type">機型</label>
@@ -185,7 +183,7 @@
             .info {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: flex-start;
                 margin-right: 48px;
                 label{
                     font-size: 15px;

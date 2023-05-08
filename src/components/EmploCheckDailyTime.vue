@@ -20,7 +20,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseOne" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    員工ID:000929 時間:2023/05/07
+                                    時間:2023/05/07  已審核
                                 </button>
                             </h2>
                             <div id="flush-collapseOne" class="accordion-collapse collapse"
@@ -41,7 +41,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseTwo" aria-expanded="false"
                                     aria-controls="flush-collapseTwo">
-                                    員工ID:000929 時間:2023/05/07
+                                    時間:2023/05/07  已審核
                                 </button>
                             </h2>
                             <div id="flush-collapseTwo" class="accordion-collapse collapse"
@@ -62,8 +62,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseThree" aria-expanded="false"
                                     aria-controls="flush-collapseThree">
-                                    <span><i class="fa-solid fa-circle" style="color: #d41111;"></i></span>
-                                    員工ID:000929 時間:2023/05/07
+                                    時間:2023/05/07  待審核
                                 </button>
                             </h2>
                             <div id="flush-collapseThree" class="accordion-collapse collapse"
@@ -169,11 +168,15 @@
             .sheet {
                 border-radius: 5px;
                 .accordion-button{
-                    
+                    word-spacing: 2em;
                     i{
                         font-size: 8px;
                         margin-bottom: 6px;
                         margin-right: 8px;
+                    }
+                    &:hover{
+                        background-color: rgb(105, 152, 171);
+                        color:white;
                     }
                 }
 

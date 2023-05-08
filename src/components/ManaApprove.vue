@@ -57,6 +57,9 @@ export default {
         }
     
         .area1 {
+            background-color: white;
+            padding: 12px;
+            border-radius: 5px;
             p{
                 font-size: 16px;
 

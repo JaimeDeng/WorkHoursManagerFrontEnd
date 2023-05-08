@@ -26,8 +26,14 @@
                 </div>
                 <!-- 右側填寫區 -->
                 <div class="detail">
-                    <label for="">部課</label>
-                    <input type="text" id="">
+                    <label for="">部門</label>
+                    <select>
+                        <option selected>請選擇部門</option>
+                        <option value="1">管理部</option>
+                        <option value="2">IT部</option>
+                        <option value="3">營業部</option>
+                        <option value="4">製造部</option>
+                    </select>
                     <label for="">職稱</label>
                     <input type="text" id="">
                     <label for="">職等</label>
@@ -106,7 +112,7 @@
                     font-size: 15px;
                 }
 
-                input {
+                input,select {
                     margin-bottom: 8px;
                     height: 30px;
                     border-radius: 5px;

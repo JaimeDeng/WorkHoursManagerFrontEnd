@@ -20,7 +20,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseOne" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    員工ID:000929 姓名: 莊員工
+                                    員工ID:000929 姓名:莊員工
                                 </button>
                             </h2>
                             <div id="flush-collapseOne" class="accordion-collapse collapse"
@@ -41,7 +41,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseTwo" aria-expanded="false"
                                     aria-controls="flush-collapseTwo">
-                                    員工ID:043929 姓名: 林員工
+                                    員工ID:043929 姓名:林員工
                                 </button>
                             </h2>
                             <div id="flush-collapseTwo" class="accordion-collapse collapse"
@@ -62,7 +62,7 @@
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#flush-collapseThree" aria-expanded="false"
                                     aria-controls="flush-collapseThree">
-                                    員工ID:000379 姓名: 王經理
+                                    員工ID:000379 姓名:王經理
                                 </button>
                             </h2>
                             <div id="flush-collapseThree" class="accordion-collapse collapse"
@@ -182,11 +182,15 @@
                 border-radius: 5px;
 
                 .accordion-button {
-
+                    word-spacing: 1rem;
                     i {
                         font-size: 8px;
                         margin-bottom: 6px;
                         margin-right: 8px;
+                    }
+                    &:hover{
+                        background-color: rgb(105, 152, 171);
+                        color:white;
                     }
                 }
 
