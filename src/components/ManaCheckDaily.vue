@@ -99,8 +99,10 @@
                     <label for="">人員部門</label>
                     <select>
                         <option selected>請選擇部門</option>
-                        <option value="1">A部門</option>
-                        <option value="2">B部門</option>
+                        <option value="1">管理部</option>
+                        <option value="2">IT部</option>
+                        <option value="1">營業部</option>
+                        <option value="2">製造部</option>
                     </select>
                     <!-- 人員ID -->
                     <label for="personId">人員ID</label>

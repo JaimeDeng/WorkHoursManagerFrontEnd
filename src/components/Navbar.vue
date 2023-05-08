@@ -1,4 +1,12 @@
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      notificationCount: 7
+    };
+  }
+};
+</script>
 
 <template>
     <div class="navbar">
@@ -10,7 +18,10 @@
             </div>
             <div class="right">
                 <h3>某某某 |<button>登出</button></h3>
-                <i class="bell fa-regular fa-bell"></i>
+                <i class="bell fa-regular fa-bell">
+                    
+                </i>
+                <div class="badge"><span v-if="notificationCount > 0" class="notification-badge">{{ notificationCount }}</span></div>
             </div>
 
 
@@ -50,13 +61,30 @@
                 font-size: 23px;
                 color: white;
             }
-            button{
+
+            button {
                 background: none;
                 border: none;
-                color:white;
-                &:active{
+                color: white;
+
+                &:active {
                     transform: scale(0.95);
                 }
+            }
+
+            .badge {
+                position: relative;
+                width: 18px;
+                height: 18px;
+                border-radius: 50%;
+                background-color: red;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                top: -8px;
+                right: 6px;
+               
             }
         }
 

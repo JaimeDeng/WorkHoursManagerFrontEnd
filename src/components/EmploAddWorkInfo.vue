@@ -15,8 +15,9 @@
                     <input type="text" id="type">
                     <label for="productNum">製造號碼</label>
                     <input type="text" id="productNum">
-                    <label for="">狀態</label>
+                    <label for="">出勤</label>
                     <select>
+                        <option selected>請選擇出勤狀態</option>
                         <option value="1">出勤</option>
                         <option value="2">公假</option>
                         <option value="3">病假</option>
@@ -29,9 +30,111 @@
                 <!-- 右側填寫區 -->
                 <div class="detail">
                     <label for="">開始時間</label>
-                    <input type="time">
+                    <select>
+                        <option selected>請選擇開始時間</option>
+                        <option value="1">00:00</option>
+                        <option value="2">00:30</option>
+                        <option value="3">01:00</option>
+                        <option value="4">01:30</option>
+                        <option value="5">02:00</option>
+                        <option value="6">02:30</option>
+                        <option value="7">03:00</option>
+                        <option value="8">03:30</option>
+                        <option value="9">04:00</option>
+                        <option value="10">04:30</option>
+                        <option value="11">05:00</option>
+                        <option value="12">05:30</option>
+                        <option value="13">06:00</option>
+                        <option value="14">06:30</option>
+                        <option value="15">07:00</option>
+                        <option value="16">07:30</option>
+                        <option value="17">08:00</option>
+                        <option value="18">08:30</option>
+                        <option value="19">09:00</option>
+                        <option value="20">09:30</option>
+                        <option value="21">10:00</option>
+                        <option value="22">10:30</option>
+                        <option value="23">11:00</option>
+                        <option value="24">11:30</option>
+                        <option value="25">12:00</option>
+                        <option value="26">12:30</option>
+                        <option value="27">13:00</option>
+                        <option value="28">13:30</option>
+                        <option value="29">14:00</option>
+                        <option value="1">14:30</option>
+                        <option value="2">15:00</option>
+                        <option value="3">15:30</option>
+                        <option value="4">16:00</option>
+                        <option value="5">16:30</option>
+                        <option value="6">17:00</option>
+                        <option value="7">17:30</option>
+                        <option value="8">18:00</option>
+                        <option value="9">18:30</option>
+                        <option value="10">19:00</option>
+                        <option value="11">19:30</option>
+                        <option value="12">20:00</option>
+                        <option value="13">20:30</option>
+                        <option value="14">21:00</option>
+                        <option value="15">21:30</option>
+                        <option value="16">22:00</option>
+                        <option value="17">22:30</option>
+                        <option value="18">23:00</option>
+                        <option value="19">23:30</option>
+                        <option value="20">24:00</option>
+                    </select>
                     <label for="">結束時間</label>
-                    <input type="time">
+                    <select>
+                        <option selected>請選擇結束時間</option>
+                        <option value="1">00:00</option>
+                        <option value="2">00:30</option>
+                        <option value="3">01:00</option>
+                        <option value="4">01:30</option>
+                        <option value="5">02:00</option>
+                        <option value="6">02:30</option>
+                        <option value="7">03:00</option>
+                        <option value="8">03:30</option>
+                        <option value="9">04:00</option>
+                        <option value="10">04:30</option>
+                        <option value="11">05:00</option>
+                        <option value="12">05:30</option>
+                        <option value="13">06:00</option>
+                        <option value="14">06:30</option>
+                        <option value="15">07:00</option>
+                        <option value="16">07:30</option>
+                        <option value="17">08:00</option>
+                        <option value="18">08:30</option>
+                        <option value="19">09:00</option>
+                        <option value="20">09:30</option>
+                        <option value="21">10:00</option>
+                        <option value="22">10:30</option>
+                        <option value="23">11:00</option>
+                        <option value="24">11:30</option>
+                        <option value="25">12:00</option>
+                        <option value="26">12:30</option>
+                        <option value="27">13:00</option>
+                        <option value="28">13:30</option>
+                        <option value="29">14:00</option>
+                        <option value="1">14:30</option>
+                        <option value="2">15:00</option>
+                        <option value="3">15:30</option>
+                        <option value="4">16:00</option>
+                        <option value="5">16:30</option>
+                        <option value="6">17:00</option>
+                        <option value="7">17:30</option>
+                        <option value="8">18:00</option>
+                        <option value="9">18:30</option>
+                        <option value="10">19:00</option>
+                        <option value="11">19:30</option>
+                        <option value="12">20:00</option>
+                        <option value="13">20:30</option>
+                        <option value="14">21:00</option>
+                        <option value="15">21:30</option>
+                        <option value="16">22:00</option>
+                        <option value="17">22:30</option>
+                        <option value="18">23:00</option>
+                        <option value="19">23:30</option>
+                        <option value="20">24:00</option>
+                    </select>
                     <div class="mes form-floating">
                         <textarea class="mesarea form-control" placeholder="Leave a comment here" id="floatingTextarea2"
                             style="height: 155px"></textarea>
@@ -105,7 +208,7 @@
                     font-size: 15px;
                 }
 
-                input {
+                input,select {
                     margin-bottom: 8px;
                     height: 30px;
                     border-radius: 5px;

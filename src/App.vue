@@ -28,19 +28,19 @@ export default{
 
 <template>
         <!-- 一般員工 -->
-        <!-- <LoginView /> -->
-        <!-- <EmployeeHomeView /> -->
-        <!-- <EmploAddWorkInfoView /> -->
-        <!-- <EmploCheckDailyTimeView /> -->
-        <!-- <EmploChangePsdView /> -->
+        <LoginView />
+        <EmployeeHomeView />
+        <EmploAddWorkInfoView />
+        <EmploCheckDailyTimeView />
+        <EmploChangePsdView />
 
         <!-- 主管 -->
-        <!-- <ManagerHomeView /> -->
-        <!-- <ManaCheckDailyView /> -->
-        <!-- <ManaApproveView /> -->
+        <ManagerHomeView />
+        <ManaCheckDailyView />
+        <ManaApproveView />
 
         <!-- 系統管理 -->
-        <!-- <SystemAddEmploListView /> -->
+        <SystemAddEmploListView />
         <StstemEditInfoView />
    
 </template>
