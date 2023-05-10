@@ -1,26 +1,23 @@
-<script>
-import { RouterLink } from 'vue-router'
-</script>
+<script></script>
 <template>
     <div class="main">
         <div class="all">
-            <h4>莊員工,Fighting !</h4>
+            <h4>管理員,Good Morning !</h4>
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="area1">
-                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">新增工作時數表</RouterLink>
-
-                    <RouterLink class="buttonlink" to="/emploChangePsd">變更密碼</RouterLink>
+                    <button type="button">新增人員名單</button>
+                    <button type="button">修改人員資訊</button>
                 </div>
                 <!-- 下排 -->
-                <div class="area2">
-                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
-                </div>
+                <!-- <div class="area2">
+                    <button type="button">查詢日工時表</button>
+                </div> -->
 
             </div>
         </div>
 
-        <!-- <RouterLink to="/login"><button class="btnback" type="button">返回登入頁</button></RouterLink> -->
+        <button class="btnback" type="button">回上一頁</button>
     </div>
 </template>
 
@@ -57,29 +54,24 @@ import { RouterLink } from 'vue-router'
                 display: flex;
                 justify-content: space-between;
 
-                .buttonlink {
-                    color: #000;
+                button {
                     width: 48%;
                     background-color: white;
                     border-radius: 5px;
                     border: 2px solid #000;
                     font-size: 22px;
-                    text-decoration: none;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
+                    position: relative;
+                    overflow: hidden;
 
-
-                    &:active {
+                    &:active{
                         transform: scale(0.97);
                     }
-
                     &:hover {
                         color: white;
-                        background-color: rgb(64, 104, 130);
+                        background-color:rgb(64, 104, 130) ;
                     }
 
-
+                   
                 }
 
 
@@ -97,12 +89,11 @@ import { RouterLink } from 'vue-router'
         border: 1.5px solid #000;
         color: white;
         border-radius: 5px;
-        width: 120px;
+        width: 100px;
         height: 40px;
         // font-weight: bold;
         font-size: 18px;
         margin-top: 50px;
-
         &:hover {
             background-color: rgb(64, 104, 130);
         }
@@ -114,5 +105,4 @@ import { RouterLink } from 'vue-router'
 
 
 
-}
-</style>
+}</style>

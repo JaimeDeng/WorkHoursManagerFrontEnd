@@ -1,11 +1,10 @@
 <script>
-import { RouterLink, RouterView } from 'vue-router'
 import Navbar from "../components/Navbar.vue"
 import FooterView from "../components/FooterView.vue"
-import EmployeeHome from "../components/EmployeeHome.vue"
+import EmploAddWorkInfo_success from "../components/EmploAddWorkInfo_success.vue"
 export default {
     components: {
-        Navbar, FooterView, EmployeeHome
+        Navbar, FooterView, EmploAddWorkInfo_success
     }
 }
 </script>
@@ -13,10 +12,11 @@ export default {
 
 <template>
     <div class="main">
+
         <div class="background"></div>
         <div class="content">
             <Navbar />
-            <EmployeeHome />
+            <EmploAddWorkInfo_success />
             <FooterView />
         </div>
     </div>
@@ -32,7 +32,7 @@ export default {
     .background {
         position: fixed;
         z-index: -1;
-        background-image: url(../assets/pic/typewriter-7686633_1280.jpg);
+        background-image: url(../assets/pic//light-bulb-4514505__480.webp);
         background-size: cover;
         filter: blur(3px);
         width: 100%;

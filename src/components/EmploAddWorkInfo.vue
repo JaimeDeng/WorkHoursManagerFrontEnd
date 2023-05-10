@@ -1,4 +1,6 @@
-<script></script>
+<script>
+import { RouterLink, RouterView } from 'vue-router'
+</script>
 <template>
     <div class="main">
         <div class="add">
@@ -142,7 +144,8 @@
             </div>
             <!-- 底部按鈕 -->
             <div class="area2">
-                <button type="button">返回首頁</button>
+                <RouterLink to="/employeeHome"><button type="button">返回首頁</button></RouterLink>
+                
                 <button type="button">新增</button>
             </div>
         </div>

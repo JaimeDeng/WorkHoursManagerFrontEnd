@@ -12,25 +12,12 @@ export default {
             <h2>變更密碼</h2>
 
             <div class="area1">
-                <!-- 新密碼輸入 -->
-                <label for="emid">
-                    <i class="fa-sharp fa-solid fa-key"></i>
-                </label>
-                <input id="emid" placeholder="請輸入新密碼" type="text">
-                <!-- 再次輸入新密碼 -->
-                <label for="password">
-                    <i class="fa-sharp fa-solid fa-key"></i>
-                </label>
-                <input id="password" placeholder="請再次輸入新密碼" type="password">
+               <h3>密碼變更完成</h3>
             </div>
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome"><button type="button">返回首頁</button></RouterLink>
-                
-                <button type="button">確定變更</button>
-
-
+                <button type="button">返回</button>
             </div>
         </div>
     </div>
@@ -65,33 +52,10 @@ export default {
 
         .area1 {
             display: flex;
-            flex-direction: column;
-            height: 30%;
-            width: 70%;
-            justify-content: space-between;
+           justify-content: center;
+           align-items: center;
+           
 
-            input {
-                cursor: pointer;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-
-            }
-
-            label {
-                position: relative;
-
-                i {
-                    position: absolute;
-                    top: 18px;
-                    left: 8px;
-                }
-            }
-
-            input {
-                padding-left: 28px;
-                height: 40px;
-                border-radius: 5px;
-                border: 1.5px solid #000;
-            }
         }
 
         .area2 {
