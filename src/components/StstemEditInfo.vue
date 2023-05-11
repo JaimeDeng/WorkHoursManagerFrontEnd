@@ -1,4 +1,29 @@
-<script></script>
+<script>
+export default {
+    data(){
+        return{
+            infoList:[]
+        }
+    },
+    beforeCreate() {
+        fetch("http://localhost/getAllEmployeeInfo")
+            .then(function (response) {
+                //從json轉回JS物件
+                return response.json()
+            })
+            .then(function (data) {
+                
+                this.infoList = data;
+
+            })
+            .catch(function (error) {
+                //沒有抓成功的話 就會進catch
+                console.log(error)
+            })
+
+    }
+}
+</script>
 <template>
     <div class="main">
         <div class="check">
@@ -113,7 +138,7 @@
                     <button class="delete" type="button">刪除該人員資訊</button>
                 </div>
                 <div class="btnArea">
-                    <button type="button">返回首頁</button>
+                    <RouterLink to="/systemHome" class="btnback">返回</RouterLink>
                     <button type="button">送出修改</button>
                 </div>
             </div>
@@ -183,14 +208,16 @@
 
                 .accordion-button {
                     word-spacing: 1rem;
+
                     i {
                         font-size: 8px;
                         margin-bottom: 6px;
                         margin-right: 8px;
                     }
-                    &:hover{
+
+                    &:hover {
                         background-color: rgb(105, 152, 171);
-                        color:white;
+                        color: white;
                     }
                 }
 
@@ -301,6 +328,25 @@
                 width: 100%;
                 height: 100%;
 
+                .btnback {
+                    background: rgb(26, 55, 77);
+                    border: 1.5px solid #000;
+                    color: white;
+                    border-radius: 5px;
+                    padding: 4px;
+                    font-size: 18px;
+                    margin-top: 50px;
+                    text-decoration: none;
+
+                    &:hover {
+                        background-color: rgb(64, 104, 130);
+                    }
+
+                    &:active {
+                        transform: scale(0.95);
+                    }
+                }
+
                 button {
                     background: rgb(26, 55, 77);
                     border: 1.5px solid #000;
@@ -323,4 +369,5 @@
     }
 
 
-}</style>
+}
+</style>

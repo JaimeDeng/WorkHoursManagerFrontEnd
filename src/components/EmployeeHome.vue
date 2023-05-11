@@ -9,12 +9,14 @@ import { RouterLink } from 'vue-router'
                 <!-- 上排 -->
                 <div class="area1">
                     <RouterLink class="buttonlink" to="/emploAddWorkInfo">新增工作時數表</RouterLink>
-
                     <RouterLink class="buttonlink" to="/emploChangePsd">變更密碼</RouterLink>
+                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
                 </div>
                 <!-- 下排 -->
                 <div class="area2">
-                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
+                    
+                    <RouterLink class="buttonlink" to="/managerHome">主管權限</RouterLink>
+                    <RouterLink class="buttonlink" to="/systemHome">系統管理權限</RouterLink>
                 </div>
 
             </div>
@@ -59,7 +61,7 @@ import { RouterLink } from 'vue-router'
 
                 .buttonlink {
                     color: #000;
-                    width: 48%;
+                    width: 40%;
                     background-color: white;
                     border-radius: 5px;
                     border: 2px solid #000;
@@ -68,6 +70,7 @@ import { RouterLink } from 'vue-router'
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    margin-right: 12px;
 
 
                     &:active {

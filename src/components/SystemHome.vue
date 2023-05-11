@@ -6,8 +6,8 @@
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="area1">
-                    <button type="button">新增人員名單</button>
-                    <button type="button">修改人員資訊</button>
+                    <RouterLink to="/systemAddEmploList" class="buttonlink">新增人員名單</RouterLink>
+                    <RouterLink to="/ststemEditInfo" class="buttonlink">修改人員資訊</RouterLink>
                 </div>
                 <!-- 下排 -->
                 <!-- <div class="area2">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <button class="btnback" type="button">回上一頁</button>
+        <RouterLink to="/employeeHome" class="btnback">返回</RouterLink>
     </div>
 </template>
 
@@ -54,24 +54,29 @@
                 display: flex;
                 justify-content: space-between;
 
-                button {
-                    width: 48%;
+                .buttonlink {
+                    color: #000;
+                    width: 40%;
                     background-color: white;
                     border-radius: 5px;
                     border: 2px solid #000;
                     font-size: 22px;
-                    position: relative;
-                    overflow: hidden;
+                    text-decoration: none;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 12px;
 
-                    &:active{
+                    &:active {
                         transform: scale(0.97);
                     }
+
                     &:hover {
                         color: white;
-                        background-color:rgb(64, 104, 130) ;
+                        background-color: rgb(64, 104, 130);
                     }
 
-                   
+
                 }
 
 
@@ -89,11 +94,11 @@
         border: 1.5px solid #000;
         color: white;
         border-radius: 5px;
-        width: 100px;
-        height: 40px;
-        // font-weight: bold;
+        padding: 4px;
         font-size: 18px;
         margin-top: 50px;
+        text-decoration: none;
+
         &:hover {
             background-color: rgb(64, 104, 130);
         }
@@ -105,4 +110,5 @@
 
 
 
-}</style>
+}
+</style>

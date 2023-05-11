@@ -1,50 +1,41 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-export default {
+export default{
     components: {
-        RouterLink
-    }
+    RouterLink
+  }
 }
 </script>
 <template>
+
     <div class="main">
         <div class="login">
-            <h2>登入系統</h2>
+            <h2>註冊</h2>
 
             <div class="area1">
-                <!-- id輸入 -->
+                 <!-- id輸入 -->
                 <label for="emid">
                     <i class="fa-solid fa-user"></i>
                 </label>
-                <input id="emid" placeholder="請輸入員工ID" type="text">
+                <input id="emid" placeholder="請設定帳號" type="text">
                 <!-- password輸入 -->
                 <label for="password">
                     <i class="fa-sharp fa-solid fa-key"></i>
                 </label>
-                <input id="password" placeholder="請輸入密碼" type="password">
+                <input id="password" placeholder="請設定密碼" type="password">
             </div>
-
+            
             <div class="area2">
-                <div class="checkbox_help">
-                    <!-- 保持登入 -->
-                    <div class="keepInput">
-                        <input id="keep" type="checkbox">
-                        <label for="keep">保持登入</label>
-                    </div>
-                    <!-- 忘記密碼 -->
-                    <div class="forgetpassword">
-                        <i class="fa-regular fa-circle-question"></i>
-                        忘記密碼
-                    </div>
-                </div>
+                
                 <!-- 登入按鈕 -->
-                <RouterLink to="/signup"><button type="button">註冊</button></RouterLink>
-
-                <RouterLink to="/employeeHome"><button type="button">登入</button></RouterLink>
-
+                
+                    <button type="button">註冊</button>
+                
+                
             </div>
         </div>
     </div>
+ 
 </template>
 
 
@@ -142,7 +133,7 @@ export default {
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 80px;
+                width: 100px;
                 height: 40px;
                 // font-weight: bold;
                 font-size: 18px;

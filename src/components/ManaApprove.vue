@@ -11,10 +11,10 @@ export default {
         <div class="login">
             <p class="timeText">時間: 2023/05/07</p>
 
-            <div class="area1" style="overflow-y: scroll; max-height: 250px;">
+            <div class="area1" style="overflow-y: auto;overflow-x: hidden;">
                 <p>人員ID: <span>00967</span></p>
                 <p>人員姓名: <span>莊員工</span></p>
-                <p>工作詳情: <span>機台故障Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel, tenetur consectetur. Accusantium quod iste, perspiciatis ad similique officia fuga in. </span></p>
+                <p>工作詳情: <span>機台故障Lorem ipddddddddddddddddddddddddddddddddddddddumrrrrrrrrrrrrrrrrrrrr dolor sit atttttttttttttttttttttttttttmet consectetur adipisicing elit. Vel, tenetur consectetur. Accusantium quod iste, perspiciatis ad similique officia fuga in. </span></p>
                 <p>當日狀態: <span>出勤</span></p>
                 <p>審核人員ID: <span>TCE0077</span></p>
                 <p>審核進度:<span>待審核</span></p>
@@ -47,7 +47,7 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 40%;
+        width: 75%;
         height: 90%;
         border-radius: 5px;
         padding: 20px;
@@ -60,6 +60,7 @@ export default {
             background-color: white;
             padding: 12px;
             border-radius: 5px;
+            width: 100%;
             p{
                 font-size: 16px;
 

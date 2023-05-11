@@ -13,7 +13,7 @@ export default {
         <div class="logo">
             <div class="left">
                 <i class="fa-solid fa-clock-rotate-left"></i>
-                <RouterLink to="/employeeHome" class="link">
+                <RouterLink to="/login" class="link">
                     <h3>WHM.</h3>
                 </RouterLink>
 
