@@ -40,6 +40,7 @@ import { RouterLink } from 'vue-router'
         height: 70%;
 
         h4 {
+            font-size: 40px;
             color: white;
             margin-bottom: 50px;
         }
@@ -60,23 +61,58 @@ import { RouterLink } from 'vue-router'
                 .buttonlink {
                     color: #000;
                     width: 48%;
+                    position: relative;
                     background-color: white;
-                    border-radius: 5px;
+                    border-radius: 10px;
                     border: 2px solid #000;
                     font-size: 22px;
                     text-decoration: none;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-
+                    transition: 0.5s;
+                    z-index: 1;
+                    overflow: hidden;
 
                     &:active {
-                        transform: scale(0.97);
+                        transform: scale(0.9);
                     }
 
                     &:hover {
                         color: white;
                         background-color: rgb(64, 104, 130);
+                    }
+
+                    &::after{
+                        content: "";
+                        z-index: -1;
+                        position: absolute;
+                        bottom: -500%;
+                        border-radius: 100%;
+                        height: 70vh;
+                        width: 50vw;
+                        background-color: rgba(40, 40, 40 ,0.5);
+                        transition: 0.5s;
+                    }
+
+                    &::before{
+                        content: "";
+                        z-index: -1;
+                        position: absolute;
+                        top: -500%;
+                        border-radius: 100%;
+                        height: 70vh;
+                        width: 50vw;
+                        background-color: rgba(189, 243, 255, 0.5);
+                        transition: 0.5s;
+                    }
+
+                    &:hover::after{
+                        bottom: -320%;
+                    }
+
+                    &:hover::before{
+                        top: -260%;
                     }
 
 

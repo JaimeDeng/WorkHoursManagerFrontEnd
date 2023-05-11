@@ -1,152 +1,146 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+export default (await import('vue')).defineComponent({
+data() {
+  return{
+        addTitle:"新增工作時數表",
+        type:"機型",
+        caseNo:"製造號碼",
+        status:"出勤狀態",
+        selectStatus:"請選擇出勤狀態",
+        date:"日期",
+        satrtTime:"開始時間",
+        selectStartTime:"請選擇開始時間",
+        endTime:"結束時間",
+        selectEndTime:"請選擇結束時間",
+        back:"返回",
+        commit:"新增",
+        detailPlaceHolder:"工作內容(限制500字以內)",
+        changeLangBtn:"切換英文",
+        changeLang:false,
+
+        statusOptions:[
+        {label : "出勤" , value : "1"},
+        {label : "公假" , value : "2"},
+        {label : "病假" , value : "3"},
+        {label : "事假" , value : "4"},
+        {label : "特休" , value : "5"},
+        {label : "工傷" , value : "6"},
+        {label : "天災" , value : "7"}],
+        timeOptions:[]
+    }
+},
+methods: {
+    changeLanguage(){
+        if(this.changeLang === false){
+            this.addTitle = "New Timesheet";
+            this.type = "Type";
+            this.caseNo = "Case no";
+            this.status = "Attendance";
+            this.selectStatus = "Select attendence status";
+            this.date = "Date";
+            this.satrtTime = "Start time";
+            this.selectStartTime = "Select start time";
+            this.endTime = "End time";
+            this.selectEndTime = "Select end time";
+            this.back = "Back";
+            this.commit = "Commit";
+            this.changeLangBtn = "Chinese";
+            this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
+            this.changeLang = true;
+        }else{
+            this.addTitle = "新增工作時數表";
+            this.type = "機型";
+            this.caseNo = "製造號碼";
+            this.status = "出勤狀態";
+            this.selectStatus = "請選擇出勤狀態";
+            this.date = "日期";
+            this.satrtTime = "開始時間";
+            this.selectStartTime = "請選擇開始時間";
+            this.endTime = "結束時間";
+            this.selectEndTime = "請選擇結束時間";
+            this.back = "返回";
+            this.commit = "新增";
+            this.changeLangBtn = "切換英文";
+            this.detailPlaceHolder = "工作內容(限制500字以內)";
+            this.changeLang = false;
+        }
+    }
+},
+mounted() {
+    //建構時間option
+    let time = "";
+    let hours = 0;
+    let minutes = "00";
+    let count = 1;
+    while(count < 50){
+        if(hours < 10){
+            time = "0" + hours.toString() + ":" + minutes;
+        }else{
+            time = hours.toString() + ":" + minutes;
+        }
+        if(minutes === "00"){
+            minutes = "30";
+        }else{
+            minutes = "00";
+        }
+        this.timeOptions.push({label : time , value : time});
+        if(count%2 === 0){
+            hours++;
+        }
+        count++;
+    }
+}
+})
 </script>
 <template>
     <div class="main">
         <div class="add">
-            <h4>新增工作時數表</h4>
+            <h4>{{ addTitle }}</h4>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
                 <div class="info">
-                    <label for="date">日期</label>
-                    <input type="date" id="date">
-                    <label for="type">機型</label>
+                    <label for="type">{{ type }}</label>
                     <input type="text" id="type">
-                    <label for="productNum">製造號碼</label>
-                    <input type="text" id="productNum">
-                    <label for="">出勤</label>
+                    <label for="caseNo">{{ caseNo }}</label>
+                    <input type="text" id="caseNo">
+                    <label for="">{{ status }}</label>
                     <select>
-                        <option selected>請選擇出勤狀態</option>
-                        <option value="1">出勤</option>
-                        <option value="2">公假</option>
-                        <option value="3">病假</option>
-                        <option value="4">事假</option>
-                        <option value="5">特休</option>
-                        <option value="6">工傷</option>
-                        <option value="7">天災</option>
+                        <option selected>{{ selectStatus }}</option>
+                        <option v-for="(option , index) in statusOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
                 </div>
                 <!-- 右側填寫區 -->
-                <div class="detail">
-                    <label for="">開始時間</label>
-                    <select>
-                        <option selected>請選擇開始時間</option>
-                        <option value="1">00:00</option>
-                        <option value="2">00:30</option>
-                        <option value="3">01:00</option>
-                        <option value="4">01:30</option>
-                        <option value="5">02:00</option>
-                        <option value="6">02:30</option>
-                        <option value="7">03:00</option>
-                        <option value="8">03:30</option>
-                        <option value="9">04:00</option>
-                        <option value="10">04:30</option>
-                        <option value="11">05:00</option>
-                        <option value="12">05:30</option>
-                        <option value="13">06:00</option>
-                        <option value="14">06:30</option>
-                        <option value="15">07:00</option>
-                        <option value="16">07:30</option>
-                        <option value="17">08:00</option>
-                        <option value="18">08:30</option>
-                        <option value="19">09:00</option>
-                        <option value="20">09:30</option>
-                        <option value="21">10:00</option>
-                        <option value="22">10:30</option>
-                        <option value="23">11:00</option>
-                        <option value="24">11:30</option>
-                        <option value="25">12:00</option>
-                        <option value="26">12:30</option>
-                        <option value="27">13:00</option>
-                        <option value="28">13:30</option>
-                        <option value="29">14:00</option>
-                        <option value="1">14:30</option>
-                        <option value="2">15:00</option>
-                        <option value="3">15:30</option>
-                        <option value="4">16:00</option>
-                        <option value="5">16:30</option>
-                        <option value="6">17:00</option>
-                        <option value="7">17:30</option>
-                        <option value="8">18:00</option>
-                        <option value="9">18:30</option>
-                        <option value="10">19:00</option>
-                        <option value="11">19:30</option>
-                        <option value="12">20:00</option>
-                        <option value="13">20:30</option>
-                        <option value="14">21:00</option>
-                        <option value="15">21:30</option>
-                        <option value="16">22:00</option>
-                        <option value="17">22:30</option>
-                        <option value="18">23:00</option>
-                        <option value="19">23:30</option>
-                        <option value="20">24:00</option>
+                <div class="timeFrame">
+                    <label for="date">{{ date }}</label>
+                    <input type="date" id="date">
+                    <label for="startTime">{{ satrtTime }}</label>
+                    <select id="startTime">
+                        <option selected>{{ selectStartTime }}</option>
+                        <option v-for="(option , index) in timeOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
-                    <label for="">結束時間</label>
-                    <select>
-                        <option selected>請選擇結束時間</option>
-                        <option value="1">00:00</option>
-                        <option value="2">00:30</option>
-                        <option value="3">01:00</option>
-                        <option value="4">01:30</option>
-                        <option value="5">02:00</option>
-                        <option value="6">02:30</option>
-                        <option value="7">03:00</option>
-                        <option value="8">03:30</option>
-                        <option value="9">04:00</option>
-                        <option value="10">04:30</option>
-                        <option value="11">05:00</option>
-                        <option value="12">05:30</option>
-                        <option value="13">06:00</option>
-                        <option value="14">06:30</option>
-                        <option value="15">07:00</option>
-                        <option value="16">07:30</option>
-                        <option value="17">08:00</option>
-                        <option value="18">08:30</option>
-                        <option value="19">09:00</option>
-                        <option value="20">09:30</option>
-                        <option value="21">10:00</option>
-                        <option value="22">10:30</option>
-                        <option value="23">11:00</option>
-                        <option value="24">11:30</option>
-                        <option value="25">12:00</option>
-                        <option value="26">12:30</option>
-                        <option value="27">13:00</option>
-                        <option value="28">13:30</option>
-                        <option value="29">14:00</option>
-                        <option value="1">14:30</option>
-                        <option value="2">15:00</option>
-                        <option value="3">15:30</option>
-                        <option value="4">16:00</option>
-                        <option value="5">16:30</option>
-                        <option value="6">17:00</option>
-                        <option value="7">17:30</option>
-                        <option value="8">18:00</option>
-                        <option value="9">18:30</option>
-                        <option value="10">19:00</option>
-                        <option value="11">19:30</option>
-                        <option value="12">20:00</option>
-                        <option value="13">20:30</option>
-                        <option value="14">21:00</option>
-                        <option value="15">21:30</option>
-                        <option value="16">22:00</option>
-                        <option value="17">22:30</option>
-                        <option value="18">23:00</option>
-                        <option value="19">23:30</option>
-                        <option value="20">24:00</option>
+                    <label for="endTime">{{ endTime }}</label>
+                    <select id="endTime">
+                        <option selected>{{ selectEndTime }}</option>
+                        <option v-for="(option , index) in timeOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
-                    <div class="mes form-floating">
-                        <textarea class="mesarea form-control" placeholder="Leave a comment here" id="floatingTextarea2"
-                            style="height: 155px"></textarea>
-                        <label for="floatingTextarea2">回報</label>
-                    </div>
                 </div>
             </div>
+
+            <div class="detailFrame">
+                <div class="mes form-floating">
+                    <textarea maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
+                </div>
+            </div>
+
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome"><button type="button">返回首頁</button></RouterLink>
+                <RouterLink to="/employeeHome"><button type="button">{{ back }}</button></RouterLink>
                 
-                <button type="button">新增</button>
+                <button type="button">{{ commit }}</button>
+
+                <button @click="changeLanguage" type="button">{{ changeLangBtn }}</button>
             </div>
         </div>
 
@@ -168,32 +162,34 @@ import { RouterLink, RouterView } from 'vue-router'
         border-radius: 5px;
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
         align-items: center;
         width: 50%;
-        height: 90%;
+        height: 80%;
         h4{
+            margin-top: 3vh;
             font-size: 32px;
             font-weight: bold;
         }
 
         .area1 {
+            position: relative;
             display: flex;
             justify-content: center;
-            width: 100%;
-            margin-top: 8px;
+            justify-content: space-between;
+            width: 50%;
+            margin: 7vh auto;
 
             .info {
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
-                margin-right: 48px;
                 label{
                     font-size: 15px;
                 }
                 input,
                 select {
-                    height: 30px;
+                    height: 4vh;
+                    width: 10vw;
                     margin-bottom: 8px;
                     border-radius: 5px;
                     border:1px solid #000;
@@ -202,7 +198,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
             }
 
-            .detail {
+            .timeFrame {
                 display: flex;
                 flex-direction: column;
                 label{
@@ -211,28 +207,35 @@ import { RouterLink, RouterView } from 'vue-router'
 
                 input,select {
                     margin-bottom: 8px;
-                    height: 30px;
+                    height: 4vh;
+                    width: 10vw;
                     border-radius: 5px;
                     border:1px solid #000;
 
                 }
+            }
+        }
 
-                .mes {
-                    margin-top: 20px;
-                    .mesarea {
-                        box-shadow: none;
-                        border-color:#000;
-                    }
+        .detailFrame{
+            position: relative;
+            width: 50%;
+            .detail{
+                height: 13vh;
+                width: 100%;
+                border-radius: 10px;
+                resize: none;
+                margin: auto;
+                overflow: auto;
 
-                }
             }
         }
 
         .area2 {
             display: flex;
             justify-content: space-between;
-            width: 100%;
+            width: 40%;
             padding: 0 8px;
+            margin-top: 7vh;
 
             button {
                 background: rgb(26, 55, 77);

@@ -5,6 +5,7 @@ import EmploAddWorkInfo from "../components/EmploAddWorkInfo.vue"
 import Login from "../components/Login.vue"
 import EmploChangePsd from "../components/EmploChangePsd.vue"
 import EmploCheckDailyTime from "../components/EmploCheckDailyTime.vue"
+import ManaCheckDaily from "../components/ManaCheckDaily.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/emploCheckDailyTime',
       name: 'EmploCheckDailyTime',  //盡量跟檔案名稱相同
       component: EmploCheckDailyTime
+    },
+    { //主管審核下屬工時表頁面
+      path: '/ManaCheckDaily',
+      name: 'ManaCheckDaily',  //盡量跟檔案名稱相同
+      component: ManaCheckDaily
     }
   ]
 })
