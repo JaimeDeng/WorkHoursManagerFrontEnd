@@ -1,10 +1,21 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-export default{
-    components: {
+export default (await import('vue')).defineComponent({
+components: {
     RouterLink
-  }
+},
+data() {
+return{
+
 }
+},
+methods: {
+
+},
+mounted() {
+
+}
+})
 </script>
 <template>
 
@@ -13,23 +24,33 @@ export default{
             <h2>註冊</h2>
 
             <div class="area1">
-                 <!-- id輸入 -->
-                <label for="emid">
+                <!-- 員工ID輸入 -->
+                <div class="employeeIdInputFrame">
                     <i class="fa-solid fa-user"></i>
-                </label>
-                <input id="emid" placeholder="請設定帳號" type="text">
+                    <input maxlength="20" id="setAccount" placeholder="請輸入您的員工ID" type="text">
+                </div>
+                <!-- 帳號輸入 -->
+                <div class="accountInputFrame">
+                    <i class="fa-solid fa-user"></i>
+                    <input maxlength="20" id="setAccount" placeholder="請設定帳號" type="text">
+                </div>
                 <!-- password輸入 -->
-                <label for="password">
+                <div class="pwdInputFrame">         
                     <i class="fa-sharp fa-solid fa-key"></i>
-                </label>
-                <input id="password" placeholder="請設定密碼" type="password">
+                    <input maxlength="20" id="setPassword" placeholder="請設定密碼" type="password">
+                </div>
+                <!-- password再次輸入 -->
+                <div class="rePwdInputFrame">         
+                    <i class="fa-sharp fa-solid fa-key"></i>
+                    <input maxlength="20" id="repeatPassword" placeholder="請再次輸入密碼" type="password">
+                </div>
             </div>
             
             <div class="area2">
                 
                 <!-- 登入按鈕 -->
                 
-                    <button type="button">註冊</button>
+                    <button @click="commitSignup" type="button">註冊</button>
                 
                 
             </div>
@@ -66,33 +87,75 @@ export default{
         }
 
         .area1 {
+            position: relative;
             display: flex;
             flex-direction: column;
-            height: 30%;
+            height: 40%;
             width: 70%;
             justify-content: space-between;
 
-            input {
-                cursor: pointer;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-
-            }
-
-            label {
+            %inputFrameSetting{
+                width: 100%;
                 position: relative;
+                height: max-content;
 
-                i {
-                    position: absolute;
-                    top: 18px;
-                    left: 8px;
+                input {
+                    cursor: pointer;
+                    width: 100%;
+                    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                    padding-left: 28px;
+                    height: 40px;
+                    border-radius: 5px;
+                    border: 1.5px solid #000;
+                    transition: 0.5s;
+                    &:focus{
+                        background-color: rgb(227, 244, 255);
+                    }
                 }
             }
 
-            input {
-                padding-left: 28px;
-                height: 40px;
-                border-radius: 5px;
-                border: 1.5px solid #000;
+            .employeeIdInputFrame{
+                @extend %inputFrameSetting;
+                .fa-user{
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 2%;
+                }
+            }
+            .accountInputFrame{        
+
+                @extend %inputFrameSetting;
+                .fa-user{
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 2%;
+                }
+            }
+
+            .pwdInputFrame{
+
+                @extend %inputFrameSetting;          
+
+                .fa-key{
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 2%;
+                }
+            }
+
+            .rePwdInputFrame{
+
+                @extend %inputFrameSetting;            
+
+                .fa-key{
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 2%;
+                }
             }
         }
 
