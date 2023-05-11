@@ -47,8 +47,8 @@
             </div>
             <!-- 底部按鈕 -->
             <div class="area2">
-                <button type="button">返回首頁</button>
-                <button type="button">新增</button>
+                <RouterLink to="/systemHome" class="btn1">返回</RouterLink>
+                <button type="button" class="btn1">新增</button>
             </div>
         </div>
 
@@ -128,16 +128,15 @@
             justify-content: space-between;
             width: 100%;
             padding: 0 8px;
-
-            button {
+            
+            .btn1 {
                 background: rgb(26, 55, 77);
                 border: 1.5px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 100px;
-                height: 30px;
+                padding: 4px;
                 font-size: 15px;
-
+                text-decoration: none;
                 &:hover {
                     background-color: rgb(64, 104, 130);
                 }

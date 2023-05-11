@@ -116,7 +116,7 @@
                     </select>
 
                 </div>
-                <button type="button">返回首頁</button>
+                <RouterLink to="/managerHome" class="buttonlink">返回</RouterLink>
             </div>
         </div>
 
@@ -255,16 +255,15 @@
 
             }
 
-            button {
+            .buttonlink {
                 background: rgb(26, 55, 77);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 80px;
-                height: 30px;
+                padding: 4px;
                 margin: auto;
                 font-size: 16px;
-
+                text-decoration: none;
                 &:hover {
                     background-color: rgb(64, 104, 130);
                 }

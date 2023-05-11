@@ -18,6 +18,7 @@ export default {
         <div class="background"></div>
         <div class="content">
             <Navbar />
+            
             <RouterView />
             <FooterView />
         </div>
