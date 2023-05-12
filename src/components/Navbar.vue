@@ -23,11 +23,13 @@ export default {
         },
         //添加點擊其他地方關閉通知列表的動作
         addCloseNotifyList(){
-            let notification = document.getElementById("bell fa-regular fa-bell")
+            let notificationIcon = document.getElementById("bell fa-regular fa-bell")
+            let notificationBtn = document.getElementById("notification")
             let notificationList = document.getElementById("list-group")
             window.addEventListener("click" , (event) => {
                 console.log(event.target)
-                if(event.target != notificationList && !notificationList.contains(event.target) && event.target != notification){
+                if(event.target != notificationList && !notificationList.contains(event.target) && event.target != notificationIcon
+                && event.target != notificationBtn){
                     if(this.notificationBtnIsClick === true){
                         this.notificationBtnIsClick = false;
                     }
@@ -69,7 +71,7 @@ export default {
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
                         <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
-                    <div :style="{ opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
+                    <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                             <h5 class="mb-1">待審核通知</h5>
@@ -145,6 +147,7 @@ export default {
                 width: max-content;
                 h3{
                     display: inline-block;
+                    margin-right: 2vw;
                 }
                 .notification{
                     position: relative;
@@ -158,6 +161,7 @@ export default {
                         width: 1rem;
                         background-color: rgb(211, 47, 47);
                         border-radius: 3px;
+                        font-family: "Cascadia Mono";
                         position: absolute;
                         left: 1%;
                         bottom: -10%;
