@@ -3,7 +3,7 @@
 <template>
     <div class="footer">
      
-        <h5>Work Hours Manager</h5>
+        <p class="fs-6"> &copy; 2023 WorkHoursManager </p>
         <span>TM</span>
     </div>
 
