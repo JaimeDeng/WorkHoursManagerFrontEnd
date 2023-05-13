@@ -16,8 +16,7 @@ data() {
         back:"返回",
         commit:"新增",
         detailPlaceHolder:"工作內容(限制500字以內)",
-        changeLangBtn:"切換英文",
-        changeLang:false,
+        langValue:'',
 
         statusOptions:[
         {label : "出勤" , value : "1"},
@@ -32,7 +31,7 @@ data() {
 },
 methods: {
     changeLanguage(){
-        if(this.changeLang === false){
+        if(this.langValue === 'en'){
             this.addTitle = "New Timesheet";
             this.type = "Type";
             this.caseNo = "Case no";
@@ -45,13 +44,25 @@ methods: {
             this.selectEndTime = "Select end time";
             this.back = "Back";
             this.commit = "Commit";
-            this.changeLangBtn = "Chinese";
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
-            this.changeLang = true;
-        }else{
+        }else if(this.langValue === 'jp'){
+            this.addTitle = "タイムシート作成";
+            this.type = "モデル";
+            this.caseNo = "製造號碼";
+            this.status = "出勤状態";
+            this.selectStatus = "出勤状態を選択してください";
+            this.date = "日にち";
+            this.satrtTime = "開始時刻";
+            this.selectStartTime = "開始時刻を選択してください";
+            this.endTime = "終了時刻";
+            this.selectEndTime = "終了時刻を選択してください";
+            this.back = "戻る";
+            this.commit = "作成";
+            this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
+        }else if(this.langValue === 'ch'){
             this.addTitle = "新增工作時數表";
             this.type = "機型";
-            this.caseNo = "製造號碼";
+            this.caseNo = "案件號碼";
             this.status = "出勤狀態";
             this.selectStatus = "請選擇出勤狀態";
             this.date = "日期";
@@ -61,14 +72,15 @@ methods: {
             this.selectEndTime = "請選擇結束時間";
             this.back = "返回";
             this.commit = "新增";
-            this.changeLangBtn = "切換英文";
             this.detailPlaceHolder = "工作內容(限制500字以內)";
-            this.changeLang = false;
         }
     }
 },
 mounted() {
     //建構時間option
+    this.langValue = sessionStorage.getItem('langValue');
+    console.log(this.langValue);
+    this.changeLanguage();
     let time = "";
     let hours = 0;
     let minutes = "00";
@@ -137,8 +149,6 @@ mounted() {
                 <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
                 
                 <button type="button">{{ commit }}</button>
-
-                <button @click="changeLanguage" type="button">{{ changeLangBtn }}</button>
             </div>
         </div>
 
@@ -191,7 +201,7 @@ mounted() {
                 }
                 input,
                 select {
-                    font-size: 2vh;
+                    font-size: 1.5vh;
                     height: 3.5vh;
                     width: 10vw;
                     margin-bottom: 8px;
@@ -209,7 +219,7 @@ mounted() {
                 }
 
                 input,select {
-                    font-size: 2vh;
+                    font-size: 1.5vh;
                     margin-bottom: 8px;
                     height: 3.5vh;
                     width: 10vw;
