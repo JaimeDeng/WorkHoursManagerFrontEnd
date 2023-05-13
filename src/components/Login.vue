@@ -27,7 +27,7 @@ export default {
                 .then(data => {
                     console.log(data)
                     if (this.password === null && this.employeeId === null) {
-                        alert("不得為空")
+                        alert("請輸入員工ID及密碼")
                     } else if (this.password === null) {
                         alert("密碼不得為空")
                     } else if (this.employeeId === null) {
@@ -37,7 +37,6 @@ export default {
                     } else if (this.password !== data.password) {
                         alert("密碼錯誤")
                     } else if (this.password === data.password && data.success === true) {
-                        alert(data.message)
                         if (this.keepLogin === true) {
                             //長存
                             localStorage.setItem("employeeId", this.employeeId)
