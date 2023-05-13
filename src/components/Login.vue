@@ -41,12 +41,12 @@ export default {
                         if (this.keepLogin === true) {
                             //長存
                             localStorage.setItem("employeeId", this.employeeId)
-                            localStorage.setItem("password", this.password)
                             localStorage.setItem("accountId", data.accountId)
                             this.$router.push('/employeeHome')
                         } else {
                             //短存
                             sessionStorage.setItem("employeeId", this.employeeId)
+                            sessionStorage.setItem("accountId", data.accountId)
                             this.$router.push('/employeeHome')
                         }
                        
