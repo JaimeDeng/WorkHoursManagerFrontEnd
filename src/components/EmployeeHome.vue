@@ -1,5 +1,46 @@
 <script>
 import { RouterLink } from 'vue-router'
+export default {
+    data(){
+        return{
+            langValue:'',
+            addTimeSheet:'',
+            changePwd:'',
+            checkTimesheet:'',
+            approve:'',
+            administrator:''
+        }
+    },
+    methods:{
+        changeLanguage(){
+            if(this.langValue === 'en'){
+                this.addTimeSheet = 'Add new timesheet';
+                this.changePwd = 'Change password';
+                this.checkTimesheet = 'Check my timesheets';
+                this.approve = 'Review timesheets';
+                this.administrator = 'Administrator page';
+            }else if(this.langValue === 'ch'){
+                this.addTimeSheet = '新增工作時數表';
+                this.changePwd = '變更密碼';
+                this.checkTimesheet = '查詢日工時表';
+                this.approve = '審核工時表';
+                this.administrator = '系統管理員功能';
+            }else if(this.langValue === 'jp'){
+                this.addTimeSheet = 'タイムシート作成';
+                this.changePwd = 'パスワード変更';
+                this.checkTimesheet = 'タイムシート一覧';
+                this.approve = 'タイムシート承認';
+                this.administrator = 'システム管理者ページ';
+            }
+        }
+    },
+    mounted(){
+        //檢查及切換語言
+        this.langValue = sessionStorage.getItem('langValue');
+        console.log(this.langValue);
+        this.changeLanguage();
+    }
+}
 </script>
 <template>
     <div class="main">
@@ -8,11 +49,11 @@ import { RouterLink } from 'vue-router'
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="linkFrame">
-                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">新增工作時數表</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploChangePsd">變更密碼</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
-                    <RouterLink class="buttonlink" to="/managerHome">主管權限</RouterLink>
-                    <RouterLink class="buttonlink" to="/systemHome">系統管理權限</RouterLink>       
+                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">{{ addTimeSheet }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">{{ checkTimesheet }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/emploChangePsd">{{ changePwd }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/managerHome">{{ approve }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>       
                 </div>
             </div>
         </div>
