@@ -16,16 +16,16 @@ data() {
         back:"返回",
         commit:"新增",
         detailPlaceHolder:"工作內容(限制500字以內)",
-        langValue:'',
+        langValue:'ch',
 
         statusOptions:[
-        {label : "出勤" , value : "1"},
-        {label : "公假" , value : "2"},
-        {label : "病假" , value : "3"},
-        {label : "事假" , value : "4"},
-        {label : "特休" , value : "5"},
-        {label : "工傷" , value : "6"},
-        {label : "天災" , value : "7"}],
+        {label : "出勤" , value : "出勤"},
+        {label : "公假" , value : "公假"},
+        {label : "病假" , value : "病假"},
+        {label : "事假" , value : "事假"},
+        {label : "特休" , value : "特休"},
+        {label : "工傷" , value : "工傷"},
+        {label : "天災" , value : "天災"}],
         timeOptions:[]
     }
 },
@@ -46,18 +46,18 @@ methods: {
             this.commit = "Commit";
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
         }else if(this.langValue === 'jp'){
-            this.addTitle = "タイムシート作成";
-            this.type = "モデル";
-            this.caseNo = "製造號碼";
-            this.status = "出勤状態";
-            this.selectStatus = "出勤状態を選択してください";
-            this.date = "日にち";
+            this.addTitle = "勤務表追加";
+            this.type = "型番";
+            this.caseNo = "案件番号";
+            this.status = "出勤状況";
+            this.selectStatus = "出勤状況を選択してください";
+            this.date = "日付";
             this.satrtTime = "開始時刻";
             this.selectStartTime = "開始時刻を選択してください";
             this.endTime = "終了時刻";
             this.selectEndTime = "終了時刻を選択してください";
             this.back = "戻る";
-            this.commit = "作成";
+            this.commit = "追加";
             this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
         }else if(this.langValue === 'ch'){
             this.addTitle = "新增工作時數表";
@@ -77,10 +77,11 @@ methods: {
     }
 },
 mounted() {
-    //建構時間option
+    //檢查及修改介面語言
     this.langValue = sessionStorage.getItem('langValue');
     console.log(this.langValue);
     this.changeLanguage();
+    //建構時間option
     let time = "";
     let hours = 0;
     let minutes = "00";
