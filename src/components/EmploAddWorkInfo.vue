@@ -129,14 +129,12 @@ mounted() {
             </div>
 
             <div class="detailFrame">
-                <div class="mes form-floating">
-                    <textarea maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
-                </div>
+                <textarea maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
             </div>
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome"><button type="button">{{ back }}</button></RouterLink>
+                <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
                 
                 <button type="button">{{ commit }}</button>
 
@@ -155,19 +153,24 @@ mounted() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: -1;
 
     .add {
         background-color: rgba(255, 255, 255, 0.724);
         border: 2px solid rgb(177, 208, 224);
-        border-radius: 5px;
+        border-radius: 10px;
         display: flex;
+        position: relative;
         flex-direction: column;
         align-items: center;
         width: 50%;
         height: 80%;
+        overflow: auto;
         h4{
-            margin-top: 3vh;
-            font-size: 32px;
+            margin-top: 3%;
+            margin-bottom: 3vh;
+            font-size: 4vh;
             font-weight: bold;
         }
 
@@ -177,23 +180,23 @@ mounted() {
             justify-content: center;
             justify-content: space-between;
             width: 50%;
-            margin: 7vh auto;
+            margin: 2vh auto;
 
             .info {
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
                 label{
-                    font-size: 15px;
+                    font-size: 2vh;
                 }
                 input,
                 select {
-                    height: 4vh;
+                    font-size: 2vh;
+                    height: 3.5vh;
                     width: 10vw;
                     margin-bottom: 8px;
                     border-radius: 5px;
                     border:1px solid #000;
-
                 }
 
             }
@@ -202,12 +205,13 @@ mounted() {
                 display: flex;
                 flex-direction: column;
                 label{
-                    font-size: 15px;
+                    font-size: 2vh;
                 }
 
                 input,select {
+                    font-size: 2vh;
                     margin-bottom: 8px;
-                    height: 4vh;
+                    height: 3.5vh;
                     width: 10vw;
                     border-radius: 5px;
                     border:1px solid #000;
@@ -218,9 +222,13 @@ mounted() {
 
         .detailFrame{
             position: relative;
+            margin: 2vh 0;
+            height: 20%;
             width: 50%;
             .detail{
-                height: 13vh;
+                padding: 0.5vh 0.3vw;
+                font-size: 1.5vh;
+                height: 100%;
                 width: 100%;
                 border-radius: 10px;
                 resize: none;
@@ -234,17 +242,43 @@ mounted() {
             display: flex;
             justify-content: space-between;
             width: 40%;
-            padding: 0 8px;
-            margin-top: 7vh;
+            padding: 0 1vw;
+            margin-top: 3.3%;
+
+            .back{
+                background: rgb(26, 55, 77);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
+                border: 1.5px solid #000;
+                color: white;
+                border-radius: 5px;
+                width: 5vw;
+                height: 3.5vh;
+                font-size: 0.7vw;
+                transition: 0.4s;
+                overflow: hidden;
+
+                &:hover {
+                    background-color: rgb(64, 104, 130);
+                }
+
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
 
             button {
                 background: rgb(26, 55, 77);
                 border: 1.5px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 100px;
-                height: 30px;
-                font-size: 15px;
+                width: 5vw;
+                height: 3.5vh;
+                font-size: 0.7vw;
+                transition: 0.4s;
+                overflow: hidden;
 
                 &:hover {
                     background-color: rgb(64, 104, 130);

@@ -284,6 +284,7 @@ mounted() {
     flex-grow: 1;
     display: flex;
     position: relative;
+    height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -322,13 +323,12 @@ mounted() {
         }
 
         h2 {
-            margin-top: 10%;
+            margin: 4vh auto;
             font-size: 4vh;
             font-weight: bold;
         }
 
         .area1 {
-            margin-top: 2%;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -347,7 +347,8 @@ mounted() {
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
                     padding-left: 28px;
-                    height: 5vh;
+                    height: 4vh;
+                    font-size: 2vh;
                     border-radius: 5px;
                     border: 1.5px solid #000;
                     transition: 0.5s;
@@ -404,7 +405,7 @@ mounted() {
 
         .area2 {
             position: relative;
-            margin-top: 5%;
+            margin: 2.5vh auto;
             display: flex;
             width: 100%;
             justify-content: space-evenly;
@@ -417,7 +418,7 @@ mounted() {
                 width: 8vw;
                 height: 5vh;
                 // font-weight: bold;
-                font-size: 18px;
+                font-size: 2vh;
 
                 &:hover {
                     background-color: rgb(64, 104, 130);
