@@ -7,18 +7,13 @@ import { RouterLink } from 'vue-router'
             <h4>莊員工,Fighting !</h4>
             <div class="funtionArea">
                 <!-- 上排 -->
-                <div class="area1">
+                <div class="linkFrame">
                     <RouterLink class="buttonlink" to="/emploAddWorkInfo">新增工作時數表</RouterLink>
                     <RouterLink class="buttonlink" to="/emploChangePsd">變更密碼</RouterLink>
                     <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
-                </div>
-                <!-- 下排 -->
-                <div class="area2">
-                    
                     <RouterLink class="buttonlink" to="/managerHome">主管權限</RouterLink>
-                    <RouterLink class="buttonlink" to="/systemHome">系統管理權限</RouterLink>
+                    <RouterLink class="buttonlink" to="/systemHome">系統管理權限</RouterLink>       
                 </div>
-
             </div>
         </div>
 
@@ -39,7 +34,7 @@ import { RouterLink } from 'vue-router'
         display: flex;
         flex-direction: column;
         width: 55%;
-        height: 70%;
+        height: 80%;
 
         h4 {
             font-size: 40px;
@@ -53,21 +48,23 @@ import { RouterLink } from 'vue-router'
             flex-direction: column;
             justify-content: space-evenly;
 
-            .area1,
-            .area2 {
+            .linkFrame {
                 width: 100%;
-                height: 40%;
+                height: auto;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                align-items: center;
 
                 .buttonlink {
+                    margin-top: 2%;
                     color: #000;
                     width: 48%;
+                    height: 10vh;
                     position: relative;
                     background-color: white;
                     border-radius: 10px;
                     border: 2px solid #000;
-                    font-size: 22px;
+                    font-size: 2vh;
                     text-decoration: none;
                     display: flex;
                     justify-content: center;
@@ -89,7 +86,7 @@ import { RouterLink } from 'vue-router'
                         content: "";
                         z-index: -1;
                         position: absolute;
-                        bottom: -500%;
+                        transform: translateY(100%);
                         border-radius: 100%;
                         height: 70vh;
                         width: 50vw;
@@ -101,7 +98,7 @@ import { RouterLink } from 'vue-router'
                         content: "";
                         z-index: -1;
                         position: absolute;
-                        top: -500%;
+                        transform: translateY(-100%);
                         border-radius: 100%;
                         height: 70vh;
                         width: 50vw;
@@ -110,11 +107,11 @@ import { RouterLink } from 'vue-router'
                     }
 
                     &:hover::after{
-                        bottom: -320%;
+                        transform: translateY(51.5%);
                     }
 
                     &:hover::before{
-                        top: -260%;
+                        transform: translateY(-44%);
                     }
 
 

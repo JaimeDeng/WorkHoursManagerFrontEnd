@@ -36,7 +36,7 @@ export default {
 
     },
     updated() {
-        console.log("hello")
+        console.log("this component has been updated")
     },
 };
 </script>
