@@ -24,7 +24,7 @@ return{
     message : "none",
     isInputInvalid : 0,
     //切換語言相關
-    langValue : '',
+    langValue : 'ch',
     signupStr : '',
     employeeIdStr : '',
     employeeIdPHStr : '',
@@ -43,11 +43,11 @@ methods: {
         if(this.langValue === 'en'){
             this.signupStr = 'Sign up';
             this.employeeIdStr = 'Employee ID';
-            this.employeeIdPHStr = 'Please input your ID';
+            this.employeeIdPHStr = 'Please input your employee ID';
             this.accountStr = 'Set account';
             this.accountPHStr = 'Please set your account';
             this.pwdStr = 'Set password';
-            this.pwdPHStr = 'Please set your account';
+            this.pwdPHStr = 'Please set your password';
             this.rePwdStr = 'Repeat password';
             this.rePwdPHStr = 'Please input your password again';
             this.commitBtnStr = 'Sign up';
@@ -92,7 +92,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "請輸入員工ID欄位";
             }else if(this.langValue === 'en'){
-                this.message = "Please input employee ID field";
+                this.message = "You haven't filled in employee ID field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "社員番号欄を入力してください";
             }
@@ -106,7 +106,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "請輸入帳號欄位";
             }else if(this.langValue === 'en'){
-                this.message = "Please input account field";
+                this.message = "You haven't filled in account field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "アカウント欄を入力してください";
             }
@@ -120,7 +120,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "帳號格式錯誤:請輸入4~10位英數字";
             }else if(this.langValue === 'en'){
-                this.message = "Account format error: Please enter 4~10 alphanumeric characters";
+                this.message = "Account format is not correct: Please enter 4~10 alphanumeric characters";
             }else if(this.langValue === 'jp'){
                 this.message = "アカウント形式が正しくありません: 4~10文字の英数字を入力してください";
             }
@@ -134,7 +134,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "請輸入密碼欄位";
             }else if(this.langValue === 'en'){
-                this.message = "Please input password field";
+                this.message = "You haven't filled in password field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "パスワード欄を入力してください";
             }
@@ -148,7 +148,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "請輸入再次輸入密碼欄位";
             }else if(this.langValue === 'en'){
-                this.message = "Please input repeat password field";
+                this.message = "You haven't filled in repeat password field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "パスワード（確認）欄を入力してください";
             }
@@ -163,7 +163,7 @@ methods: {
             if(this.langValue === 'ch'){
                 this.message = "密碼格式錯誤:請輸入8~20位英數字";
             }else if(this.langValue === 'en'){
-                this.message = "Password format error: Please enter 8~20 alphanumeric characters";
+                this.message = "Password format is not correct: Please enter 8~20 alphanumeric characters";
             }else if(this.langValue === 'jp'){
                 this.message = "パスワード形式が正しくありません: 8~20文字の英数字を入力してください";
             }

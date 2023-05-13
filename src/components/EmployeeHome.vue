@@ -3,12 +3,15 @@ import { RouterLink } from 'vue-router'
 export default {
     data(){
         return{
-            langValue:'',
+            name:'老鄧',
+            langValue:'ch',
             addTimeSheet:'',
             changePwd:'',
             checkTimesheet:'',
             approve:'',
-            administrator:''
+            administrator:'',
+            isSupervisor:true,
+            isAdministrator:true
         }
     },
     methods:{
@@ -26,10 +29,10 @@ export default {
                 this.approve = '審核工時表';
                 this.administrator = '系統管理員功能';
             }else if(this.langValue === 'jp'){
-                this.addTimeSheet = 'タイムシート作成';
+                this.addTimeSheet = '勤務表追加';
                 this.changePwd = 'パスワード変更';
-                this.checkTimesheet = 'タイムシート一覧';
-                this.approve = 'タイムシート承認';
+                this.checkTimesheet = '勤務表一覧';
+                this.approve = '勤務表承認';
                 this.administrator = 'システム管理者ページ';
             }
         }
@@ -45,15 +48,15 @@ export default {
 <template>
     <div class="main">
         <div class="all">
-            <h4>莊員工,Fighting !</h4>
+            <h4>{{ name }} , Fighting !</h4>
             <div class="funtionArea">
-                <!-- 上排 -->
+                <!-- 選單 -->
                 <div class="linkFrame">
                     <RouterLink class="buttonlink" to="/emploAddWorkInfo">{{ addTimeSheet }}</RouterLink>
                     <RouterLink class="buttonlink" to="/emploCheckDailyTime">{{ checkTimesheet }}</RouterLink>
                     <RouterLink class="buttonlink" to="/emploChangePsd">{{ changePwd }}</RouterLink>
-                    <RouterLink class="buttonlink" to="/managerHome">{{ approve }}</RouterLink>
-                    <RouterLink class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>       
+                    <RouterLink v-if="isSupervisor" class="buttonlink" to="/managerHome">{{ approve }}</RouterLink>
+                    <RouterLink v-if="isAdministrator" class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>       
                 </div>
             </div>
         </div>
@@ -75,12 +78,12 @@ export default {
         display: flex;
         flex-direction: column;
         width: 55%;
-        height: 80%;
+        height: 85%;
 
         h4 {
-            font-size: 40px;
+            font-size: 4vh;
             color: white;
-            margin-bottom: 50px;
+            margin-bottom: 5vh;
         }
 
         .funtionArea {
@@ -130,8 +133,8 @@ export default {
                         transform: translateY(100%);
                         border-radius: 100%;
                         height: 70vh;
-                        width: 50vw;
-                        background-color: rgba(40, 40, 40 ,0.5);
+                        width: 60vw;
+                        background-color: rgba(61, 62, 63, 0.5);
                         transition: 0.5s;
                     }
 
@@ -142,13 +145,13 @@ export default {
                         transform: translateY(-100%);
                         border-radius: 100%;
                         height: 70vh;
-                        width: 50vw;
-                        background-color: rgba(189, 243, 255, 0.5);
+                        width: 60vw;
+                        background-color: rgba(130, 204, 223, 0.5);
                         transition: 0.5s;
                     }
 
                     &:hover::after{
-                        transform: translateY(51.5%);
+                        transform: translateY(53%);
                     }
 
                     &:hover::before{

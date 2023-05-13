@@ -8,7 +8,7 @@ export default {
     },
     data() {
         return {
-            name: "阿強",   //員工名
+            name: "老鄧",   //員工名
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
@@ -69,6 +69,9 @@ export default {
         this.addCloseNotifyList();
         this.calculateNotificationNum();
         this.langSelectValue = sessionStorage.getItem('langValue');
+        if(this.langSelectValue === null){
+            this.langSelectValue = 'ch';
+        }
         if(this.langSelectValue === 'ch'){
             this.lang = '介面語言';
             this.chOption = '中文';
@@ -209,10 +212,14 @@ export default {
                     padding: 0;
                     z-index: 0;
 
+                    .fa-bell{
+                        font-size: 2rem;
+                    }
+
                     .notifyIcon{
                         height: 1rem;
                         width: 1rem;
-                        background-color: rgb(211, 47, 47);
+                        background-color: rgb(165, 20, 20);
                         border-radius: 3px;
                         font-family: "Cascadia Mono";
                         position: absolute;
