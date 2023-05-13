@@ -234,7 +234,7 @@ mounted() {
                 resize: none;
                 margin: auto;
                 overflow: auto;
-
+                border:1px solid #000;
             }
         }
 
