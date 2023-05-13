@@ -1,14 +1,23 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import popup from './popup.vue'
 export default {
     components: {
-        RouterLink
+        RouterLink,
+        popup
     },
     data() {
         return {
+            //props傳來的變數 , 直接宣告一樣的名稱在data()內
+            showPopup: false,
+            popupData: {
+                title: "Popup Title",
+                content: "Popup Content",
+            },
             "employeeId": null,
             "password": null,
-            "keepLogin": false
+            "keepLogin": false,
+            message: ""
         }
     },
     methods: {
@@ -25,41 +34,98 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log(data)
                     if (this.password === null && this.employeeId === null) {
-                        alert("請輸入員工ID及密碼")
+                        this.message="請輸入員工ID及密碼"
+                        this.errorPopup()
                     } else if (this.password === null) {
-                        alert("密碼不得為空")
+                        this.message="密碼不得為空"
+                        this.errorPopup()
                     } else if (this.employeeId === null) {
-                        alert("請輸入員工ID,不得為空白")
+                        this.message="請輸入員工ID,不得為空白"
                     } else if (data.success === false) {
-                        alert(data.message)
+                        this.message=data.message
+                        this.errorPopup()
                     } else if (this.password !== data.password) {
-                        alert("密碼錯誤")
+                        this.message="密碼錯誤"
+                        this.errorPopup()
                     } else if (this.password === data.password && data.success === true) {
                         if (this.keepLogin === true) {
-                            //長存
+                            //有勾選keepLogin長存
                             localStorage.setItem("employeeId", this.employeeId)
                             localStorage.setItem("accountId", data.accountId)
                             this.$router.push('/employeeHome')
                         } else {
-                            //短存
+                            //沒有勾選keepLogin短存
                             sessionStorage.setItem("employeeId", this.employeeId)
                             sessionStorage.setItem("accountId", data.accountId)
                             this.$router.push('/employeeHome')
                         }
-                       
+
 
                     }
 
                 })
 
-        }
+        },
+        closePopup() {
+            this.showPopup = false;
+            this.popupData.title = "";
+            this.popupData.content = "";
+            if (this.employeeInfo.success) {
+                this.id = "";
+                this.account = "";
+                this.password = "";
+                this.rePassword = "";
+            }
+        },
+        successPopup() {
+            this.popupData.title = "成功";
+            this.popupData.content = this.message;
+            this.showPopup = true;
+            setTimeout(() => {
+                let popup = this.$refs.popup;
+                let popupEl = popup.$el;
+                let popupIcon = popupEl.querySelector("i");
+                console.log(popupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-check";
+                popupIcon.classList.add(iconStr1);
+                popupIcon.classList.add(iconStr2);
+                popupIcon.style.color = "#3771ae";
+                console.log(popupIcon);
+                popup.$el.style.opacity = "1";
+                popup.$el.style.bottom = "0%";
+            }, 100);
+        },
+        errorPopup() {
+            this.popupData.title = "錯誤";
+            this.popupData.content = this.message;
+            this.showPopup = true;
+            setTimeout(() => {
+                let popup = this.$refs.popup;
+                console.log(popup);
+                let popupEl = popup.$el;
+                let popupIcon = popupEl.querySelector("i");
+                console.log(popupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-circle-xmark";
+                popupIcon.classList.add(iconStr1);
+                popupIcon.classList.add(iconStr2);
+                popupIcon.style.color = "#ae3737";
+                console.log(popupIcon);
+                popup.$el.style.opacity = "1";
+                popup.$el.style.bottom = "0%";
+            }, 100);
+        },
     }
 }
 </script>
 <template>
     <div class="main">
+        <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
+        <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
+        <div v-if="showPopup" ref="mask" class="mask"></div>
+
         <div class="login">
             <h2>登入系統</h2>
 
@@ -93,7 +159,7 @@ export default {
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
-                <RouterLink to="/signup"><button type="button">註冊</button></RouterLink>
+                <RouterLink to="/signup" tag="button" class="btn">註冊</RouterLink>
 
                 <button type="button" @click="login">登入</button>
 
@@ -110,6 +176,23 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .popup {
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition: 0.2s;
+        z-index: 2;
+    }
+
+    .mask {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.3);
+        filter: blur(100px);
+        height: 99.8vh;
+        width: 100%;
+        z-index: 1;
+    }
 
     .login {
         background-color: rgba(255, 255, 255, 0.724);
@@ -218,7 +301,7 @@ export default {
 
             }
 
-            button {
+            button,.btn {
                 background: rgb(26, 55, 77);
                 border: 1px solid #000;
                 color: white;
