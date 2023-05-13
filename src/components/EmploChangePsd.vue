@@ -13,21 +13,24 @@ export default {
 
             <div class="area1">
                 <!-- 新密碼輸入 -->
-                <label for="emid">
+                <div class="newPsdInput">
                     <i class="fa-sharp fa-solid fa-key"></i>
-                </label>
-                <input id="emid" placeholder="請輸入新密碼" type="text">
+                    <input id="emid" placeholder="請輸入新密碼" type="text">
+
+                </div>
+
                 <!-- 再次輸入新密碼 -->
-                <label for="password">
+                <div class="againNewPsd">
                     <i class="fa-sharp fa-solid fa-key"></i>
-                </label>
-                <input id="password" placeholder="請再次輸入新密碼" type="password">
+                    <input id="password" placeholder="請再次輸入新密碼" type="password">
+                </div>
+
             </div>
 
             <!-- 按鈕 -->
             <div class="area2">
                 <RouterLink to="/employeeHome"><button type="button">返回首頁</button></RouterLink>
-                
+
                 <button type="button">確定變更</button>
 
 
@@ -64,34 +67,52 @@ export default {
         }
 
         .area1 {
+            position: relative;
             display: flex;
             flex-direction: column;
-            height: 30%;
+            height: 40%;
             width: 70%;
-            justify-content: space-between;
+            justify-content: space-around;
 
-            input {
-                cursor: pointer;
-                box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+            %inputFrameSetting {
+                width: 100%;
+                position: relative;
+                height: max-content;
+
+                input {
+                    cursor: pointer;
+                    width: 100%;
+                    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                    padding-left: 28px;
+                    height: 40px;
+                    border-radius: 5px;
+                    border: 1.5px solid #000;
+                    transition: 0.5s;
+
+                    &:focus {
+                        background-color: rgb(227, 244, 255);
+                    }
+                }
 
             }
 
-            label {
-                position: relative;
+            .newPsdInput,.againNewPsd {
+                @extend %inputFrameSetting;
 
-                i {
+                .fa-sharp {
                     position: absolute;
-                    top: 18px;
-                    left: 8px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 2%;
                 }
             }
 
-            input {
-                padding-left: 28px;
-                height: 40px;
-                border-radius: 5px;
-                border: 1.5px solid #000;
-            }
+           
+
+
+
+
+
         }
 
         .area2 {
