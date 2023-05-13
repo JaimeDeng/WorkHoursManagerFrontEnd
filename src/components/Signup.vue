@@ -15,6 +15,7 @@ return{
     popupData: {
         title: "Popup Title",
         content: "Popup Content",
+        backBtn: 'Back',
     },
     id : "",
     account : "",
@@ -50,6 +51,7 @@ methods: {
             this.rePwdStr = 'Repeat password';
             this.rePwdPHStr = 'Please input your password again';
             this.commitBtnStr = 'Sign up';
+            this.popupData.backBtn = 'Back'
         }else if(this.langValue === 'ch'){
             this.signupStr = '註冊';
             this.employeeIdStr = '員工ID';
@@ -61,6 +63,7 @@ methods: {
             this.rePwdStr = '再次輸入密碼';
             this.rePwdPHStr = '請再次輸入密碼';
             this.commitBtnStr = '註冊';
+            this.popupData.backBtn = '返回';
         }else if(this.langValue === 'jp'){
             this.signupStr = 'アカウント登録';
             this.employeeIdStr = '社員番号';
@@ -72,6 +75,7 @@ methods: {
             this.rePwdStr = 'パスワード（確認）';
             this.rePwdPHStr = 'パスワードを再入力してください';
             this.commitBtnStr = '登録';
+            this.popupData.backBtn = '戻る';
         }
     },
     commitSignup(){
@@ -85,7 +89,13 @@ methods: {
         let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
         let accountPattern = /^[a-zA-Z0-9]{4,10}$/;
         if(this.id.length === 0){
-            this.message = "請輸入員工ID欄位";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入員工ID欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "Please input employee ID field";
+            }else if(this.langValue === 'jp'){
+                this.message = "社員番号欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -93,7 +103,13 @@ methods: {
             }
         }
         if(this.account.length === 0){
-            this.message = "請輸入帳號欄位";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入帳號欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "Please input account field";
+            }else if(this.langValue === 'jp'){
+                this.message = "アカウント欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -101,7 +117,13 @@ methods: {
             }
         }
         if(!accountPattern.test(account)){
-            this.message = "帳號格式錯誤:請輸入4~10位英數字";
+            if(this.langValue === 'ch'){
+                this.message = "帳號格式錯誤:請輸入4~10位英數字";
+            }else if(this.langValue === 'en'){
+                this.message = "Account format error: Please enter 4~10 alphanumeric characters";
+            }else if(this.langValue === 'jp'){
+                this.message = "アカウント形式が正しくありません: 4~10文字の英数字を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -109,16 +131,28 @@ methods: {
             }
         }
         if(this.password.length === 0){
-            this.message = "請輸入密碼欄位";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "請輸入密碼欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "Please input password field";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード欄を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
             }
         }
         if(this.rePassword.length === 0){
-            this.message = "請再次輸入密碼";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "請輸入再次輸入密碼欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "Please input repeat password field";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード（確認）欄を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -126,8 +160,14 @@ methods: {
         }
 
         if(!pwdPattern.test(pwd)){
-            this.message = "密碼格式錯誤:請輸入8~20字符的英數字";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "密碼格式錯誤:請輸入8~20位英數字";
+            }else if(this.langValue === 'en'){
+                this.message = "Password format error: Please enter 8~20 alphanumeric characters";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード形式が正しくありません: 8~20文字の英数字を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -135,8 +175,14 @@ methods: {
         }
 
         if(pwd !== rePassword){
-            this.message = "重複輸入的密碼與設定的密碼不符!";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "重複輸入的密碼與設定的密碼不符!";
+            }else if(this.langValue === 'en'){
+                this.message = "The repaet password does not match the password";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード（確認）はパスワードと一致していません";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -208,7 +254,13 @@ methods: {
         }, 100);
     },
     errorPopup(){
-        this.popupData.title = "錯誤";
+        if(this.langValue === 'ch'){
+            this.popupData.title = "錯誤";
+        }else if(this.langValue === 'en'){
+            this.popupData.title = "Failure";
+        }else if(this.langValue === 'jp'){
+            this.popupData.title = "エラー";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {

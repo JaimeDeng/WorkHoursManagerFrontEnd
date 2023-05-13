@@ -7,6 +7,18 @@ import Login from "../components/Login.vue"
 export default {
     components: {
         Navbar, FooterView, Login
+    },
+    data() {
+        return {
+            langValue : ''
+        };
+    },
+    methods: {
+        langChange(){
+            console.log('更新');
+            //vue-router的重新渲染方法 , 只會重載頁面重新渲染vue元件 , 不會刷新所有數據跟JS
+            this.$router.go(0);
+        }
     }
 }
 </script>
@@ -17,7 +29,7 @@ export default {
 
         <div class="background"></div>
         <div class="content">
-            <Navbar />
+            <Navbar @change="langChange" />
             
             <RouterView />
             <FooterView />
