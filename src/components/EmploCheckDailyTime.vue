@@ -390,7 +390,7 @@ export default {
             <!-- 左側範圍 -->
             <div class="left">
                 <div class="title_search">
-                    <h4 class="fw-bold">{{ title }}</h4>
+                    <h4 class="fw-bold title">{{ title }}</h4>
                     <div class="searchFrame">
                         <label for="serch">{{ search }}</label>
                         <div class="dateFrame">
@@ -469,6 +469,8 @@ export default {
 .main {
     flex-grow: 1;
     z-index: -1;
+    height: 100vh;
+    width: 100vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -494,8 +496,12 @@ export default {
             .title_search {
                 display: flex;
                 width: 100%;
+                height: 5vh;
                 align-items: baseline;
 
+                .title{
+                    font-size: 3vh;
+                }
                 .searchFrame{
                     position: absolute;
                     right: 50%;
@@ -565,8 +571,9 @@ export default {
             }
 
             .sheet {
+                position: relative;
                 border-radius: 5px;
-                height: 90%;
+                height: 85%;
 
                 .emptyTitle{
                     position: absolute;
@@ -576,7 +583,9 @@ export default {
                     transform: translateX(-50%);
                 }
 
-                .accordion-button {
+                .accordion-flush{
+                    height: 100%;
+                    .accordion-button {
                     word-spacing: 2em;
                     position: relative;
 
@@ -642,6 +651,8 @@ export default {
                             transform: scale(0.95);
                         }
                     }
+                }
+                    
                 }
             }
 
