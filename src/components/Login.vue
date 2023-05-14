@@ -13,6 +13,7 @@ export default {
             popupData: {
                 title: "Popup Title",
                 content: "Popup Content",
+                backBtn: "back"
             },
             employeeId: '',
             password: '',
@@ -83,7 +84,7 @@ export default {
                             this.message = "社員番号欄は存在しません";
                         }
                         this.errorPopup()
-                    } else if (this.password !== data.password) {
+                    } else if (this.password !== atob(data.password)) {
                         if (this.langValue === 'ch') {
                             this.message = "密碼錯誤";
                         } else if (this.langValue === 'en') {
@@ -92,7 +93,7 @@ export default {
                             this.message = "パスワードが違います";
                         }
                         this.errorPopup()
-                    } else if (this.password === data.password && data.success === true) {
+                    } else if (this.password === atob(data.password) && data.success === true) {
                         if (this.keepLogin === true) {
                             //有勾選keepLogin長存
                             localStorage.setItem("employeeId", this.employeeId)

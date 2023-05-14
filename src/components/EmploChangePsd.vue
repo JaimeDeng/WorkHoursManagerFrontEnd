@@ -14,6 +14,7 @@ export default {
             popupData: {
                 title: "Popup Title",
                 content: "Popup Content",
+                backBtn: "返回"
             },
             newPsd: "",
             againNewPsd: "",
@@ -101,7 +102,6 @@ export default {
             this.showPopup = false;
             this.popupData.title = "";
             this.popupData.content = "";
-            
         },
         successPopup() {
             this.popupData.title = "成功";
@@ -297,13 +297,6 @@ export default {
                     left: 2%;
                 }
             }
-
-
-
-
-
-
-
         }
 
         .area2 {
