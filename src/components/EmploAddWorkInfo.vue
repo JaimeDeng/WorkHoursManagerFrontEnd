@@ -79,6 +79,9 @@ methods: {
 mounted() {
     //檢查及修改介面語言
     this.langValue = sessionStorage.getItem('langValue');
+    if(this.langValue === null){
+        this.langValue = 'ch';
+    }
     console.log(this.langValue);
     this.changeLanguage();
     //建構時間option
