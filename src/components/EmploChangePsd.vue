@@ -65,7 +65,7 @@ export default {
             } else {
 
                 //密碼加密為Base64再存入資料庫
-                let securePwd = btoa(pwd);
+                let securePwd = btoa(this.newPsd);
                 let a = atob(securePwd);
                 console.log(securePwd);
                 console.log(a);
@@ -77,9 +77,7 @@ export default {
                     },
                     body: JSON.stringify({
                         "accountId": sessionStorage.getItem("accountId") || localStorage.getItem("accountId"),
-                        "password": this.newPsd,
-                        "employeeId": sessionStorage.getItem("employeeId") || localStorage.getItem("employeeId"),
-                        "newPassword": this.againNewPsd
+                        "newPassword": securePwd
                     })
                 })
                     .then(res => res.json())
