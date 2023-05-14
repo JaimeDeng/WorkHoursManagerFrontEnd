@@ -1,24 +1,63 @@
 <script>
 import { RouterLink } from 'vue-router'
+export default {
+    data(){
+        return{
+            name:'老鄧',
+            langValue:'ch',
+            addTimeSheet:'',
+            changePwd:'',
+            checkTimesheet:'',
+            approve:'',
+            administrator:'',
+            isSupervisor:true,
+            isAdministrator:true
+        }
+    },
+    methods:{
+        changeLanguage(){
+            if(this.langValue === 'en'){
+                this.addTimeSheet = 'Add new timesheet';
+                this.changePwd = 'Change password';
+                this.checkTimesheet = 'Check my timesheets';
+                this.approve = 'Review timesheets';
+                this.administrator = 'Administrator page';
+            }else if(this.langValue === 'ch'){
+                this.addTimeSheet = '新增工作時數表';
+                this.changePwd = '變更密碼';
+                this.checkTimesheet = '查詢日工時表';
+                this.approve = '審核工時表';
+                this.administrator = '系統管理員功能';
+            }else if(this.langValue === 'jp'){
+                this.addTimeSheet = '勤務表追加';
+                this.changePwd = 'パスワード変更';
+                this.checkTimesheet = '勤務表一覧';
+                this.approve = '勤務表承認';
+                this.administrator = 'システム管理者ページ';
+            }
+        }
+    },
+    mounted(){
+        //檢查及切換語言
+        this.langValue = sessionStorage.getItem('langValue');
+        console.log(this.langValue);
+        this.changeLanguage();
+    }
+}
 </script>
 <template>
     <div class="main">
         <div class="all">
-            <h4>莊員工,Fighting !</h4>
+            <h4>{{ name }} , Fighting !</h4>
             <div class="funtionArea">
-                <!-- 上排 -->
-                <div class="area1">
-                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">新增工作時數表</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploChangePsd">變更密碼</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">查詢日工時表</RouterLink>
+                <!-- 選單 -->
+                <div class="linkFrame">
+                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">{{ addTimeSheet }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">{{ checkTimesheet }}</RouterLink>
+                    <RouterLink class="buttonlink" to="/emploChangePsd">{{ changePwd }}</RouterLink>
+                    <RouterLink v-if="isSupervisor" class="buttonlink" to="/managerHome">{{ approve }}</RouterLink>
+                    <RouterLink v-if="isAdministrator" class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>       
                 </div>
-                <!-- 下排 -->
-                <div class="area2">
-                    
-                    <RouterLink class="buttonlink" to="/managerHome">主管權限</RouterLink>
-                    <RouterLink class="buttonlink" to="/systemHome">系統管理權限</RouterLink>
-                </div>
-
             </div>
         </div>
 
@@ -39,12 +78,12 @@ import { RouterLink } from 'vue-router'
         display: flex;
         flex-direction: column;
         width: 55%;
-        height: 70%;
+        height: 85%;
 
         h4 {
-            font-size: 40px;
+            font-size: 4vh;
             color: white;
-            margin-bottom: 50px;
+            margin-bottom: 5vh;
         }
 
         .funtionArea {
@@ -53,21 +92,23 @@ import { RouterLink } from 'vue-router'
             flex-direction: column;
             justify-content: space-evenly;
 
-            .area1,
-            .area2 {
+            .linkFrame {
                 width: 100%;
-                height: 40%;
+                height: auto;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                align-items: center;
 
                 .buttonlink {
+                    margin-top: 2%;
                     color: #000;
                     width: 48%;
+                    height: 10vh;
                     position: relative;
                     background-color: white;
                     border-radius: 10px;
                     border: 2px solid #000;
-                    font-size: 22px;
+                    font-size: 2vh;
                     text-decoration: none;
                     display: flex;
                     justify-content: center;
@@ -89,11 +130,11 @@ import { RouterLink } from 'vue-router'
                         content: "";
                         z-index: -1;
                         position: absolute;
-                        bottom: -500%;
+                        transform: translateY(100%);
                         border-radius: 100%;
                         height: 70vh;
-                        width: 50vw;
-                        background-color: rgba(40, 40, 40 ,0.5);
+                        width: 60vw;
+                        background-color: rgba(61, 62, 63, 0.5);
                         transition: 0.5s;
                     }
 
@@ -101,20 +142,20 @@ import { RouterLink } from 'vue-router'
                         content: "";
                         z-index: -1;
                         position: absolute;
-                        top: -500%;
+                        transform: translateY(-100%);
                         border-radius: 100%;
                         height: 70vh;
-                        width: 50vw;
-                        background-color: rgba(189, 243, 255, 0.5);
+                        width: 60vw;
+                        background-color: rgba(130, 204, 223, 0.5);
                         transition: 0.5s;
                     }
 
                     &:hover::after{
-                        bottom: -320%;
+                        transform: translateY(53%);
                     }
 
                     &:hover::before{
-                        top: -260%;
+                        transform: translateY(-44%);
                     }
 
 

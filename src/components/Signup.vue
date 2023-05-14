@@ -15,16 +15,69 @@ return{
     popupData: {
         title: "Popup Title",
         content: "Popup Content",
+        backBtn: 'Back',
     },
     id : "",
     account : "",
     password : "",
     rePassword : "",
     message : "none",
-    isInputInvalid : 0
+    isInputInvalid : 0,
+    //切換語言相關
+    langValue : 'ch',
+    signupStr : '',
+    employeeIdStr : '',
+    employeeIdPHStr : '',
+    accountStr : '',
+    accountPHStr : '',
+    pwdStr : '',
+    pwdPHStr : '',
+    rePwdStr : '',
+    rePwdPHStr : '',
+    commitBtnStr : ''
+
 }
 },
 methods: {
+    changeLanguage(){
+        if(this.langValue === 'en'){
+            this.signupStr = 'Sign up';
+            this.employeeIdStr = 'Employee ID';
+            this.employeeIdPHStr = 'Please input your employee ID';
+            this.accountStr = 'Set account';
+            this.accountPHStr = 'Please set your account';
+            this.pwdStr = 'Set password';
+            this.pwdPHStr = 'Please set your password';
+            this.rePwdStr = 'Repeat password';
+            this.rePwdPHStr = 'Please input your password again';
+            this.commitBtnStr = 'Sign up';
+            this.popupData.backBtn = 'Back'
+        }else if(this.langValue === 'ch'){
+            this.signupStr = '註冊';
+            this.employeeIdStr = '員工ID';
+            this.employeeIdPHStr = '請輸入您的員工ID';
+            this.accountStr = '設置帳號';
+            this.accountPHStr = '請設定帳號';
+            this.pwdStr = '設置密碼';
+            this.pwdPHStr = '請設定密碼';
+            this.rePwdStr = '再次輸入密碼';
+            this.rePwdPHStr = '請再次輸入密碼';
+            this.commitBtnStr = '註冊';
+            this.popupData.backBtn = '返回';
+        }else if(this.langValue === 'jp'){
+            this.signupStr = 'アカウント登録';
+            this.employeeIdStr = '社員番号';
+            this.employeeIdPHStr = '社員番号を入力してください';
+            this.accountStr = 'アカウント設定';
+            this.accountPHStr = 'アカウントを設定してください';
+            this.pwdStr = 'パスワード設定';
+            this.pwdPHStr = 'パスワードを設定してください';
+            this.rePwdStr = 'パスワード（確認）';
+            this.rePwdPHStr = 'パスワードを再入力してください';
+            this.commitBtnStr = '登録';
+            this.popupData.backBtn = '戻る';
+        }
+    },
     commitSignup(){
         let employeeId = this.$refs.employeeId.value;
         let account = this.$refs.account.value;
@@ -36,7 +89,13 @@ methods: {
         let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
         let accountPattern = /^[a-zA-Z0-9]{4,10}$/;
         if(this.id.length === 0){
-            this.message = "請輸入員工ID欄位";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入員工ID欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "You haven't filled in employee ID field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "社員番号欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -44,7 +103,13 @@ methods: {
             }
         }
         if(this.account.length === 0){
-            this.message = "請輸入帳號欄位";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入帳號欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "You haven't filled in account field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "アカウント欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -52,7 +117,13 @@ methods: {
             }
         }
         if(!accountPattern.test(account)){
-            this.message = "帳號格式錯誤:請輸入4~10位英數字";
+            if(this.langValue === 'ch'){
+                this.message = "帳號格式錯誤:請輸入4~10位英數字";
+            }else if(this.langValue === 'en'){
+                this.message = "Account format is not correct: Please enter 4~10 alphanumeric characters";
+            }else if(this.langValue === 'jp'){
+                this.message = "アカウント形式が正しくありません: 4~10文字の英数字を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -60,16 +131,28 @@ methods: {
             }
         }
         if(this.password.length === 0){
-            this.message = "請輸入密碼欄位";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "請輸入密碼欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "You haven't filled in password field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード欄を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
             }
         }
         if(this.rePassword.length === 0){
-            this.message = "請再次輸入密碼";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "請輸入再次輸入密碼欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "You haven't filled in repeat password field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード（確認）欄を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -77,8 +160,14 @@ methods: {
         }
 
         if(!pwdPattern.test(pwd)){
-            this.message = "密碼格式錯誤:請輸入8~20字符的英數字";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "密碼格式錯誤:請輸入8~20位英數字";
+            }else if(this.langValue === 'en'){
+                this.message = "Password format is not correct: Please enter 8~20 alphanumeric characters";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード形式が正しくありません: 8~20文字の英数字を入力してください";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -86,8 +175,14 @@ methods: {
         }
 
         if(pwd !== rePassword){
-            this.message = "重複輸入的密碼與設定的密碼不符!";
-                     error = true;
+            if(this.langValue === 'ch'){
+                this.message = "重複輸入的密碼與設定的密碼不符!";
+            }else if(this.langValue === 'en'){
+                this.message = "The repaet password does not match the password";
+            }else if(this.langValue === 'jp'){
+                this.message = "パスワード（確認）はパスワードと一致していません";
+            }
+            error = true;
             if(error){
                 this.errorPopup();
                 return;
@@ -159,7 +254,13 @@ methods: {
         }, 100);
     },
     errorPopup(){
-        this.popupData.title = "錯誤";
+        if(this.langValue === 'ch'){
+            this.popupData.title = "錯誤";
+        }else if(this.langValue === 'en'){
+            this.popupData.title = "Failure";
+        }else if(this.langValue === 'jp'){
+            this.popupData.title = "エラー";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {
@@ -212,7 +313,13 @@ methods: {
     }
 },
 mounted() {
-
+    //檢查及切換語言
+    this.langValue = sessionStorage.getItem('langValue');
+    if(this.langValue === null){
+        this.langValue = 'ch';
+    }
+    console.log(this.langValue);
+    this.changeLanguage();
 }
 })
 </script>
@@ -226,52 +333,52 @@ mounted() {
 
         <div class="login">
 
-            <h2>註冊</h2>
+            <h2>{{ signupStr }}</h2>
 
             <div class="area1">
                 <!-- 員工ID輸入 -->
-                <label for="employeeId">員工ID</label>
+                <label for="employeeId">{{ employeeIdStr }}</label>
                 <div class="employeeIdInputFrame">
                     <i class="fa-solid fa-user"></i>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(255, 205, 205)' : '' }"
                     maxlength="20" @input="checkInputLegth('employeeId')" ref="employeeId" v-model="id" 
-                    id="employeeId" placeholder="請輸入您的員工ID" type="text"
+                    id="employeeId" :placeholder="employeeIdPHStr" type="text"
                     >
                 </div>
                 <!-- 帳號輸入 -->
-                <label for="account">設置帳號</label>
+                <label for="account">{{ accountStr }}</label>
                 <div class="accountInputFrame">
                     <i class="fa-solid fa-user"></i>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }"
                     maxlength="10" @input="checkInputLegth('account')" ref="account" v-model="account" 
-                    id="setAccount" placeholder="請設定帳號" type="text">
+                    id="setAccount" :placeholder="accountPHStr" type="text">
                 </div>
                 <!-- password輸入 -->
-                <label for="password">設置密碼</label>
+                <label for="password">{{ pwdStr }}</label>
                 <div class="pwdInputFrame">         
                     <i class="fa-sharp fa-solid fa-key"></i>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
                     maxlength="20" @input="checkInputLegth('password')" ref="password" v-model="password" 
-                    id="setPassword" placeholder="請設定密碼" type="password"
+                    id="setPassword" :placeholder="pwdPHStr" type="password"
                     >
                 </div>
                 <!-- password再次輸入 -->
-                <label for="rePassword">再次輸入密碼</label>
+                <label for="rePassword">{{ rePwdStr }}</label>
                 <div class="rePwdInputFrame">         
                     <i class="fa-sharp fa-solid fa-key"></i>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
                     maxlength="20" @input="checkInputLegth('rePassword')" ref="rePassword" v-model="rePassword" 
-                    id="repeatPassword" placeholder="請再次輸入密碼" type="password">
+                    id="repeatPassword" :placeholder="rePwdPHStr" type="password">
                 </div>
             </div>
             
             <div class="area2">
                 <!-- 登入按鈕 -->
-                <button @click="commitSignup" type="button">註冊</button>              
+                <button @click="commitSignup" type="button">{{ commitBtnStr }}</button>              
             </div>
         </div>
     </div>
@@ -284,6 +391,7 @@ mounted() {
     flex-grow: 1;
     display: flex;
     position: relative;
+    height: 100vh;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -322,13 +430,12 @@ mounted() {
         }
 
         h2 {
-            margin-top: 10%;
+            margin: 4vh auto;
             font-size: 4vh;
             font-weight: bold;
         }
 
         .area1 {
-            margin-top: 2%;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -347,7 +454,8 @@ mounted() {
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
                     padding-left: 28px;
-                    height: 5vh;
+                    height: 4vh;
+                    font-size: 2vh;
                     border-radius: 5px;
                     border: 1.5px solid #000;
                     transition: 0.5s;
@@ -404,7 +512,7 @@ mounted() {
 
         .area2 {
             position: relative;
-            margin-top: 5%;
+            margin: 2.5vh auto;
             display: flex;
             width: 100%;
             justify-content: space-evenly;
@@ -417,7 +525,7 @@ mounted() {
                 width: 8vw;
                 height: 5vh;
                 // font-weight: bold;
-                font-size: 18px;
+                font-size: 2vh;
 
                 &:hover {
                     background-color: rgb(64, 104, 130);

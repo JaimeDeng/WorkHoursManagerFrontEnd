@@ -15,11 +15,8 @@ export default {
 
     data() {
         return {
-            // showPopup: false,
-            // popupData:{
-            //     title: "",
-            //     content: ""
-            // }
+            langValue : 'ch',
+            back : ''
         };
     },
 
@@ -29,14 +26,13 @@ export default {
             //popup的closePopup指定這個方法綁定v-on:close , 所以我們點擊popup這顆按鈕的動作就等於close
             //在父元素中引入的popup元件標籤宣告:close = "方法" , 即可在點擊按鈕時執行父元件中自定義的方法
             this.$emit('close');
-        }
+        },
     },
-
     mounted() {
 
     },
     updated() {
-        console.log("hello")
+        console.log("this component has been updated")
     },
 };
 </script>
@@ -50,7 +46,7 @@ export default {
             <h5 class="content">{{ popupData.content }}</h5>
         </div>
         <div class="btnFrame">
-            <button @click="closePopup" class="back">返回</button>
+            <button @click="closePopup" class="back">{{ popupData.backBtn }}</button>
         </div>
     </div>
     
@@ -102,7 +98,7 @@ export default {
                 width: 8vw;
                 height: 5vh;
                 // font-weight: bold;
-                font-size: 18px;
+                font-size: 2vh;
 
                 &:hover {
                     background-color: rgb(64, 104, 130);

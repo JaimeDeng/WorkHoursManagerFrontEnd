@@ -7,6 +7,36 @@ import Login from "../components/Login.vue"
 export default {
     components: {
         Navbar, FooterView, Login
+    },
+    data() {
+        return {
+            langValue : ''
+        };
+    },
+    methods: {
+        changeLanguage(){
+            if(this.langValue === 'en'){
+               
+            }else if(this.langValue === 'jp'){
+                
+            }else if(this.langValue === 'ch'){
+
+            }
+        },
+        langChange(){
+            console.log('更新');
+            //vue-router的重新渲染方法 , 只會重載頁面重新渲染vue元件 , 不會刷新所有數據跟JS
+            this.$router.go(0);
+        }
+    },
+    mounted(){
+        //檢查及修改介面語言
+        this.langValue = sessionStorage.getItem('langValue');
+        if(this.langValue = null){
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
     }
 }
 </script>
@@ -17,7 +47,7 @@ export default {
 
         <div class="background"></div>
         <div class="content">
-            <Navbar />
+            <Navbar @change="langChange" />
             
             <RouterView />
             <FooterView />

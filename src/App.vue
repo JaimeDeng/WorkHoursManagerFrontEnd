@@ -40,7 +40,7 @@ export default{
         EmploAddWorkInfo,
         EmployeeHome,
         navFooter
-    }
+    },
 }
 </script>
 

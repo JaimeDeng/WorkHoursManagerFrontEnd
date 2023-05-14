@@ -166,10 +166,9 @@ export default {
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
-                <button type="button" class="btnLang">切換英文</button>
-                <button type="button" class="btnLang">切換日文</button>
-                <RouterLink to="/signup" tag="button" class="btn">註冊</RouterLink>
-                <button type="button" @click="login" class="btn">登入</button>
+                <RouterLink to="/signup" tag="button" class="signUpBtn">註冊</RouterLink>
+
+                <RouterLink class="loginBtn" to="/employeeHome" tag="button" @click="login">登入</RouterLink>
 
             </div>
         </div>
@@ -238,8 +237,9 @@ export default {
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
                     padding-left: 28px;
-                    height: 40px;
+                    height: 5vh;
                     border-radius: 5px;
+                    font-size: 2vh;
                     border: 1.5px solid #000;
                     transition: 0.5s;
 
@@ -309,15 +309,20 @@ export default {
 
             }
 
-           
-            .btn {
+            .signUpBtn,.loginBtn {
                 background: rgb(26, 55, 77);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-decoration: none;
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 80px;
-                height: 40px;
-                font-size: 18px;
+                width: 5vw;
+                height: 3vh;
+                transition: 0.4s;
+                font-size: 1.5vh;
+                
 
                 &:hover {
                     background-color: rgb(64, 104, 130);
