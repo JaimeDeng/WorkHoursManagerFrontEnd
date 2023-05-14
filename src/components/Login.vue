@@ -14,10 +14,23 @@ export default {
                 title: "Popup Title",
                 content: "Popup Content",
             },
-            "employeeId": null,
-            "password": null,
-            "keepLogin": false,
-            message: ""
+            employeeId: '',
+            password: '',
+            keepLogin: false,
+            message: "",
+
+            //切換語言相關
+            langValue: 'ch',
+            titleStr: '',
+            employeeIdPHStr: '',
+            pwdPHStr: '',
+            commitBtnStr: '',
+            loginBtnStr: '',
+            keepLog: '',
+            forgetPsdStr: '',
+            pwdStr: '',
+            employeeIdStr: ''
+
         }
     },
     methods: {
@@ -34,19 +47,50 @@ export default {
             })
                 .then(res => res.json())
                 .then(data => {
-                    if (this.password === null && this.employeeId === null) {
-                        this.message="請輸入員工ID及密碼"
+                    if (this.password.length === 0 && this.employeeId.length === 0) {
+                        if (this.langValue === 'ch') {
+                            this.message = "請輸入員工ID欄位及密碼欄位";
+                        } else if (this.langValue === 'en') {
+                            this.message = "You haven't filled in employee ID and password field yet";
+                        } else if (this.langValue === 'jp') {
+                            this.message = "社員番号欄とパスワード欄を入力してください";
+                        }
                         this.errorPopup()
-                    } else if (this.password === null) {
-                        this.message="密碼不得為空"
+                    } else if (this.password.length === 0) {
+                        if (this.langValue === 'ch') {
+                            this.message = "請輸入密碼欄位";
+                        } else if (this.langValue === 'en') {
+                            this.message = "You haven't filled in password field yet";
+                        } else if (this.langValue === 'jp') {
+                            this.message = "パスワード欄を入力してください";
+                        }
                         this.errorPopup()
-                    } else if (this.employeeId === null) {
-                        this.message="請輸入員工ID,不得為空白"
+                    } else if (this.employeeId.length === 0) {
+                        if (this.langValue === 'ch') {
+                            this.message = "請輸入員工ID欄位";
+                        } else if (this.langValue === 'en') {
+                            this.message = "You haven't filled in employee ID field yet";
+                        } else if (this.langValue === 'jp') {
+                            this.message = "社員番号欄とを入力してください";
+                        }
+                        this.errorPopup()
                     } else if (data.success === false) {
-                        this.message=data.message
+                        if (this.langValue === 'ch') {
+                            this.message = "此員工ID不存在";
+                        } else if (this.langValue === 'en') {
+                            this.message = "This employee ID does not exist.";
+                        } else if (this.langValue === 'jp') {
+                            this.message = "社員番号欄は存在しません";
+                        }
                         this.errorPopup()
                     } else if (this.password !== data.password) {
-                        this.message="密碼錯誤"
+                        if (this.langValue === 'ch') {
+                            this.message = "密碼錯誤";
+                        } else if (this.langValue === 'en') {
+                            this.message = "Wrong password";
+                        } else if (this.langValue === 'jp') {
+                            this.message = "パスワードが違います";
+                        }
                         this.errorPopup()
                     } else if (this.password === data.password && data.success === true) {
                         if (this.keepLogin === true) {
@@ -98,7 +142,13 @@ export default {
             }, 100);
         },
         errorPopup() {
-            this.popupData.title = "錯誤";
+            if (this.langValue === 'ch') {
+                this.popupData.title = "錯誤";
+            } else if (this.langValue === 'en') {
+                this.popupData.title = "Failure";
+            } else if (this.langValue === 'jp') {
+                this.popupData.title = "エラー";
+            }
             this.popupData.content = this.message;
             this.showPopup = true;
             setTimeout(() => {
@@ -117,6 +167,58 @@ export default {
                 popup.$el.style.bottom = "0%";
             }, 100);
         },
+        changeLanguage() {
+            if (this.langValue === 'en') {
+                this.titleStr = 'Login';
+                this.employeeIdPHStr = 'Please input your employee ID';
+                this.pwdPHStr = 'Please input your password';
+                this.commitBtnStr = 'Sign up';
+                this.loginBtnStr = 'Login'
+                this.keepLog = 'Keep Login';
+                this.forgetPsdStr = 'Forgot Password'
+                this.popupData.backBtn = 'Back';
+                this.pwdStr = 'Password',
+                    this.employeeIdStr = 'Employee ID'
+            } else if (this.langValue === 'ch') {
+                this.titleStr = '登入';
+                this.employeeIdPHStr = '請輸入您的員工ID';
+                this.pwdPHStr = '請輸入密碼';
+                this.commitBtnStr = '註冊';
+                this.loginBtnStr = '登入'
+                this.keepLog = '保持登入';
+                this.forgetPsdStr = '忘記密碼'
+                this.popupData.backBtn = '返回';
+                this.pwdStr = '密碼',
+                    this.employeeIdStr = '員工ID'
+            } else if (this.langValue === 'jp') {
+                this.titleStr = 'ログイン';
+                this.employeeIdPHStr = '社員番号を入力してください';
+                this.pwdPHStr = 'パスワードを入力してください';
+                this.commitBtnStr = 'アカウント登録';
+                this.loginBtnStr = 'ログイン'
+                this.keepLog = 'ログイン状態を保持する';
+                this.forgetPsdStr = 'パスワードを忘れた場合'
+                this.popupData.backBtn = '戻る';
+                this.pwdStr = 'パスワード',
+                    this.employeeIdStr = '社員番号'
+            }
+        }
+    },
+    beforeCreate() {
+        //如果存在localStroage/sessionStorage，則跳過登入頁，直接進到首頁
+        if (localStorage.getItem('accountId') || sessionStorage.getItem('accountId')) {
+            this.$router.push('/employeeHome')
+        }
+
+    },
+    mounted() {
+        //檢查及修改介面語言
+        this.langValue = sessionStorage.getItem('langValue');
+        if (this.langValue === null) {
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
     }
 }
 </script>
@@ -127,21 +229,28 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>登入系統</h2>
+            <h2>{{ titleStr }}</h2>
 
             <div class="area1">
                 <!-- id輸入 -->
-                <div class="emploIdInput">
-                    <i class="fa-solid fa-user"></i>
-                    <input id="emid" placeholder="請輸入員工ID" type="text" v-model="employeeId">
-
+                <div>
+                    <label for="emid">{{ employeeIdStr }}</label>
+                    <div class="emploIdInput">
+                        <i class="fa-solid fa-user"></i>
+                        <input id="emid" :placeholder="employeeIdPHStr" type="text" v-model="employeeId">
+                    </div>
                 </div>
+
 
                 <!-- password輸入 -->
-                <div class="idInput">
-                    <i class="fa-sharp fa-solid fa-key"></i>
-                    <input id="password" placeholder="請輸入密碼" type="password" v-model="password">
+                <div>
+                    <label for="password">{{ pwdStr }}</label>
+                    <div class="idInput">
+                        <i class="fa-sharp fa-solid fa-key"></i>
+                        <input id="password" :placeholder="pwdPHStr" type="password" v-model="password">
+                    </div>
                 </div>
+
 
             </div>
 
@@ -150,18 +259,23 @@ export default {
                     <!-- 保持登入 -->
                     <div class="keepInput">
                         <input id="keep" type="checkbox" v-model="keepLogin">
-                        <label for="keep">保持登入</label>
+                        <label for="keep">{{ keepLog }}</label>
                     </div>
                     <!-- 忘記密碼 -->
                     <div class="forgetpassword">
                         <i class="fa-regular fa-circle-question"></i>
-                        忘記密碼
+                        {{ forgetPsdStr }}
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
-                <RouterLink to="/signup" tag="button" class="signUpBtn">註冊</RouterLink>
+                <div class="btnGroup">
+                    <RouterLink to="/signup" tag="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
+                    <!-- <RouterLink class="loginBtn" to="/employeeHome" tag="button" @click="login">登入</RouterLink> -->
+                    <button type="button" class="loginBtn" to="/employeeHome" tag="button" @click="login">{{ loginBtnStr
+                    }}</button>
 
-                <RouterLink class="loginBtn" to="/employeeHome" tag="button" @click="login">登入</RouterLink>
+                </div>
+
 
             </div>
         </div>
@@ -204,6 +318,10 @@ export default {
         width: 25%;
         height: 70%;
         border-radius: 5px;
+
+        label {
+            font-size: 2vh;
+        }
 
         h2 {
             margin-top: 40px;
@@ -272,18 +390,22 @@ export default {
 
         .area2 {
             display: flex;
+            flex-direction: column;
             width: 100%;
             justify-content: space-evenly;
 
             .checkbox_help {
                 display: flex;
                 flex-direction: column;
+                align-items: center;
+                margin-bottom: 5%;
 
                 .keepInput {
                     display: flex;
 
                     label {
                         cursor: pointer;
+                        font-size: 2vh;
                     }
 
                     input {
@@ -294,6 +416,7 @@ export default {
 
                 .forgetpassword {
                     cursor: pointer;
+                    font-size: 2vh;
 
                     i {
                         margin-right: 5px;
@@ -302,7 +425,14 @@ export default {
 
             }
 
-            .signUpBtn,.loginBtn {
+            .btnGroup {
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 3%;
+            }
+
+            .signUpBtn,
+            .loginBtn {
                 background: rgb(26, 55, 77);
                 display: flex;
                 justify-content: center;
@@ -311,11 +441,11 @@ export default {
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 5vw;
-                height: 3vh;
+                width: 8vw;
+                height: 5vh;
                 transition: 0.4s;
-                font-size: 1.5vh;
-                
+                font-size: 2vh;
+
 
                 &:hover {
                     background-color: rgb(64, 104, 130);
