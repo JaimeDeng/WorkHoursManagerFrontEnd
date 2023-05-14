@@ -455,7 +455,7 @@ mounted() {
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
                     padding-left: 28px;
                     height: 4vh;
-                    font-size: 2vh;
+                    font-size: 1.5vh;
                     border-radius: 5px;
                     border: 1.5px solid #000;
                     transition: 0.5s;
