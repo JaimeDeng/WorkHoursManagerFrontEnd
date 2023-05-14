@@ -35,18 +35,18 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     if (this.password === null && this.employeeId === null) {
-                        this.message="請輸入員工ID及密碼"
+                        this.message = "請輸入員工ID及密碼"
                         this.errorPopup()
                     } else if (this.password === null) {
-                        this.message="密碼不得為空"
+                        this.message = "密碼不得為空"
                         this.errorPopup()
                     } else if (this.employeeId === null) {
-                        this.message="請輸入員工ID,不得為空白"
+                        this.message = "請輸入員工ID,不得為空白"
                     } else if (data.success === false) {
-                        this.message=data.message
+                        this.message = data.message
                         this.errorPopup()
                     } else if (this.password !== data.password) {
-                        this.message="密碼錯誤"
+                        this.message = "密碼錯誤"
                         this.errorPopup()
                     } else if (this.password === data.password && data.success === true) {
                         if (this.keepLogin === true) {
@@ -117,6 +117,13 @@ export default {
                 popup.$el.style.bottom = "0%";
             }, 100);
         },
+    },
+    beforeCreate() {
+        //如果存在localStroage/sessionStorage，則跳過登入頁，直接進到首頁
+        if (localStorage.getItem('accountId')||sessionStorage.getItem('accountId')) {
+            this.$router.push('/employeeHome')
+        }
+
     }
 }
 </script>
@@ -159,9 +166,10 @@ export default {
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
+                <button type="button" class="btnLang">切換英文</button>
+                <button type="button" class="btnLang">切換日文</button>
                 <RouterLink to="/signup" tag="button" class="btn">註冊</RouterLink>
-
-                <button type="button" @click="login">登入</button>
+                <button type="button" @click="login" class="btn">登入</button>
 
             </div>
         </div>
@@ -201,7 +209,7 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
-        width: 25%;
+        width: 30%;
         height: 70%;
         border-radius: 5px;
 
@@ -301,14 +309,14 @@ export default {
 
             }
 
-            button,.btn {
+           
+            .btn {
                 background: rgb(26, 55, 77);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
                 width: 80px;
                 height: 40px;
-                // font-weight: bold;
                 font-size: 18px;
 
                 &:hover {
