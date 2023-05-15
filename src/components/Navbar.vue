@@ -1,12 +1,24 @@
 <script>
 export default {
+    props:{
+        changeLangValue:{
+            type:String,
+            default:''
+        }
+    },
     data() {
         return {
-            name: "阿強",   //員工名
+            name: "老鄧",   //員工名
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
-            notificationNum:0   //通知數量
+            notificationNum:0,   //通知數量
+            changeLangValue:"",
+            langSelectValue:'',
+            chOption:'',
+            enOption:'',
+            jpOption:'',
+            lang:''
         };
     },
 
@@ -42,6 +54,13 @@ export default {
             let notifications = listGroup.querySelectorAll(".list-group-item");
             this.notificationNum = notifications.length;
             console.log(notifications)
+        },
+        //監聽切換語言
+        changeLang(){
+            console.log("切換語言")
+            let langValue = document.getElementById("lang").value;
+            sessionStorage.setItem('langValue' , langValue);
+            this.$emit("change");
         }
     },
 
@@ -49,6 +68,26 @@ export default {
         this.checkPendingApprove();
         this.addCloseNotifyList();
         this.calculateNotificationNum();
+        this.langSelectValue = sessionStorage.getItem('langValue');
+        if(this.langSelectValue === null){
+            this.langSelectValue = 'ch';
+        }
+        if(this.langSelectValue === 'ch'){
+            this.lang = '介面語言';
+            this.chOption = '中文';
+            this.enOption = '英文';
+            this.jpOption = '日文';
+        }else if(this.langSelectValue === 'en'){
+            this.lang = 'Language'
+            this.chOption = 'Chinese';
+            this.enOption = 'English';
+            this.jpOption = 'Japanese';
+        }else if(this.langSelectValue === 'jp'){
+            this.lang = '言語選択'
+            this.chOption = '中国語';
+            this.enOption = '英語';
+            this.jpOption = '日本語';
+        }
     },
 };
 </script>
@@ -66,6 +105,12 @@ export default {
             </div>
             <div class="right">
                 <div class="rightTopFrame">
+                    <label class="langLabel" for="lang">{{ lang }}</label>
+                    <select v-model="langSelectValue" @change="changeLang" class="lang" name="lang" id="lang">
+                        <option value="ch">{{ chOption }}</option>
+                        <option value="en">{{ enOption }}</option>
+                        <option value="jp">{{ jpOption }}</option>
+                    </select>
                     <h3>{{ name }} |<RouterLink to="/login"><button class="btnback" type="button">登出</button></RouterLink></h3>
                     <button @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
@@ -145,6 +190,17 @@ export default {
 
             .rightTopFrame{
                 width: max-content;
+
+                .langLabel{
+                    color: white;
+                    margin-right: 0.5vw;
+                }
+                .lang{
+                    border-radius: 10px;
+                    padding: 0.2vh 0.5vw;
+                    margin-right: 2vw;
+                    background-color: rgb(255, 255, 255, 0.5);
+                }
                 h3{
                     display: inline-block;
                     margin-right: 2vw;
@@ -156,10 +212,14 @@ export default {
                     padding: 0;
                     z-index: 0;
 
+                    .fa-bell{
+                        font-size: 2rem;
+                    }
+
                     .notifyIcon{
                         height: 1rem;
                         width: 1rem;
-                        background-color: rgb(211, 47, 47);
+                        background-color: rgb(165, 20, 20);
                         border-radius: 3px;
                         font-family: "Cascadia Mono";
                         position: absolute;

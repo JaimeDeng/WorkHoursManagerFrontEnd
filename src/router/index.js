@@ -17,18 +17,18 @@ const router = createRouter({
   routes: [
     {
       path: '/test',
-      name: 'test',  //盡量跟檔案名稱相同
+      name: 'test',  
       component: test
     },
     { //一般員工首頁
       path: '/employeeHome',
-      name: 'EmployeeHome',  //盡量跟檔案名稱相同
+      name: 'EmployeeHome',  
       component: EmployeeHome
 
     },
     { //新增日工時表
       path: '/emploAddWorkInfo',
-      name: 'EmploAddWorkInfo',  //盡量跟檔案名稱相同
+      name: 'EmploAddWorkInfo',  
       component: EmploAddWorkInfo
 
     },
@@ -55,7 +55,7 @@ const router = createRouter({
     },
     { //主管權限首頁
       path: '/managerHome',
-      name: 'ManagerHome',  //盡量跟檔案名稱相同
+      name: 'ManagerHome',  
       component: ManagerHome
     },
     { //主管查閱工時表
