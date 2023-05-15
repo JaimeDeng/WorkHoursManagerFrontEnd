@@ -235,7 +235,13 @@ methods: {
         }
     },
     successPopup(){
-        this.popupData.title = "成功";
+        if (this.langValue === 'ch') {
+            this.popupData.title = "成功";
+        } else if (this.langValue === 'en') {
+            this.popupData.title = "Success";
+        } else if (this.langValue === 'jp') {
+            this.popupData.title = "登録完了";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {

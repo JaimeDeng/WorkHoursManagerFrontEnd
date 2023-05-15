@@ -475,7 +475,7 @@ export default {
     flex-grow: 1;
     z-index: -1;
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -502,7 +502,7 @@ export default {
             border: 2px solid rgb(177, 208, 224);
             border-radius: 5px;
             width: 90%;
-            height: 95%;
+            height: 75vh;
 
             .title_search {
                 display: flex;
