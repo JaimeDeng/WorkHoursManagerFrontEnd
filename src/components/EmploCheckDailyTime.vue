@@ -660,8 +660,12 @@ export default {
                 setTimeout(()=>{
                     this.queryDate = event.target.value;
                     let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
+                    let deco1 = document.getElementById("deco1");
+                    let deco2 = document.getElementById("deco2");
                     workHoursInfoFrame.style.left = "50%";
                     workHoursInfoFrame.style.transform = "translateX(-50%)";
+                    deco1.style.left = "110%";
+                    deco2.style.left = "150%";
                 },100);
                 this.workHoursInfoByDate(event.target.value);
                 if(data.success === true){
@@ -675,7 +679,7 @@ export default {
             console.log(event.target.value);
             let sheet = document.getElementById("sheet");
             sheet.style.overflow = "hidden";
-            sheet.style.marginLeft = "150%";
+            sheet.style.marginLeft = "200%";
         },
         workHoursInfoByDate(targetValue){
             let selectedDateInfoList = [];
@@ -689,11 +693,19 @@ export default {
         backToWorkDayInfo(){
             let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
             workHoursInfoFrame.style.left = "-150%";
+            let deco1 = document.getElementById("deco1");
+            let deco2 = document.getElementById("deco2");
+            deco1.style.transform = "skew(20deg)"
+            deco2.style.transform = "skew(20deg)"
+            deco1.style.left = "-150%";
+            deco2.style.left = "-130%";
             let sheet = document.getElementById("sheet");
             sheet.style.marginLeft = "0";
+            deco1.style.left = "-150";
+            deco2.style.left = "-130";
             setTimeout(()=>{
                 this.showWorkHoursInfo = false;
-            },1000)
+            },800)
         }
     },
     watch:{
@@ -797,6 +809,8 @@ export default {
                     </div>
                     <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
                 </div>
+                <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
+                <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
                 <div class="sheet" id="sheet" style="overflow: auto;">
                     <!--手風琴-->
                     <div v-if="hasAnyWorkDayInfo" class="accordion accordion-flush" id="accordionFlushExample" style="overflow: auto;">
@@ -998,6 +1012,29 @@ export default {
                         scale: 0.95;
                     }
                 }
+            }
+
+            .deco1{
+                position: absolute;
+                left: -150%;
+                transform: skew(-20deg);
+                height: 140%;
+                width: 20vw;
+                background-color: rgb(94, 209, 213);
+                transition-property: left;
+                transition-duration: 0.2s;
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,1);
+            }
+            .deco2{
+                position: absolute;
+                left: -130%;
+                transform: skew(-20deg);
+                height: 100%;
+                width: 20vw;
+                background-color: rgb(209, 91, 91);
+                transition-property: left;
+                transition-duration: 0.6s;
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,1);
             }
             .sheet {
                 position: relative;
