@@ -10,6 +10,7 @@ export default {
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
             hasntThisTimeScopeInfo:false,
+            listRenderOver:false,
             message:'',
             //介面文字
             searchDate:'',
@@ -127,6 +128,7 @@ export default {
                     workingHoursIsNotEnough : workingHoursIsNotEnough
                 })
             })
+            this.listRenderOver = true;
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
@@ -387,8 +389,9 @@ export default {
 <template>
     <div class="main">
         <div class="check">
+
             <!-- 左側範圍 -->
-            <div class="left">
+            <div v-if="listRenderOver" class="left">
                 <div class="title_search">
                     <h4 class="fw-bold title">{{ title }}</h4>
                     <div class="searchFrame">
@@ -456,6 +459,8 @@ export default {
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
+            <!--spinner在list還沒渲染好時顯示-->
+            <div v-else class="spinner-border text-light" role="status"></div>
 
 
 
@@ -483,6 +488,12 @@ export default {
         display: flex;
         justify-content: space-evenly;
         align-items: center;
+
+        .text-light{
+            font-size: 4rem;
+            width: 5rem;
+            height: 5rem;
+        }
 
         .left {
             position: relative;
