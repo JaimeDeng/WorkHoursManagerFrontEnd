@@ -206,7 +206,7 @@ components: {
         }, 100);
 },
 
-    checkInputLegth(input){
+    checkInputLength(input){
         let emailPattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         let phonePattern =/^[0-9]{7,10}$/;
         switch(input){
@@ -278,14 +278,14 @@ components: {
                     <label for="employeeId">員工ID</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLegth('employeeId')" ref="employeeId" v-model="id" 
+                    maxlength="20" @input="checkInputLength('employeeId')" ref="employeeId" v-model="id" 
                     id="employeeId" placeholder="請輸入您的員工ID" type="text"
                     >
                     <!-- 姓名輸入 -->
                     <label for="name">姓名</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLegth('name')" ref="name" v-model="name" 
+                    maxlength="20" @input="checkInputLength('name')" ref="name" v-model="name" 
                     id="setName" placeholder="請輸入您的姓名" type="text"
                     >
 
@@ -301,7 +301,7 @@ components: {
                     <label for="">信箱</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
-                    @input="checkInputLegth('email')" ref="email" v-model="email" 
+                    @input="checkInputLength('email')" ref="email" v-model="email" 
                     id="setEmail" placeholder="請輸入您的信箱" type="text"
                     >                  
                 </div>
@@ -322,7 +322,7 @@ components: {
                     <label for="">職稱</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLegth('position')" ref="position" v-model="position" 
+                    maxlength="20" @input="checkInputLength('position')" ref="position" v-model="position" 
                     id="setPosition" placeholder="請輸入您職稱" type="text"
                     >
 
@@ -330,13 +330,13 @@ components: {
                     <label for="">職等</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 5 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLegth('level')" ref="level" v-model="level" 
+                    maxlength="20" @input="checkInputLength('level')" ref="level" v-model="level" 
                     id="setLevel" placeholder="請輸入您職等" type="text"
                     >
 
                     <!-- 主管ID輸入 -->
                     <label for="">主管ID</label>
-                    <input maxlength="20" @input="checkInputLegth('supervisor')" ref="supervisor" 
+                    <input maxlength="20" @input="checkInputLength('supervisor')" ref="supervisor" 
                     v-model="supervisor" id="supervisorId" placeholder="請輸入您的主管ID" type="text"
                     >
 
@@ -344,7 +344,7 @@ components: {
                     <label for="">電話</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
+                    maxlength="10" @input="checkInputLength('phone')" ref="phone" v-model="phone" 
                     id="setPhone" placeholder="請輸入您的電話(7-10碼)" type="text"
                     >
                 </div>
