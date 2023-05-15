@@ -6,6 +6,9 @@ export default {
             //工時表資料
             today:'',
             workDayInfo:[],
+            workHoursInfoData:[],
+            queryDate:"",
+            showWorkHoursInfo:false,
             workDayInfoList:[],
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
@@ -127,6 +130,7 @@ export default {
                     approvedStr : approvedStr,
                     workingHoursIsNotEnough : workingHoursIsNotEnough
                 })
+                console.log(workDayInfo.date)
             })
             this.listRenderOver = true;
         },
@@ -636,6 +640,60 @@ export default {
             }else{
                 this.hasntThisTimeScopeInfo = false;
             }
+        },
+        workHoursInfo(event){
+            let reqBody = {
+                employeeId : 'E00001'
+            }
+
+            fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
+                method:"put",
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                this.workHoursInfoData = data;
+                console.log(this.workHoursInfoData);
+                this.showWorkHoursInfo = true;
+                setTimeout(()=>{
+                    this.queryDate = event.target.value;
+                    let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
+                    workHoursInfoFrame.style.left = "50%";
+                    workHoursInfoFrame.style.transform = "translateX(-50%)";
+                },100);
+                this.workHoursInfoByDate(event.target.value);
+                if(data.success === true){
+                    this.message = data.message;
+                }else{
+                    this.message = data.message;
+                }
+            })
+            .catch(err => console.log(err))
+
+            console.log(event.target.value);
+            let sheet = document.getElementById("sheet");
+            sheet.style.overflow = "hidden";
+            sheet.style.marginLeft = "150%";
+        },
+        workHoursInfoByDate(targetValue){
+            let selectedDateInfoList = [];
+            this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
+                if(workHoursInfo.date === targetValue){
+                    selectedDateInfoList.push(workHoursInfo);
+                }
+            })
+            console.log(selectedDateInfoList);
+        },
+        backToWorkDayInfo(){
+            let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
+            workHoursInfoFrame.style.left = "-150%";
+            let sheet = document.getElementById("sheet");
+            sheet.style.marginLeft = "0";
+            setTimeout(()=>{
+                this.showWorkHoursInfo = false;
+            },1000)
         }
     },
     watch:{
@@ -733,7 +791,13 @@ export default {
                     </div>
 
                 </div>
-                <div class="sheet" style="overflow: auto;">
+                <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
+                    <div class="infoFrame" id="infoFrame">
+                        <h4 class="queryDate">{{ queryDate }}工時表一覽</h4>
+                    </div>
+                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                </div>
+                <div class="sheet" id="sheet" style="overflow: auto;">
                     <!--手風琴-->
                     <div v-if="hasAnyWorkDayInfo" class="accordion accordion-flush" id="accordionFlushExample" style="overflow: auto;">
                         <!--手風琴格位-->
@@ -756,7 +820,7 @@ export default {
                                     <p :class="{'notEnough' : workDayInfo.workingHoursIsNotEnough}">登錄時數: {{ workDayInfo.workingHours }}</p>
                                     <p>出勤狀態: {{ workDayInfo.status }}</p>
                                     <p :class="{'hasntApproved' : !workDayInfo.approved}">審核狀態: {{ workDayInfo.approvedStr }}</p>
-                                    <button class="viewBtn" type="button">查看</button>
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn" type="button">查看</button>
                                 </div>
                             </div>
                         </div>
@@ -811,6 +875,7 @@ export default {
             border-radius: 5px;
             width: 90%;
             height: 75vh;
+            overflow: hidden;
 
             .title_search {
                 display: flex;
@@ -889,10 +954,58 @@ export default {
                 }
             }
 
+            .workHoursInfoFrame{
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: -150%;
+                border-radius: 10px;
+                width: 95%;
+                height: 80%;
+                transition-property: left;
+                transition-duration: 0.4s;
+                transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
+
+                .infoFrame{
+                    height: 90%;
+                    width: 100%;
+                    border-radius: 10px;
+                    overflow: auto;
+                    background-color: rgba(119, 128, 125, 0.5);
+                }
+                .backToDayList{
+                    margin-top: 1%;
+                    margin-left: auto;
+                    margin-right: auto;
+                    padding-left: 1vw;
+                    padding-right: 1vw;
+                    background: rgb(26, 55, 77);
+                    border: 1px solid #000;
+                    color: white;
+                    border-radius: 5px;
+                    width: max-content;
+                    height: 3.5vh;
+                    bottom: 5%;
+                    font-size: 1.5vh;
+                    transition: 0.4s;
+
+                    &:hover {
+                        background-color: rgb(64, 104, 130);
+                    }
+
+                    &:active{
+                        scale: 0.95;
+                    }
+                }
+            }
             .sheet {
                 position: relative;
                 border-radius: 5px;
                 height: 85%;
+                transition-property: margin;
+                transition-duration: 0.4s;
+                transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
 
                 .emptyTitle{
                     position: absolute;
@@ -904,6 +1017,8 @@ export default {
 
                 .accordion-flush{
                     height: 100%;
+                    transition: 0.5s;
+                    white-space: nowrap;
                     .accordion-button {
                     word-spacing: 2em;
                     position: relative;
