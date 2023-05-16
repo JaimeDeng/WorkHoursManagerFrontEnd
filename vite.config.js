@@ -12,3 +12,16 @@ export default defineConfig({
     }
   }
 })
+
+// module.exports = {
+//   devServer: {
+//     proxy: {
+//       '/api': {
+//         target: 'localhost:3000/getAllEmployeeInfo',
+//         pathRewrite: { '^/api': '' },
+//         changeOrigin: true,
+//         ws: true
+//       },
+//     }
+//   }
+// }

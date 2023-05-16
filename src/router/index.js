@@ -11,6 +11,7 @@ import ManaCheckDaily from "../components/ManaCheckDaily.vue"
 import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
 import StstemEditInfo from "../components/StstemEditInfo.vue"
+import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -76,6 +77,11 @@ const router = createRouter({
       path:'/ststemEditInfo',
       name: 'StstemEditInfo',
       component:StstemEditInfo
+    },
+    { //修改人員資訊成功
+      path:'/systemAddEmploList_success',
+      name: 'SystemAddEmploList_success',
+      component:SystemAddEmploList_success
     }
   ]
 })

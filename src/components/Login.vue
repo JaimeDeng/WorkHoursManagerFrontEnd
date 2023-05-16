@@ -13,6 +13,7 @@ export default {
             popupData: {
                 title: "Popup Title",
                 content: "Popup Content",
+                backBtn: "back"
             },
             employeeId: '',
             password: '',
@@ -41,74 +42,75 @@ export default {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    "employeeId": this.employeeId,
-                    "password": this.password
-                }),
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (this.password.length === 0 && this.employeeId.length === 0) {
-                        if (this.langValue === 'ch') {
-                            this.message = "請輸入員工ID欄位及密碼欄位";
-                        } else if (this.langValue === 'en') {
-                            this.message = "You haven't filled in employee ID and password field yet";
-                        } else if (this.langValue === 'jp') {
-                            this.message = "社員番号欄とパスワード欄を入力してください";
-                        }
-                        this.errorPopup()
-                    } else if (this.password.length === 0) {
-                        if (this.langValue === 'ch') {
-                            this.message = "請輸入密碼欄位";
-                        } else if (this.langValue === 'en') {
-                            this.message = "You haven't filled in password field yet";
-                        } else if (this.langValue === 'jp') {
-                            this.message = "パスワード欄を入力してください";
-                        }
-                        this.errorPopup()
-                    } else if (this.employeeId.length === 0) {
-                        if (this.langValue === 'ch') {
-                            this.message = "請輸入員工ID欄位";
-                        } else if (this.langValue === 'en') {
-                            this.message = "You haven't filled in employee ID field yet";
-                        } else if (this.langValue === 'jp') {
-                            this.message = "社員番号欄とを入力してください";
-                        }
-                        this.errorPopup()
-                    } else if (data.success === false) {
-                        if (this.langValue === 'ch') {
-                            this.message = "此員工ID不存在";
-                        } else if (this.langValue === 'en') {
-                            this.message = "This employee ID does not exist.";
-                        } else if (this.langValue === 'jp') {
-                            this.message = "社員番号欄は存在しません";
-                        }
-                        this.errorPopup()
-                    } else if (this.password !== data.password) {
-                        if (this.langValue === 'ch') {
-                            this.message = "密碼錯誤";
-                        } else if (this.langValue === 'en') {
-                            this.message = "Wrong password";
-                        } else if (this.langValue === 'jp') {
-                            this.message = "パスワードが違います";
-                        }
-                        this.errorPopup()
-                    } else if (this.password === data.password && data.success === true) {
-                        if (this.keepLogin === true) {
-                            //有勾選keepLogin長存
-                            localStorage.setItem("employeeId", this.employeeId)
-                            localStorage.setItem("accountId", data.accountId)
-                            this.$router.push('/employeeHome')
-                        } else {
-                            //沒有勾選keepLogin短存
-                            sessionStorage.setItem("employeeId", this.employeeId)
-                            sessionStorage.setItem("accountId", data.accountId)
-                            this.$router.push('/employeeHome')
-                        }
-
-
-                    }
-
+                    "employeeId": this.employeeId
                 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (this.password.length === 0 && this.employeeId.length === 0) {
+                    if (this.langValue === 'ch') {
+                        this.message = "請輸入員工ID欄位及密碼欄位";
+                    } else if (this.langValue === 'en') {
+                        this.message = "You haven't filled in employee ID and password field yet";
+                    } else if (this.langValue === 'jp') {
+                        this.message = "社員番号欄とパスワード欄を入力してください";
+                    }
+                    this.errorPopup()
+                } else if (this.password.length === 0) {
+                    if (this.langValue === 'ch') {
+                        this.message = "請輸入密碼欄位";
+                    } else if (this.langValue === 'en') {
+                        this.message = "You haven't filled in password field yet";
+                    } else if (this.langValue === 'jp') {
+                        this.message = "パスワード欄を入力してください";
+                    }
+                    this.errorPopup()
+                } else if (this.employeeId.length === 0) {
+                    if (this.langValue === 'ch') {
+                        this.message = "請輸入員工ID欄位";
+                    } else if (this.langValue === 'en') {
+                        this.message = "You haven't filled in employee ID field yet";
+                    } else if (this.langValue === 'jp') {
+                        this.message = "社員番号欄とを入力してください";
+                    }
+                    this.errorPopup()
+                } else if (data.success === false) {
+                    if (this.langValue === 'ch') {
+                        this.message = "此員工ID不存在";
+                    } else if (this.langValue === 'en') {
+                        this.message = "This employee ID does not exist.";
+                    } else if (this.langValue === 'jp') {
+                        this.message = "社員番号欄は存在しません";
+                    }
+                    this.errorPopup()
+                } else if (this.password !== atob(data.password)) {
+                    if (this.langValue === 'ch') {
+                        this.message = "密碼錯誤";
+                    } else if (this.langValue === 'en') {
+                        this.message = "Wrong password";
+                    } else if (this.langValue === 'jp') {
+                        this.message = "パスワードが違います";
+                    }
+                    this.errorPopup()
+                } else if (this.password === atob(data.password) && data.success === true) {
+                    if (this.keepLogin === true) {
+                        //有勾選keepLogin長存
+                        localStorage.setItem("employeeId", this.employeeId)
+                        localStorage.setItem("accountId", data.accountId)
+                        localStorage.setItem("employeeName" , data.employeeId.name)
+                        this.$router.push('/employeeHome')
+                    } else {
+                        //沒有勾選keepLogin短存
+                        sessionStorage.setItem("employeeId", this.employeeId)
+                        sessionStorage.setItem("accountId", data.accountId)
+                        sessionStorage.setItem("employeeName" , data.employeeId.name)
+                        this.$router.push('/employeeHome');
+                    }
+                    this.$emit('login');
+                    console.log('login event emitted');
+                }
+            })
 
         },
         closePopup() {
@@ -270,7 +272,6 @@ export default {
                 <!-- 登入按鈕 -->
                 <div class="btnGroup">
                     <RouterLink to="/signup" tag="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
-                    <!-- <RouterLink class="loginBtn" to="/employeeHome" tag="button" @click="login">登入</RouterLink> -->
                     <button type="button" class="loginBtn" to="/employeeHome" tag="button" @click="login">{{ loginBtnStr
                     }}</button>
 

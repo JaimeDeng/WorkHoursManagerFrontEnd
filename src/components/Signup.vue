@@ -235,7 +235,13 @@ methods: {
         }
     },
     successPopup(){
-        this.popupData.title = "成功";
+        if (this.langValue === 'ch') {
+            this.popupData.title = "成功";
+        } else if (this.langValue === 'en') {
+            this.popupData.title = "Success";
+        } else if (this.langValue === 'jp') {
+            this.popupData.title = "登録完了";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {
@@ -455,7 +461,7 @@ mounted() {
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
                     padding-left: 28px;
                     height: 4vh;
-                    font-size: 2vh;
+                    font-size: 1.5vh;
                     border-radius: 5px;
                     border: 1.5px solid #000;
                     transition: 0.5s;

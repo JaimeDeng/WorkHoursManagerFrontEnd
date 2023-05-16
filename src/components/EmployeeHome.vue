@@ -3,8 +3,8 @@ import { RouterLink } from 'vue-router'
 export default {
     data(){
         return{
-            name:'老鄧',
-            langValue:'ch',
+            name:'NONE',
+            langValue:'',
             addTimeSheet:'',
             changePwd:'',
             checkTimesheet:'',
@@ -39,7 +39,17 @@ export default {
     },
     mounted(){
         //檢查及切換語言
+        this.name = sessionStorage.getItem('employeeName')
+        if(this.name === null){
+            this.name = localStorage.getItem('employeeName')
+            if(this.name === null){
+                this.name = 'NONE';
+            }
+        }
         this.langValue = sessionStorage.getItem('langValue');
+        if(this.langValue === null){
+            this.langValue = 'ch';
+        }
         console.log(this.langValue);
         this.changeLanguage();
     }
