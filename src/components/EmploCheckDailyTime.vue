@@ -12,7 +12,7 @@ export default {
             workDayInfoList:[],
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
-            hasntThisTimeScopeInfo:false,
+            hasntThisTimeFrameInfo:false,
             listRenderOver:false,
             message:'',
             //介面文字
@@ -24,57 +24,57 @@ export default {
             reviewStatusPH:'',
             reviewStatusOpt1:'',
             reviewStatusOpt2:'',
-            timeScope:'',
-            timeScopePH:'',
-            timeScopeOpt1:'',
-            timeScopeOpt2:'',
-            timeScopeOpt3:'',
+            timeFrame:'',
+            timeFramePH:'',
+            timeFrameOpt1:'',
+            timeFrameOpt2:'',
+            timeFrameOpt3:'',
             backBtn:'',
             //輸入綁定
             reviewStatusSelect:'default',
-            timeScopeSelect:'default'
+            timeFrameSelect:'default'
         }
     },
     methods:{
         changeLanguage(){
             if(this.langValue === 'ch'){
-                this.title = '員工日工時表';
+                this.title = '工時表一覽';
                 this.search = '以日期搜尋';
                 this.reviewStatus = '審核狀態';
                 this.reviewStatusPH = '選擇審核狀態';
                 this.reviewStatusOpt1 = '已審核';
                 this.reviewStatusOpt2 = '未審核';
-                this.timeScope = '時間範圍';
-                this.timeScopePH = '請選擇時間範圍';
-                this.timeScopeOpt1 = '7日';
-                this.timeScopeOpt2 = '14日';
-                this.timeScopeOpt3 = '30日';
+                this.timeFrame = '時間範圍';
+                this.timeFramePH = '請選擇時間範圍';
+                this.timeFrameOpt1 = '7日';
+                this.timeFrameOpt2 = '14日';
+                this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁'
             }else if(this.langValue === 'en'){
-                this.title = '員工日工時表';
-                this.search = '以日期搜尋';
-                this.reviewStatus = '審核狀態';
-                this.reviewStatusPH = '選擇審核狀態';
-                this.reviewStatusOpt1 = '已審核';
-                this.reviewStatusOpt2 = '未審核';
-                this.timeScope = '時間範圍';
-                this.timeScopePH = '請選擇時間範圍';
-                this.timeScopeOpt1 = '7日';
-                this.timeScopeOpt2 = '14日';
-                this.timeScopeOpt3 = '30日';
-                this.backBtn = '返回首頁'
+                this.title = 'Timesheet List';
+                this.search = 'Search by date';
+                this.reviewStatus = 'Approval status';
+                this.reviewStatusPH = 'Select approval status';
+                this.reviewStatusOpt1 = 'Approved';
+                this.reviewStatusOpt2 = 'Pending approval';
+                this.timeFrame = 'Time frame';
+                this.timeFramePH = 'Select time frame';
+                this.timeFrameOpt1 = '7days';
+                this.timeFrameOpt2 = '14days';
+                this.timeFrameOpt3 = '30days';
+                this.backBtn = 'Back to homepage'
             }else if(this.langValue === 'jp'){
-                this.title = '員工日工時表';
+                this.title = '工時表一覽';
                 this.search = '以日期搜尋';
                 this.reviewStatus = '審核狀態';
                 this.reviewStatusPH = '選擇審核狀態';
                 this.reviewStatusOpt1 = '已審核';
                 this.reviewStatusOpt2 = '未審核';
-                this.timeScope = '時間範圍';
-                this.timeScopePH = '請選擇時間範圍';
-                this.timeScopeOpt1 = '7日';
-                this.timeScopeOpt2 = '14日';
-                this.timeScopeOpt3 = '30日';
+                this.timeFrame = '時間範圍';
+                this.timeFramePH = '請選擇時間範圍';
+                this.timeFrameOpt1 = '7日';
+                this.timeFrameOpt2 = '14日';
+                this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁'
             }
         },
@@ -108,7 +108,7 @@ export default {
         },
         renderList(){
             this.workDayInfoList = [];
-            this.hasntThisTimeScopeInfo = false;
+            this.hasntThisTimeFrameInfo = false;
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
@@ -137,7 +137,7 @@ export default {
         renderListLimitedApproved(){
             this.workDayInfoList = [];
             //混合天數範圍查詢
-            if(this.timeScopeSelect === "default"){
+            if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     if(workDayInfo.approved === true){
                         let approvedStr = "已審核";
@@ -158,7 +158,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "7days"){
+            if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -182,7 +182,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "14days"){
+            if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -206,7 +206,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "30days"){
+            if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -234,7 +234,7 @@ export default {
         renderListLimitedNotApproved(){
             this.workDayInfoList = [];
             //混合天數範圍查詢
-            if(this.timeScopeSelect === "default"){
+            if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     if(workDayInfo.approved === false){
                         let approvedStr = "未審核";
@@ -255,7 +255,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "7days"){
+            if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -279,7 +279,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "14days"){
+            if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -303,7 +303,7 @@ export default {
                     }
                 })
             }
-            if(this.timeScopeSelect === "30days"){
+            if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
@@ -364,7 +364,7 @@ export default {
         },
         renderListWhitin7Days(){
             this.workDayInfoList = [];
-            let hasThisTimeScopeInfo = false;
+            let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if(this.reviewStatusSelect === 'default'){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -392,7 +392,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -419,7 +419,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -445,19 +445,19 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
-            if(hasThisTimeScopeInfo === false){
-                this.hasntThisTimeScopeInfo = true;
+            if(hasThisTimeFrameInfo === false){
+                this.hasntThisTimeFrameInfo = true;
             }else{
-                this.hasntThisTimeScopeInfo = false;
+                this.hasntThisTimeFrameInfo = false;
             }
         },
         renderListWhitin14Days(){
             this.workDayInfoList = [];
-            let hasThisTimeScopeInfo = false;
+            let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if(this.reviewStatusSelect === 'default'){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -485,7 +485,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -512,7 +512,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -538,19 +538,19 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
-            if(hasThisTimeScopeInfo === false){
-                this.hasntThisTimeScopeInfo = true;
+            if(hasThisTimeFrameInfo === false){
+                this.hasntThisTimeFrameInfo = true;
             }else{
-                this.hasntThisTimeScopeInfo = false;
+                this.hasntThisTimeFrameInfo = false;
             }
         },
         renderListWhitin30Days(){
             this.workDayInfoList = [];
-            let hasThisTimeScopeInfo = false;
+            let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if(this.reviewStatusSelect === 'default'){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -578,7 +578,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -605,7 +605,7 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
@@ -631,14 +631,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
-                        hasThisTimeScopeInfo = true;
+                        hasThisTimeFrameInfo = true;
                     }
                 })
             }
-            if(hasThisTimeScopeInfo === false){
-                this.hasntThisTimeScopeInfo = true;
+            if(hasThisTimeFrameInfo === false){
+                this.hasntThisTimeFrameInfo = true;
             }else{
-                this.hasntThisTimeScopeInfo = false;
+                this.hasntThisTimeFrameInfo = false;
             }
         },
         workHoursInfo(event){
@@ -730,7 +730,7 @@ export default {
                 this.renderListLimitedNotApproved();
             }
         },
-        timeScopeSelect(newValue){
+        timeFrameSelect(newValue){
             console.log(newValue);
             if(newValue === 'default'){
                 this.renderList();
@@ -792,12 +792,12 @@ export default {
                         </div>
                         <div class="tim">
                             <!-- 時間範圍 -->
-                            <label for="timeScopeSelect">{{ timeScope }}</label>
-                            <select v-model="timeScopeSelect" for="timeScopeSelect">
-                                <option value="default" selected>{{ timeScopePH }}</option>
-                                <option value="7days">{{ timeScopeOpt1 }}</option>
-                                <option value="14days">{{ timeScopeOpt2 }}</option>
-                                <option value="30days">{{ timeScopeOpt3 }}</option>
+                            <label for="timeFrameSelect">{{ timeFrame }}</label>
+                            <select v-model="timeFrameSelect" for="timeFrameSelect">
+                                <option value="default" selected>{{ timeFramePH }}</option>
+                                <option value="7days">{{ timeFrameOpt1 }}</option>
+                                <option value="14days">{{ timeFrameOpt2 }}</option>
+                                <option value="30days">{{ timeFrameOpt3 }}</option>
                             </select>
                         </div>
                     </div>
@@ -841,7 +841,7 @@ export default {
                     </div>
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeScopeInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -1019,22 +1019,24 @@ export default {
                 left: -150%;
                 transform: skew(-20deg);
                 height: 140%;
-                width: 20vw;
-                background-color: rgb(100, 100, 100);
+                width: 30vw;
+                background-color: rgb(67, 74, 79);
                 transition-property: left;
                 transition-duration: 0.2s;
-                transition-timing-function: cubic-bezier(0.5,0.2,0.2,1);
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
+                z-index: 1;
             }
             .deco2{
                 position: absolute;
                 left: -130%;
                 transform: skew(-20deg);
                 height: 100%;
-                width: 20vw;
-                background-color: rgb(100, 100, 100);
+                width: 30vw;
+                background-color: rgb(67, 74, 79);
                 transition-property: left;
                 transition-duration: 0.6s;
-                transition-timing-function: cubic-bezier(0.5,0.2,0.2,1);
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
+                z-index: 1;
             }
             .sheet {
                 position: relative;
@@ -1056,9 +1058,11 @@ export default {
                     height: 100%;
                     transition: 0.5s;
                     white-space: nowrap;
+                    z-index: 0;
                     .accordion-button {
                     word-spacing: 2em;
                     position: relative;
+                    z-index: 0;
 
                     i {
                         font-size: 8px;
@@ -1135,7 +1139,7 @@ export default {
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: 5vw;
+                width: max-content;
                 height: 3vh;
                 font-size: 1.5vh;
                 transition: 0.4s;

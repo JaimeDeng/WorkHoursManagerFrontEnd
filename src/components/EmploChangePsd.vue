@@ -121,6 +121,7 @@ export default {
                         if (data.success) {
                             this.message = data.message;
                             this.successPopup();
+                            this.$emit('changePwdSuccess');
                         } else {
                             this.message = data.message;
                             this.errorPopup();
@@ -171,8 +172,10 @@ export default {
             // 删除localStorage，sessionStorage，要求重新登陸
             localStorage.removeItem('accountId');
             localStorage.removeItem('employeeId');
+            localStorage.removeItem('employeeName');
             sessionStorage.removeItem('accountId');
             sessionStorage.removeItem('employeeId');
+            sessionStorage.removeItem('employeeName');
         },
         errorPopup() {
             if (this.langValue === 'ch') {
