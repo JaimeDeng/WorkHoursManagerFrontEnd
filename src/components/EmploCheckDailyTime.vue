@@ -7,6 +7,7 @@ export default {
             today:'',
             workDayInfo:[],
             workHoursInfoData:[],
+            selectedDateInfoList:[],
             queryDate:"",
             showWorkHoursInfo:false,
             workDayInfoList:[],
@@ -49,7 +50,7 @@ export default {
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回首頁'
+                this.backBtn = '返回首頁';
             }else if(this.langValue === 'en'){
                 this.title = 'Timesheet List';
                 this.search = 'Search by date';
@@ -62,7 +63,7 @@ export default {
                 this.timeFrameOpt1 = '7days';
                 this.timeFrameOpt2 = '14days';
                 this.timeFrameOpt3 = '30days';
-                this.backBtn = 'Back to homepage'
+                this.backBtn = 'Back to homepage';
             }else if(this.langValue === 'jp'){
                 this.title = '工時表一覽';
                 this.search = '以日期搜尋';
@@ -75,7 +76,7 @@ export default {
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回首頁'
+                this.backBtn = '返回首頁';
             }
         },
         fetchWorkHoursInfo(){
@@ -92,6 +93,23 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
+                //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
+                        const nextDateStr = data.workDayInfoList[i+1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = data.workDayInfoList[i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if(nextDate > thisDate){
+                            container = data.workDayInfoList[i+1];
+                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
+                            data.workDayInfoList[i] = container;
+                        }       
+                    }
+                }
                 this.workDayInfo = data;
                 console.log(this.workDayInfo);
                 if(this.workDayInfo.workDayInfoList.length !== 0){
@@ -654,6 +672,28 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
+                //將工時表以時間最早的開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workHoursInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workHoursInfoList.length - 1 ; i++){
+                        const nextTimeString = data.workHoursInfoList[i+1].startTime;
+                        const nextTimeArr = nextTimeString.split(":");
+                        const nextTime = new Date();
+                        const nextTimeHours = parseInt(nextTimeArr[0]);
+                        const nextTimeMinutes = parseInt(nextTimeArr[1]);
+                        nextTime.setHours()
+                        const thisTimeString = data.workHoursInfoList[i].startTime;
+                        const thisTimeArr = thisTimeString.split(":");
+                        const thisTime = new Date();
+                        const thisTimeHours = parseInt(thisTimeArr[0]);
+                        const thisTimeMinutes = parseInt(thisTimeArr[1]);
+                        if(nextTime > thisTime){
+                            container = data.workHoursInfoList[i+1];
+                            data.workHoursInfoList[i+1] = data.workHoursInfoList[i];
+                            data.workHoursInfoList[i] = container;
+                        }       
+                    }
+                }
                 this.workHoursInfoData = data;
                 console.log(this.workHoursInfoData);
                 this.showWorkHoursInfo = true;
@@ -682,13 +722,13 @@ export default {
             sheet.style.marginLeft = "200%";
         },
         workHoursInfoByDate(targetValue){
-            let selectedDateInfoList = [];
+            this.selectedDateInfoList = [];
             this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
                 if(workHoursInfo.date === targetValue){
-                    selectedDateInfoList.push(workHoursInfo);
+                    this.selectedDateInfoList.push(workHoursInfo);
                 }
             })
-            console.log(selectedDateInfoList);
+            console.log(this.selectedDateInfoList);
         },
         backToWorkDayInfo(){
             let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
@@ -805,7 +845,19 @@ export default {
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="queryDate">{{ queryDate }}工時表一覽</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
+                        <div class="cardFrame" id="cardFrame" v-dragscroll.x>
+                            <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
+                                <p>日期: {{ workHoursInfo.date }}</p>
+                                <p>狀態: {{ workHoursInfo.status }}</p>
+                                <p>機型: {{ workHoursInfo.model }}</p>
+                                <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
+                                <p>開始時間: {{ workHoursInfo.startTime }}</p>
+                                <p>結束時間: {{ workHoursInfo.endTime }}</p>
+                                <p>工作內容: {{ workHoursInfo.detail }}</p>
+                                <button class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                            </div>
+                        </div>
                     </div>
                     <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
                 </div>
@@ -823,6 +875,7 @@ export default {
                                     aria-controls="flush-collapseOne">
                                     日期:{{ workDayInfo.date }}
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
+                                    <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
                             </h2>
                              <!--手風琴內容-->
@@ -969,24 +1022,103 @@ export default {
             }
 
             .workHoursInfoFrame{
-                background-color: white;
+                border: 1px solid rgb(130, 136, 144);
+                background-color: rgba(152, 154, 157, 0.5);
+                padding: 1vh 1vw;
+                backdrop-filter: blur(10px);
                 display: flex;
                 flex-direction: column;
                 position: absolute;
                 left: -150%;
                 border-radius: 10px;
                 width: 95%;
-                height: 80%;
+                height: 83%;
                 transition-property: left;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
 
                 .infoFrame{
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
                     height: 90%;
                     width: 100%;
-                    border-radius: 10px;
+                    border-radius: 10px 10px 0 0;
                     overflow: auto;
-                    background-color: rgba(119, 128, 125, 0.5);
+
+                    .dateTitle{
+                        height: max-content;
+                    }
+                    .cardFrame{
+                        border-radius: 10px;
+                        height: 100%;
+                        width: 100%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        cursor: grab;
+                        &::before {
+                            content: "拖曳觀看其他工時表";
+                            position: absolute;
+                            bottom: 1%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: max-content;
+                            padding: 0 0.5vw;
+                            height: 3vh;
+                            border-radius: 10px;
+                            background-color: rgba(119, 119, 119, 0.4);
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 2vh;
+                            transition: 0.5s;
+                            visibility: hidden;
+                            opacity : 0;
+                            z-index: 1;
+                        }
+
+                        &:hover::before {
+                            visibility: visible;
+                            opacity: 1;
+                        }
+                        .workHoursInfoCard{
+                            position: relative;
+                            display: inline-block;
+                            text-align: center;
+                            border-radius: 10px;
+                            margin: 0 1%;
+                            height: 100%;
+                            width: 40vw;
+                            background-color: rgba(250, 250, 250, 0.7);
+                            overflow: auto;
+                            p{
+                                font-size: 2vh;
+                            }
+                            .editWorkHoursInfo{
+                                position: absolute;
+                                bottom: 2%;
+                                right: 2%;
+                                background: rgb(26, 55, 77);
+                                border: 1px solid #000;
+                                color: white;
+                                border-radius: 5px;
+                                width: max-content;
+                                padding: 0 1vw;
+                                height: 3vh;
+                                font-size: 1.5vh;
+                                transition: 0.4s;
+
+                                &:hover {
+                                    background-color: rgb(64, 104, 130);
+                                }
+
+                                &:active {
+                                    transform: scale(0.95);
+                                }
+                            }
+                        }
+                    }
                 }
                 .backToDayList{
                     margin-top: 1%;
@@ -1077,7 +1209,7 @@ export default {
 
                     .hasntApproved{
                         position: absolute;
-                        right: 8vw;
+                        right: 10%;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
@@ -1085,11 +1217,20 @@ export default {
                     }
                     .hasApproved{
                         position: absolute;
-                        right: 8vw;
+                        right: 10%;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
                         color: rgb(71, 106, 167);
+                    }
+                    .approvedStrFrame{
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 0.5vw;
+                        height: 100%;
+                        z-index: -1;
                     }
 
                 }

@@ -110,14 +110,17 @@ export default {
                 align-items: center;
 
                 .buttonlink {
+                    font-weight: 500;
+                    letter-spacing: 0.05vw;
+                    box-shadow: inset 0 -1vh 50px 0.1vh rgba(101, 104, 110, 0.5);
                     margin-top: 2%;
                     color: #000;
                     width: 48%;
                     height: 10vh;
                     position: relative;
-                    background-color: white;
+                    background-color: rgb(255, 255, 255);
                     border-radius: 10px;
-                    border: 2px solid #000;
+                    border: 1px solid #000;
                     font-size: 2vh;
                     text-decoration: none;
                     display: flex;
@@ -133,6 +136,7 @@ export default {
 
                     &:hover {
                         color: white;
+                        box-shadow: inset 0 -1vh 30px 0.1vh rgba(35, 35, 35, 0.5);
                         background-color: rgb(64, 104, 130);
                     }
 
