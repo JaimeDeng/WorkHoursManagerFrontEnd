@@ -44,9 +44,9 @@ export default {
                 body: JSON.stringify({
                     "employeeId": this.employeeId,
                     "password": this.password
-                }),
+                })
             })
-                .then(res => res.json())
+            .then(res => res.json())
                 .then(data => {
                     if (this.password.length === 0 && this.employeeId.length === 0) {
                         if (this.langValue === 'ch') {
@@ -105,10 +105,7 @@ export default {
                             sessionStorage.setItem("accountId", data.accountId)
                             this.$router.push('/employeeHome')
                         }
-
-
                     }
-
                 })
 
         },
@@ -271,7 +268,6 @@ export default {
                 <!-- 登入按鈕 -->
                 <div class="btnGroup">
                     <RouterLink to="/signup" tag="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
-                    <!-- <RouterLink class="loginBtn" to="/employeeHome" tag="button" @click="login">登入</RouterLink> -->
                     <button type="button" class="loginBtn" to="/employeeHome" tag="button" @click="login">{{ loginBtnStr
                     }}</button>
 

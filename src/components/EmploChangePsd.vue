@@ -28,7 +28,9 @@ export default {
             rePwdStr: '',
             rePwdPHStr: '',
             backToHome: '',
-            change: ''
+            change: '',
+            //判斷相關
+            showPwd: false
         }
     },
     methods: {
@@ -129,7 +131,11 @@ export default {
             }
         },
         closePopup() {
-            this.$router.push('/login');
+            if(sessionStorage.getItem("accountId") === null && localStorage.getItem("accountId") === null){
+                this.$router.push('/login');
+            }else{
+                this.showPopup = false;
+            }
         },
         successPopup() {
             if (this.langValue === 'ch') {
@@ -240,6 +246,9 @@ export default {
                 this.popupData.backBtn = '戻る';
             }
         },
+        showPwdOrNot(){
+            this.showPwd = !this.showPwd;
+        }
     },
     beforeCreate() {
         //如果localStroage/sessionStorage都沒有accountId，則跳到登入頁面，要求重新登入
@@ -276,9 +285,10 @@ export default {
                     <label for="emid">{{ pwdStr }}</label>
                     <div class="newPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
-                        <input id="emid" :placeholder="pwdPHStr" type="text" v-model="newPsd" ref="password"
+                        <input id="emid" :placeholder="pwdPHStr" :type="showPwd ? 'text' : 'password'" v-model="newPsd" ref="password"
                             :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }" maxlength="20"
                             @input="checkInputLegth('password')">
+                        <i @click="showPwdOrNot" :class="showPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
                     </div>
                 </div>
 
@@ -370,7 +380,8 @@ export default {
                     cursor: pointer;
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-                    padding-left: 28px;
+                    padding-left: 1.8vw;
+                    padding-right: 1.8vw;
                     height: 40px;
                     border-radius: 5px;
                     border: 1.5px solid #000;
@@ -387,11 +398,22 @@ export default {
             .againNewPsd {
                 @extend %inputFrameSetting;
 
-                .fa-sharp {
+                .fa-key {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
                     left: 2%;
+                }
+
+                .fa-eye , .fa-eye-slash{
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 2%;
+
+                    &:active{
+                        scale: 0.95;
+                    }
                 }
             }
         }
