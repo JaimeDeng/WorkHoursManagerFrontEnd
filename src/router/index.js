@@ -12,6 +12,7 @@ import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
 import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
+import ManaApprove from "../components/ManaApprove.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -82,6 +83,11 @@ const router = createRouter({
       path:'/systemAddEmploList_success',
       name: 'SystemAddEmploList_success',
       component:SystemAddEmploList_success
+    },
+    { //主管進入審核畫面
+      path:'/manaApprove',
+      name: ' ManaApprove',
+      component: ManaApprove
     }
   ]
 })
