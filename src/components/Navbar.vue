@@ -228,7 +228,7 @@ export default {
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">通知</h5>
+                                <h5 class="mb-1">通知</h5>
                             </div>
                             <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
                         </RouterLink>

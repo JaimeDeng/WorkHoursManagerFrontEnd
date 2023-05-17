@@ -1,6 +1,11 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue'
 export default {
+    components: {
+        RouterLink,
+        EditEmployeeWorkHoursInfo
+    },
     data(){
         return{
             //帳戶資料
@@ -39,7 +44,9 @@ export default {
             reviewStatusSelect:'default',
             timeFrameSelect:'default',
             //元件動畫
-            isAnimating:false
+            isAnimating:false,
+            //傳遞變數
+            editWorkHoursInfoId:''
         }
     },
     methods:{
@@ -156,7 +163,12 @@ export default {
                 })
                 console.log(workDayInfo.date)
             })
-            this.listRenderOver = true;
+            //完全沒資料長度是0就不跑spinner
+            if(this.workDayInfoList.lenght === 0){
+                this.listRenderOver = false;
+            }else{
+                this.listRenderOver = true;
+            }
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
@@ -665,7 +677,7 @@ export default {
                 this.hasntThisTimeFrameInfo = false;
             }
         },
-        //
+        //查看此日期的workHoursInfo
         workHoursInfo(event){
             let reqBody = {
                 employeeId : this.employeeId
@@ -739,6 +751,7 @@ export default {
             this.selectedDateInfoList = [];
             this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
                 if(workHoursInfo.date === targetValue){
+                    workHoursInfo.workInfoId = workHoursInfo.workInfoId.toString();
                     this.selectedDateInfoList.push(workHoursInfo);
                 }
             })
@@ -768,8 +781,12 @@ export default {
                 this.isAnimating = !this.isAnimating;
             }, 500); //每隔0.5秒執行一次
         },
-        editWorkHoursInfo(){
-            
+        editWorkHoursInfo(input){
+            this.editWorkHoursInfoId = input.target.value;
+            const editWorkHoursInfoId = this.editWorkHoursInfoId; // 保存 editWorkHoursInfoId
+            setTimeout(()=>{
+                this.$router.push({ name: 'EditEmployeeWorkHoursInfo', params: { editWorkHoursInfoId } });
+            },0)
         }
     },
     watch:{
@@ -902,7 +919,7 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workHoursInfo.worInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
@@ -1303,7 +1320,7 @@ export default {
                 ::-webkit-scrollbar-thumb {
                     border-radius: 4px;
                     background-color: rgba(71, 71, 71, 0.6);
-                    border: 1px solid rgb(91, 91, 102);
+                    border: 1px solid rgb(140, 140, 150);
                 }
 
                 ::-webkit-scrollbar-track {
