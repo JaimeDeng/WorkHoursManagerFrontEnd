@@ -3,10 +3,15 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
     data(){
         return{
+            //帳戶資料
+            employeeId:'',
+            accountId:'',
+            employeeName:'',
             //工時表資料
             today:'',
             workDayInfo:[],
             workHoursInfoData:[],
+            selectedDateInfoList:[],
             queryDate:"",
             showWorkHoursInfo:false,
             workDayInfoList:[],
@@ -32,7 +37,9 @@ export default {
             backBtn:'',
             //輸入綁定
             reviewStatusSelect:'default',
-            timeFrameSelect:'default'
+            timeFrameSelect:'default',
+            //元件動畫
+            isAnimating:false
         }
     },
     methods:{
@@ -49,7 +56,7 @@ export default {
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回首頁'
+                this.backBtn = '返回首頁';
             }else if(this.langValue === 'en'){
                 this.title = 'Timesheet List';
                 this.search = 'Search by date';
@@ -62,7 +69,7 @@ export default {
                 this.timeFrameOpt1 = '7days';
                 this.timeFrameOpt2 = '14days';
                 this.timeFrameOpt3 = '30days';
-                this.backBtn = 'Back to homepage'
+                this.backBtn = 'Back to homepage';
             }else if(this.langValue === 'jp'){
                 this.title = '工時表一覽';
                 this.search = '以日期搜尋';
@@ -75,13 +82,13 @@ export default {
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回首頁'
+                this.backBtn = '返回首頁';
             }
         },
-        fetchWorkHoursInfo(){
+        fetchWorkDayInfo(){
 
             let reqBody = {
-                employeeId : 'E00001'
+                employeeId : this.employeeId
             }
 
             fetch("http://localhost:3000/getWorkDayInfoByEmployeeId" ,{
@@ -92,6 +99,23 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
+                //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
+                        const nextDateStr = data.workDayInfoList[i+1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = data.workDayInfoList[i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if(nextDate > thisDate){
+                            container = data.workDayInfoList[i+1];
+                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
+                            data.workDayInfoList[i] = container;
+                        }       
+                    }
+                }
                 this.workDayInfo = data;
                 console.log(this.workDayInfo);
                 if(this.workDayInfo.workDayInfoList.length !== 0){
@@ -643,7 +667,7 @@ export default {
         },
         workHoursInfo(event){
             let reqBody = {
-                employeeId : 'E00001'
+                employeeId : this.employeeId
             }
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
@@ -654,6 +678,34 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
+                //將工時表以時間最早的開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workHoursInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workHoursInfoList.length - 1 ; i++){
+                        const nextTimeString = data.workHoursInfoList[i+1].startTime;
+                        const nextTimeArr = nextTimeString.split(":");
+                        const nextTime = new Date();
+                        const nextTimeHours = parseInt(nextTimeArr[0]);
+                        const nextTimeMinutes = parseInt(nextTimeArr[1]);
+                        nextTime.setHours()
+                        const thisTimeString = data.workHoursInfoList[i].startTime;
+                        const thisTimeArr = thisTimeString.split(":");
+                        const thisTime = new Date();
+                        const thisTimeHours = parseInt(thisTimeArr[0]);
+                        const thisTimeMinutes = parseInt(thisTimeArr[1]);
+                        if(nextTimeHours === thisTimeHours){
+                            if(nextTimeMinutes < thisTimeMinutes){
+                                container = data.workHoursInfoList[i+1];
+                                data.workHoursInfoList[i+1] = data.workHoursInfoList[i];
+                                data.workHoursInfoList[i] = container;
+                            }
+                        }else if(nextTimeHours < thisTimeHours){
+                            container = data.workHoursInfoList[i+1];
+                            data.workHoursInfoList[i+1] = data.workHoursInfoList[i];
+                            data.workHoursInfoList[i] = container;
+                        }
+                    }
+                }
                 this.workHoursInfoData = data;
                 console.log(this.workHoursInfoData);
                 this.showWorkHoursInfo = true;
@@ -682,13 +734,13 @@ export default {
             sheet.style.marginLeft = "200%";
         },
         workHoursInfoByDate(targetValue){
-            let selectedDateInfoList = [];
+            this.selectedDateInfoList = [];
             this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
                 if(workHoursInfo.date === targetValue){
-                    selectedDateInfoList.push(workHoursInfo);
+                    this.selectedDateInfoList.push(workHoursInfo);
                 }
             })
-            console.log(selectedDateInfoList);
+            console.log(this.selectedDateInfoList);
         },
         backToWorkDayInfo(){
             let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
@@ -705,7 +757,12 @@ export default {
             deco2.style.left = "-130";
             setTimeout(()=>{
                 this.showWorkHoursInfo = false;
-            },800)
+            },300)
+        },
+        startAnimation() {
+            setInterval(() => {
+                this.isAnimating = !this.isAnimating;
+            }, 500); //每隔0.5秒執行一次
         }
     },
     watch:{
@@ -747,10 +804,26 @@ export default {
         }
     },
     created() {
-        this.fetchWorkHoursInfo();
+        //獲取帳號資訊
+        this.employeeId = sessionStorage.getItem('employeeId');
+        if(this.employeeId === null){
+            this.employeeId = localStorage.getItem('employeeId');
+        }
+        this.accountId = sessionStorage.getItem('accountId');
+        if(this.accountId === null){
+            this.accountId = localStorage.getItem('accountId');
+        }
+        this.employeeName = sessionStorage.getItem('employeeName');
+        if(this.employeeName === null){
+            this.employeeName = localStorage.getItem('employeeName');
+        }
+
+        //獲取工時表資訊
+        this.fetchWorkDayInfo();
         console.log(this.workDayInfoList);
     },
     mounted(){
+
         //檢查及切換語言
         this.langValue = sessionStorage.getItem('langValue');
         if(this.langValue === null){
@@ -761,6 +834,9 @@ export default {
         //獲取今天日期
         const today = new Date();
         this.today = today;
+        
+        //開始產生元件動畫
+        this.startAnimation();
     }
 }
 </script>
@@ -805,7 +881,24 @@ export default {
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="queryDate">{{ queryDate }}工時表一覽</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
+                        <div class="cardFrame" id="cardFrame" v-dragscroll.x>
+                            <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
+                                <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
+                                <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
+                                <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>
+                                <i class="fa-solid fa-arrow-down" style="color: #24445c;"></i>
+                                <p style="color: #1a4e78">結束時間: {{ workHoursInfo.endTime }}</p>
+                                <p>機型: {{ workHoursInfo.model }}</p>
+                                <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
+                                <div class="detailTextFrame">
+                                    <h5>工作內容</h5>
+                                    <p>{{ workHoursInfo.detail }}</p>
+                                </div>
+                                <button :value="workDayInfo.worInfoId" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                            </div>
+                            <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
+                        </div>
                     </div>
                     <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
                 </div>
@@ -823,6 +916,7 @@ export default {
                                     aria-controls="flush-collapseOne">
                                     日期:{{ workDayInfo.date }}
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
+                                    <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
                             </h2>
                              <!--手風琴內容-->
@@ -885,7 +979,7 @@ export default {
             position: relative;
             padding: 1vw;
             background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 208, 224);
+            border: 2px solid rgb(177, 201, 224);
             border-radius: 5px;
             width: 90%;
             height: 75vh;
@@ -925,7 +1019,7 @@ export default {
                             width: 6vw;
                             height: 3vh;
                             font-size: 1vh;
-                            border-radius: 50px;
+                            border-radius: 30px;
                             padding-left: 20%;
                             border: 1px solid #000;
 
@@ -969,24 +1063,137 @@ export default {
             }
 
             .workHoursInfoFrame{
-                background-color: white;
+                border: 1px solid rgb(130, 136, 144);
+                background-color: rgba(152, 154, 157, 0.5);
+                padding: 1vh 1vw;
+                backdrop-filter: blur(10px);
                 display: flex;
                 flex-direction: column;
                 position: absolute;
                 left: -150%;
                 border-radius: 10px;
                 width: 95%;
-                height: 80%;
+                height: 83%;
                 transition-property: left;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
 
                 .infoFrame{
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
                     height: 90%;
                     width: 100%;
-                    border-radius: 10px;
+                    border-radius: 10px 10px 0 0;
                     overflow: auto;
-                    background-color: rgba(119, 128, 125, 0.5);
+
+                    .dateTitle{
+                        font-size: 2.5vh;
+                        height: max-content;
+                    }
+                    .cardFrame{
+                        border-radius: 10px;
+                        height: 100%;
+                        width: 100%;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        cursor: grab;
+
+                        .tips{
+                            position: fixed;
+                            top: 2%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: max-content;
+                            padding: 0 0.5vw;
+                            height: 3vh;
+                            border-radius: 10px;
+                            background-color: rgba(38, 38, 38, 0.5);
+                            color: white;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 2vh;
+                            transition: 0.5s;
+                            visibility: hidden;
+                            opacity : 0;
+                            z-index: 1;
+                            .fa-hand{
+                                transition: 0.3s;
+                            }
+                        }
+                        &:hover > .tips {
+                            visibility: visible;
+                            opacity: 1;
+                        }
+                        .workHoursInfoCard{
+                            position: relative;
+                            display: inline-block;
+                            text-align: center;
+                            border-radius: 10px;
+                            padding: 1% 1%;
+                            margin: 0 1%;
+                            height: 100%;
+                            width: 40vw;
+                            background-color: rgba(250, 250, 250, 0.7);
+                            overflow: auto;
+                            overflow-wrap: break-word;
+                            white-space: break-spaces;
+                            h4{
+                                font-size: 3vh;
+                            }
+                            p{
+                                margin: auto;
+                                font-size: 2vh;
+                            }
+                            .infoNum{
+                                font-size: 2.5vh;
+                                position: fixed;
+                                top: 2%;
+                                right: 2%;
+                            }
+                            .detailTextFrame{
+                                h5{
+                                    margin-top: 1%;
+                                    font-size: 2.5vh;
+                                    border-bottom: 1px solid rgb(83, 78, 50);
+                                }
+                                position: absolute;
+                                bottom: 1%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 98%;
+                                height: 57%;
+                                border-radius: 10px;
+                                border: 1.5px solid rgb(83, 78, 50);
+                                background-color: rgba(240, 235, 219, 0.4);
+                                overflow: auto;
+                            }
+                            .editWorkHoursInfo{
+                                position: absolute;
+                                top: 0%;
+                                left: -0.5%;
+                                background: rgb(237, 203, 89);
+                                border: none;
+                                color: rgb(32, 36, 44);
+                                border-radius: 10px 5px 15px 5px;
+                                width: max-content;
+                                padding: 0 1vw;
+                                height: 3vh;
+                                font-size: 2vh;
+                                transition: 0.4s;
+                                z-index: 1;
+
+                                &:hover {
+                                    background-color: rgb(216, 179, 57);
+                                }
+
+                                &:active {
+                                    transform: scale(0.97);
+                                }
+                            }
+                        }
+                    }
                 }
                 .backToDayList{
                     margin-top: 1%;
@@ -1077,7 +1284,7 @@ export default {
 
                     .hasntApproved{
                         position: absolute;
-                        right: 8vw;
+                        right: 10%;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
@@ -1085,11 +1292,20 @@ export default {
                     }
                     .hasApproved{
                         position: absolute;
-                        right: 8vw;
+                        right: 10%;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
                         color: rgb(71, 106, 167);
+                    }
+                    .approvedStrFrame{
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 0.5vw;
+                        height: 100%;
+                        z-index: -1;
                     }
 
                 }
@@ -1133,6 +1349,9 @@ export default {
 
             .back {
                 position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 bottom: 2%;
                 left: 1%;
                 background: rgb(26, 55, 77);
@@ -1141,7 +1360,8 @@ export default {
                 border-radius: 5px;
                 width: max-content;
                 height: 3vh;
-                font-size: 1.5vh;
+                font-size: 2vh;
+                padding: 1vh 1vw;
                 transition: 0.4s;
 
                 &:hover {
