@@ -1152,7 +1152,7 @@ export default {
                                 position: absolute;
                                 top: 0%;
                                 left: -0.5%;
-                                background: rgb(230, 218, 179);
+                                background: rgb(237, 203, 89);
                                 border: none;
                                 color: rgb(32, 36, 44);
                                 border-radius: 10px 5px 15px 5px;
@@ -1164,8 +1164,7 @@ export default {
                                 z-index: 1;
 
                                 &:hover {
-                                    color: white;
-                                    background-color: rgb(155, 121, 11);
+                                    background-color: rgb(216, 179, 57);
                                 }
 
                                 &:active {
