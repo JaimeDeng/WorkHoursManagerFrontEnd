@@ -1106,6 +1106,31 @@ export default {
                         white-space: nowrap;
                         cursor: grab;
 
+                        //修改瀏覽器的scrollbar樣式
+                        ::-webkit-scrollbar {
+                            width: 0.5vw;
+                        }
+
+                        ::-webkit-scrollbar-button {
+                            background: transparent;
+                            height: 3%; //上下buffer的高度
+                            border-radius: 4px;
+                        }
+
+                        ::-webkit-scrollbar-track-piece {
+                            background: transparent;
+                        }
+
+                        ::-webkit-scrollbar-thumb {
+                            border-radius: 4px;
+                            background-color: rgba(129, 91, 21, 0.4);
+                            border: none;
+                        }
+
+                        ::-webkit-scrollbar-track {
+                            box-shadow: transparent;
+                        }
+
                         .tips{
                             position: fixed;
                             top: 2%;
@@ -1259,6 +1284,31 @@ export default {
                 transition-property: margin;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
+
+                //修改瀏覽器的scrollbar樣式
+                ::-webkit-scrollbar {
+                    width: 0.6vw;
+                }
+
+                ::-webkit-scrollbar-button {
+                    background: transparent;
+                    height: 0; //上下buffer的高度
+                    border-radius: 4px;
+                }
+
+                ::-webkit-scrollbar-track-piece {
+                    background: transparent;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 4px;
+                    background-color: rgba(71, 71, 71, 0.6);
+                    border: 1px solid rgb(91, 91, 102);
+                }
+
+                ::-webkit-scrollbar-track {
+                    box-shadow: transparent;
+                }
 
                 .emptyTitle{
                     position: absolute;
