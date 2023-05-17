@@ -10,7 +10,9 @@ export default {
     },
     data() {
         return {
-            langValue : ''
+            langValue : '',
+            accountName : '',
+            navBarKey : 0
         };
     },
     methods: {
@@ -24,9 +26,14 @@ export default {
             }
         },
         langChange(){
-            console.log('更新');
+            console.log('切換語言,更新畫面觸發');
             //vue-router的重新渲染方法 , 只會重載頁面重新渲染vue元件 , 不會刷新所有數據跟JS
             this.$router.go(0);
+        },
+        updateNavbar() {
+            console.log('login成功,更新畫面觸發');
+            //元件的key更改時此元件會進入update , 利用此特性來刷新navBar更新顯示的名字
+            this.navBarKey += 1;
         }
     },
     mounted(){
@@ -41,15 +48,14 @@ export default {
 }
 </script>
 
-
 <template>
     <div class="main">
 
         <div class="background"></div>
         <div class="content">
-            <Navbar @change="langChange" />
+            <Navbar :key="navBarKey" @login="updateNavbar" @logout="updateNavbar" @change="langChange" />
             
-            <RouterView />
+            <RouterView @changePwdSuccess="updateNavbar" @login="updateNavbar" />
             <FooterView />
         </div>
     </div>

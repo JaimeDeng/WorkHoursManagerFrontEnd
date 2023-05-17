@@ -4,11 +4,12 @@ export default {
         changeLangValue:{
             type:String,
             default:''
-        }
+        },
+        accountName:''
     },
     data() {
         return {
-            name: "老鄧",   //員工名
+            name: "NONE",   //員工名
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
@@ -18,6 +19,7 @@ export default {
             chOption:'',
             enOption:'',
             jpOption:'',
+            logout:'',
             lang:''
         };
     },
@@ -61,6 +63,25 @@ export default {
             let langValue = document.getElementById("lang").value;
             sessionStorage.setItem('langValue' , langValue);
             this.$emit("change");
+        },
+        accountLogout(){
+            localStorage.removeItem('accountId');
+            localStorage.removeItem('employeeId');
+            localStorage.removeItem('employeeName');
+            sessionStorage.removeItem('accountId');
+            sessionStorage.removeItem('employeeId');
+            sessionStorage.removeItem('employeeName');
+            this.$router.push('/login');
+            this.$emit("logout");
+        },
+        updateNavbar(){
+            this.name = sessionStorage.getItem('employeeName');
+            if(this.name === null){
+                this.name = localStorage.getItem('employeeName');
+                if(this.name === null){
+                    this.name = 'NONE';
+                }
+            }
         }
     },
 
@@ -77,17 +98,29 @@ export default {
             this.chOption = '中文';
             this.enOption = '英文';
             this.jpOption = '日文';
+            this.logout = '登出';
         }else if(this.langSelectValue === 'en'){
             this.lang = 'Language'
             this.chOption = 'Chinese';
             this.enOption = 'English';
             this.jpOption = 'Japanese';
+            this.logout = 'Log out';
         }else if(this.langSelectValue === 'jp'){
             this.lang = '言語選択'
             this.chOption = '中国語';
             this.enOption = '英語';
             this.jpOption = '日本語';
+            this.logout = 'ログアウト';
         }
+
+        this.name = sessionStorage.getItem("employeeName");
+        if(this.name === null){
+            this.name = localStorage.getItem("employeeName");
+            if(this.name === null){
+                this.name = "NONE";
+            }
+        }
+        
     },
 };
 </script>
@@ -111,7 +144,7 @@ export default {
                         <option value="en">{{ enOption }}</option>
                         <option value="jp">{{ jpOption }}</option>
                     </select>
-                    <h3>{{ name }} |<RouterLink to="/login"><button class="btnback" type="button">登出</button></RouterLink></h3>
+                    <h3>{{ name }} |<button @click="accountLogout" class="btnback" type="button">{{ logout }}</button></h3>
                     <button @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
                         <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>

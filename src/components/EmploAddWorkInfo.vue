@@ -1,23 +1,44 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import popup from './popup.vue'
 export default (await import('vue')).defineComponent({
+components: {
+    RouterLink,
+    popup
+},
 data() {
   return{
+        //props傳來的變數 , 直接宣告一樣的名稱在data()內
+        showPopup: false,
+        popupData: {
+            title: "Popup Title",
+            content: "Popup Content",
+            backBtn: 'back',
+        },
         addTitle:"新增工作時數表",
-        type:"機型",
+        model:"機型",
         caseNo:"製造號碼",
         status:"出勤狀態",
+        statusValue:'default',
         selectStatus:"請選擇出勤狀態",
         date:"日期",
+        dateValue:'',
         satrtTime:"開始時間",
+        startTimeValue:'default',
         selectStartTime:"請選擇開始時間",
         endTime:"結束時間",
+        endTimeValue:'default',
         selectEndTime:"請選擇結束時間",
+        detail:"",
         back:"返回",
         commit:"新增",
         detailPlaceHolder:"工作內容(限制500字以內)",
         langValue:'ch',
-
+        caseNoInput:'',
+        modelInput:'',
+        modelIsInvalid:false,
+        caseNoIsInvalid:false,
+        message:"",
         statusOptions:[
         {label : "出勤" , value : "出勤"},
         {label : "公假" , value : "公假"},
@@ -26,14 +47,17 @@ data() {
         {label : "特休" , value : "特休"},
         {label : "工傷" , value : "工傷"},
         {label : "天災" , value : "天災"}],
-        timeOptions:[]
+        timeOptions:[],
+
+        //resp
+        resp:''
     }
 },
 methods: {
     changeLanguage(){
         if(this.langValue === 'en'){
             this.addTitle = "New Timesheet";
-            this.type = "Type";
+            this.model = "Type";
             this.caseNo = "Case no";
             this.status = "Attendance";
             this.selectStatus = "Select attendence status";
@@ -45,9 +69,10 @@ methods: {
             this.back = "Back";
             this.commit = "Commit";
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
+            this.popupData.backBtn = "Back";
         }else if(this.langValue === 'jp'){
             this.addTitle = "勤務表追加";
-            this.type = "型番";
+            this.model = "型番";
             this.caseNo = "案件番号";
             this.status = "出勤状況";
             this.selectStatus = "出勤状況を選択してください";
@@ -59,9 +84,10 @@ methods: {
             this.back = "戻る";
             this.commit = "追加";
             this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
+            this.popupData.backBtn = "戻る";
         }else if(this.langValue === 'ch'){
             this.addTitle = "新增工作時數表";
-            this.type = "機型";
+            this.model = "機型";
             this.caseNo = "案件號碼";
             this.status = "出勤狀態";
             this.selectStatus = "請選擇出勤狀態";
@@ -73,7 +99,122 @@ methods: {
             this.back = "返回";
             this.commit = "新增";
             this.detailPlaceHolder = "工作內容(限制500字以內)";
+            this.popupData.backBtn = "返回";
         }
+    },
+    checkLength(input){
+        if(input === 'caseNo'){
+            if(this.caseNoInput.length <= 1){
+                this.caseNoIsInvalid = true;
+            }else{
+                this.caseNoIsInvalid = false;
+            }
+        }
+        if(input === 'model'){
+            if(this.modelInput.length <= 1){
+                this.modelIsInvalid = true;
+            }else{
+                this.modelIsInvalid = false;
+            }
+        }
+    },
+    commitReq(){
+        let reqbody = {
+            employeeId : 'E00001',
+            date : this.dateValue,
+            model : this.modelInput,
+            caseNo : this.caseNoInput,
+            startTime : this.startTimeValue,
+            endTime : this.endTimeValue,
+            detail : this.detail,
+            status : this.statusValue
+        };
+        console.log(reqbody);
+        fetch("http://localhost:3000/setWorkHoursInfo" ,{
+            method:"post",
+            body: JSON.stringify(reqbody),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        }).then(res => res.json())
+        .then((data)=>{
+            this.resp = data;
+            console.log(this.resp);
+            if(data.success === true){
+                this.message = this.resp.message;
+                this.successPopup();
+            }else{
+                this.message = this.resp.message;
+                this.errorPopup();
+            }
+        })
+        .catch(err => console.log(err))
+    },
+    closePopup() {
+        this.showPopup = false;
+        this.popupData.title = "";
+        this.popupData.content = "";
+        if (this.resp.success) {
+            this.dateValue = "";
+            this.modelInput = "";
+            this.caseNoInput = "";
+            this.startTimeValue = "default";
+            this.endTimeValue = "default";
+            this.statusValue = "default";
+            this.detail = "";
+
+        }
+    },
+    successPopup() {
+        if (this.langValue === 'ch') {
+            this.popupData.title = "成功";
+        } else if (this.langValue === 'en') {
+            this.popupData.title = "Success";
+        } else if (this.langValue === 'jp') {
+            this.popupData.title = "追加完了";
+        }
+        this.popupData.content = this.message;
+        this.showPopup = true;
+        setTimeout(() => {
+            let popup = this.$refs.popup;
+            let popupEl = popup.$el;
+            let popupIcon = popupEl.querySelector("i");
+            console.log(popupIcon);
+            let iconStr1 = "fa-solid";
+            let iconStr2 = "fa-check";
+            popupIcon.classList.add(iconStr1);
+            popupIcon.classList.add(iconStr2);
+            popupIcon.style.color = "#3771ae";
+            console.log(popupIcon);
+            popup.$el.style.opacity = "1";
+            popup.$el.style.bottom = "0%";
+        }, 100);
+    },
+    errorPopup() {
+        if (this.langValue === 'ch') {
+            this.popupData.title = "錯誤";
+        } else if (this.langValue === 'en') {
+            this.popupData.title = "Failure";
+        } else if (this.langValue === 'jp') {
+            this.popupData.title = "エラー";
+        }
+        this.popupData.content = this.message;
+        this.showPopup = true;
+        setTimeout(() => {
+            let popup = this.$refs.popup;
+            console.log(popup);
+            let popupEl = popup.$el;
+            let popupIcon = popupEl.querySelector("i");
+            console.log(popupIcon);
+            let iconStr1 = "fa-solid";
+            let iconStr2 = "fa-circle-xmark";
+            popupIcon.classList.add(iconStr1);
+            popupIcon.classList.add(iconStr2);
+            popupIcon.style.color = "#ae3737";
+            console.log(popupIcon);
+            popup.$el.style.opacity = "1";
+            popup.$el.style.bottom = "0%";
+        }, 100);
     }
 },
 mounted() {
@@ -111,48 +252,58 @@ mounted() {
 </script>
 <template>
     <div class="main">
+
+        <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
+        <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
+        <div v-if="showPopup" ref="mask" class="mask"></div>
+
         <div class="add">
             <h4>{{ addTitle }}</h4>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
                 <div class="info">
-                    <label for="type">{{ type }}</label>
-                    <input type="text" id="type">
+                    <label for="model">{{ model }}</label>
+                    <input
+                     :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }" 
+                    @input="checkLength('model')" v-model="modelInput" type="text" id="model"
+                    >
                     <label for="caseNo">{{ caseNo }}</label>
-                    <input type="text" id="caseNo">
+                    <input 
+                    :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
+                    @input="checkLength('caseNo')" v-model="caseNoInput" type="text" id="caseNo">
                     <label for="">{{ status }}</label>
-                    <select>
-                        <option selected>{{ selectStatus }}</option>
+                    <select v-model="statusValue">
+                        <option value="default" selected>{{ selectStatus }}</option>
                         <option v-for="(option , index) in statusOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
                 </div>
                 <!-- 右側填寫區 -->
                 <div class="timeFrame">
                     <label for="date">{{ date }}</label>
-                    <input type="date" id="date">
+                    <input v-model="dateValue" type="date" id="date">
                     <label for="startTime">{{ satrtTime }}</label>
-                    <select id="startTime">
-                        <option selected>{{ selectStartTime }}</option>
+                    <select v-model="startTimeValue" id="startTime">
+                        <option value="default" selected>{{ selectStartTime }}</option>
                         <option v-for="(option , index) in timeOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
                     <label for="endTime">{{ endTime }}</label>
-                    <select id="endTime">
-                        <option selected>{{ selectEndTime }}</option>
+                    <select v-model="endTimeValue" id="endTime">
+                        <option value="default" selected>{{ selectEndTime }}</option>
                         <option v-for="(option , index) in timeOptions" :value="option.value" :key="index">{{option.label}}</option>
                     </select>
                 </div>
             </div>
 
             <div class="detailFrame">
-                <textarea maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
+                <textarea v-model="detail" maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
             </div>
 
             <!-- 底部按鈕 -->
             <div class="area2">
                 <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
                 
-                <button type="button">{{ commit }}</button>
+                <button @click="commitReq" type="button">{{ commit }}</button>
             </div>
         </div>
 
@@ -169,6 +320,22 @@ mounted() {
     align-items: center;
     position: relative;
     z-index: -1;
+
+    .popup{
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition: 0.2s;
+        z-index: 2;
+    }
+    .mask{
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.3);
+        filter: blur(100px);
+        height: 99.8vh;
+        width: 100%;
+        z-index: 1;
+    }
 
     .add {
         background-color: rgba(255, 255, 255, 0.724);
@@ -211,6 +378,11 @@ mounted() {
                     margin-bottom: 8px;
                     border-radius: 5px;
                     border:1px solid #000;
+                    transition: 0.4s;
+
+                    &:focus{
+                        background-color: rgb(227, 244, 255);
+                    }
                 }
 
             }

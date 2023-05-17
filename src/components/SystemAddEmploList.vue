@@ -379,7 +379,7 @@ components: {
         }, 100);
 },
 
-    checkInputLegth(input){
+    checkInputLength(input){
         let emailPattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         let phonePattern =/^[0-9]{7,10}$/;
         switch(input){

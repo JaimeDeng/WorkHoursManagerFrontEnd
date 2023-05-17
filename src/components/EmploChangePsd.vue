@@ -15,23 +15,64 @@ export default {
                 title: "Popup Title",
                 content: "Popup Content",
                 backBtn: "返回"
+
             },
             newPsd: "",
             againNewPsd: "",
+            oldPassword: '',
             message: "",
-            isInputInvalid : 0
+            isInputInvalid: 0,
+            origiPwdInput: '',
+            //接舊密碼
+            getOldPsd: '',
+            //切換語言相關
+            langValue: 'ch',
+            pwdStr: '',
+            pwdPHStr: '',
+            rePwdStr: '',
+            rePwdPHStr: '',
+            backToHome: '',
+            change: '',
+            oldPsdStr: '',
+            oldPsdPHStr: '',
+            //判斷相關
+            showPwd: false,
+            showOldPwd: false
         }
     },
     methods: {
         changePsd() {
-            //先檢查密碼格式
-            let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
+             //先檢查密碼格式
+             let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
             let pwd = this.$refs.password.value;
             let rePassword = this.$refs.rePassword.value;
             let error = false;
 
+            //舊密碼輸入錯誤
+            if (this.origiPwdInput !== this.getOldPsd) {
+                if (this.langValue === 'ch') {
+                    this.message = "舊密碼不正確";
+                } else if (this.langValue === 'en') {
+                    this.message = "The passwords you typed don't match. Please retype the password.";
+                } else if (this.langValue === 'jp') {
+                    this.message = "現在のパスワードが一致しません。現在のパスワードを再入力してください。";
+                }
+                error = true;
+                if (error) {
+                    this.errorPopup();
+                    return;
+                }
+            }
+
+
             if (this.newPsd.length === 0) {
-                this.message = "請輸入密碼欄位";
+                if (this.langValue === 'ch') {
+                    this.message = "請輸入新密碼欄位";
+                } else if (this.langValue === 'en') {
+                    this.message = "You haven't filled in new password field yet";
+                } else if (this.langValue === 'jp') {
+                    this.message = "新しいパスワード欄を入力してください";
+                }
                 error = true;
                 if (error) {
                     this.errorPopup();
@@ -39,7 +80,13 @@ export default {
                 }
             }
             if (this.againNewPsd.length === 0) {
-                this.message = "請再次輸入密碼";
+                if (this.langValue === 'ch') {
+                    this.message = "請輸入再次輸入密碼欄位";
+                } else if (this.langValue === 'en') {
+                    this.message = "You haven't filled in repeat password field yet";
+                } else if (this.langValue === 'jp') {
+                    this.message = "パスワード（確認）欄を入力してください";
+                }
                 error = true;
                 if (error) {
                     this.errorPopup();
@@ -48,7 +95,13 @@ export default {
             }
 
             if (!pwdPattern.test(pwd)) {
-                this.message = "密碼格式錯誤:請輸入8~20字符的英數字";
+                if (this.langValue === 'ch') {
+                    this.message = "密碼格式錯誤:請輸入8~20位英數字";
+                } else if (this.langValue === 'en') {
+                    this.message = "Password format is not correct: Please enter 8~20 alphanumeric characters";
+                } else if (this.langValue === 'jp') {
+                    this.message = "パスワード形式が正しくありません: 8~20文字の英数字を入力してください";
+                }
                 error = true;
                 if (error) {
                     this.errorPopup();
@@ -56,7 +109,13 @@ export default {
                 }
             }
             if (pwd !== rePassword) {
-                this.message = "重複輸入的密碼與設定的密碼不符!";
+                if (this.langValue === 'ch') {
+                    this.message = "重複輸入的密碼與設定的密碼不符!";
+                } else if (this.langValue === 'en') {
+                    this.message = "The repaet password does not match the password";
+                } else if (this.langValue === 'jp') {
+                    this.message = "パスワード（確認）はパスワードと一致していません";
+                }
                 error = true;
                 if (error) {
                     this.errorPopup();
@@ -82,28 +141,43 @@ export default {
                 })
                     .then(res => res.json())
                     .then(data => {
-                        console.log(data)
+                        console.log(data);
                         if (data.success) {
-                            this.message = data.message
-                            this.successPopup()
+                            this.message = data.message;
+                            this.successPopup();
+                            this.$emit('changePwdSuccess');
                         } else {
-                            this.message = data.message
-                            this.errorPopup()
+                            this.message = data.message;
+                            this.errorPopup();
                         }
-                        this.newPsd = ""
-                        this.againNewPsd = ""
+                        this.newPsd = "";
+                        this.againNewPsd = "";
                     })
-
             }
         },
         closePopup() {
-            this.showPopup = false;
-            this.popupData.title = "";
-            this.popupData.content = "";
+            if (sessionStorage.getItem("accountId") === null && localStorage.getItem("accountId") === null) {
+                this.$router.push('/login');
+            } else {
+                this.showPopup = false;
+            }
         },
         successPopup() {
-            this.popupData.title = "成功";
-            this.popupData.content = this.message;
+            if (this.langValue === 'ch') {
+                this.popupData.title = "成功";
+            } else if (this.langValue === 'en') {
+                this.popupData.title = "Success";
+            } else if (this.langValue === 'jp') {
+                this.popupData.title = "完成";
+            }
+            // 訊息內容
+            if (this.langValue === 'ch') {
+                this.popupData.content = "變更成功!請重新登入";
+            } else if (this.langValue === 'en') {
+                this.popupData.content = "Your password has been changed. Please login again";
+            } else if (this.langValue === 'jp') {
+                this.popupData.content = "パスワードの変更が成功しました。再度ログインしてください。";
+            }
             this.showPopup = true;
             setTimeout(() => {
                 let popup = this.$refs.popup;
@@ -119,9 +193,22 @@ export default {
                 popup.$el.style.opacity = "1";
                 popup.$el.style.bottom = "0%";
             }, 100);
+            // 删除localStorage，sessionStorage，要求重新登入
+            localStorage.removeItem('accountId');
+            localStorage.removeItem('employeeId');
+            localStorage.removeItem('employeeName');
+            sessionStorage.removeItem('accountId');
+            sessionStorage.removeItem('employeeId');
+            sessionStorage.removeItem('employeeName');
         },
         errorPopup() {
-            this.popupData.title = "錯誤";
+            if (this.langValue === 'ch') {
+                this.popupData.title = "錯誤";
+            } else if (this.langValue === 'en') {
+                this.popupData.title = "Failure";
+            } else if (this.langValue === 'jp') {
+                this.popupData.title = "エラー";
+            }
             this.popupData.content = this.message;
             this.showPopup = true;
             setTimeout(() => {
@@ -156,16 +243,89 @@ export default {
                         this.isInputInvalid = 0;
                     }
                     break;
+                case 'oldPassword':
+                    if (this.origiPwdInput.length < 8) {
+                        this.isInputInvalid = 2;
+                    } else {
+                        this.isInputInvalid = 0;
+                    }
+                    break;
             }
+        },
+        changeLanguage() {
+            if (this.langValue === 'en') {
+                this.pwdStr = 'Set new password';
+                this.pwdPHStr = 'Please set your new password';
+                this.rePwdStr = 'Repeat password';
+                this.rePwdPHStr = 'Please input your password again';
+                this.backToHome = 'Home';
+                this.change = 'Change';
+                this.popupData.backBtn = 'Back'
+                this.oldPsdStr = 'Password'
+                this.oldPsdPHStr = 'Please set your old password'
+            } else if (this.langValue === 'ch') {
+                this.pwdStr = '設置密碼';
+                this.pwdPHStr = '請設定密碼';
+                this.rePwdStr = '再次輸入密碼';
+                this.rePwdPHStr = '請再次輸入密碼';
+                this.backToHome = '返回首頁';
+                this.change = '變更';
+                this.popupData.backBtn = '返回';
+                this.oldPsdStr = '輸入密碼';
+                this.oldPsdPHStr = '請輸入目前密碼'
+            } else if (this.langValue === 'jp') {
+                this.pwdStr = '新しいパスワード設定';
+                this.pwdPHStr = 'パスワードを設定してください';
+                this.rePwdStr = '新しいパスワード（確認）';
+                this.rePwdPHStr = 'パスワードを再入力してください';
+                this.backToHome = 'ホームへ';
+                this.change = '変更';
+                this.popupData.backBtn = '戻る';
+                this.oldPsdStr = 'パスワード'
+                this.oldPsdPHStr = 'パスワードを入力してください'
+            }
+        },
+        showPwdOrNot() {
+            this.showPwd = !this.showPwd;
+        },
+        showOldPwdOrNot() {
+            this.showOldPwd = !this.showOldPwd;
         }
     },
     beforeCreate() {
         //如果localStroage/sessionStorage都沒有accountId，則跳到登入頁面，要求重新登入
-        if (!localStorage.getItem('accountId')&&!sessionStorage.getItem('accountId')) {
+        if (!localStorage.getItem('accountId') && !sessionStorage.getItem('accountId')) {
             this.$router.push('/login')
 
         }
+        //fetch舊密碼
+        fetch("http://localhost:3000/getAccountByEmployeeId", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "employeeId": sessionStorage.getItem('employeeId') || localStorage.getItem('employeeId')
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.password)
+                    //解密
+                    let origiPwd = atob(data.password);
+                    console.log(origiPwd);
+                    this.getOldPsd = origiPwd;
 
+                })
+    },
+    mounted() {
+        //檢查及切換語言
+        this.langValue = sessionStorage.getItem('langValue');
+        if (this.langValue === null) {
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
     }
 }
 </script>
@@ -180,29 +340,54 @@ export default {
             <h2>變更密碼</h2>
 
             <div class="area1">
-                <!-- 新密碼輸入 -->
-                <div class="newPsdInput">
-                    <i class="fa-sharp fa-solid fa-key"></i>
-                    <input id="emid" placeholder="請輸入新密碼" type="text" v-model="newPsd" ref="password"
-                        :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }" maxlength="20"
-                        @input="checkInputLegth('password')">
+
+                <!-- 舊密碼 -->
+                <div>
+                    <label for="oldPsd">{{ oldPsdStr }}</label>
+                    <div class="oldPsdInput">
+                        <i class="fa-sharp fa-solid fa-key"></i>
+                        <input id="oldPsd" :placeholder="oldPsdPHStr" :type="showOldPwd ? 'text' : 'password'"
+                            v-model="origiPwdInput" ref="oldPassword"
+                            :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }" maxlength="20"
+                            @input="checkInputLegth('oldPassword')">
+                        <i @click="showOldPwdOrNot"
+                            :class="showOldPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                    </div>
                 </div>
 
-                <!-- 再次輸入新密碼 -->
-                <div class="againNewPsd">
-                    <i class="fa-sharp fa-solid fa-key"></i>
-                    <input id="password" placeholder="請再次輸入新密碼" type="password" v-model="againNewPsd" ref="rePassword"
-                        :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }" maxlength="20"
-                        @input="checkInputLegth('rePassword')">
+                <!-- 新密碼輸入 -->
+                <div>
+                    <label for="emid">{{ pwdStr }}</label>
+                    <div class="newPsdInput">
+                        <i class="fa-sharp fa-solid fa-key"></i>
+                        <input id="emid" :placeholder="pwdPHStr" :type="showPwd ? 'text' : 'password'" v-model="newPsd"
+                            ref="password" :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
+                            maxlength="20" @input="checkInputLegth('password')">
+                        <i @click="showPwdOrNot"
+                            :class="showPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                    </div>
                 </div>
+
+
+                <!-- 再次輸入新密碼 -->
+                <div>
+                    <label for="password">{{ rePwdStr }}</label>
+                    <div class="againNewPsd">
+                        <i class="fa-sharp fa-solid fa-key"></i>
+                        <input id="password" :placeholder="rePwdPHStr" type="password" v-model="againNewPsd"
+                            ref="rePassword" :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
+                            maxlength="20" @input="checkInputLegth('rePassword')">
+                    </div>
+                </div>
+
 
             </div>
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome" tag="button" class="btnChangPsd">返回首頁</RouterLink>
+                <RouterLink to="/employeeHome" tag="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
 
-                <button type="button" class="btnChangPsd" @click="changePsd">確定變更</button>
+                <button type="button" class="btnChangPsd" @click="changePsd">{{ change }}</button>
 
 
             </div>
@@ -243,8 +428,8 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
-        width: 25%;
-        height: 70%;
+        width: 28%;
+        height: 80%;
         border-radius: 5px;
 
         h2 {
@@ -258,7 +443,7 @@ export default {
             position: relative;
             display: flex;
             flex-direction: column;
-            height: 40%;
+            height: 45%;
             width: 70%;
             justify-content: space-around;
 
@@ -271,7 +456,8 @@ export default {
                     cursor: pointer;
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-                    padding-left: 28px;
+                    padding-left: 1.8vw;
+                    padding-right: 1.8vw;
                     height: 40px;
                     border-radius: 5px;
                     border: 1.5px solid #000;
@@ -284,15 +470,28 @@ export default {
 
             }
 
+            .oldPsdInput,
             .newPsdInput,
             .againNewPsd {
                 @extend %inputFrameSetting;
 
-                .fa-sharp {
+                .fa-key {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
                     left: 2%;
+                }
+
+                .fa-eye,
+                .fa-eye-slash {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 2%;
+
+                    &:active {
+                        scale: 0.95;
+                    }
                 }
             }
         }
