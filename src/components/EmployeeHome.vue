@@ -3,7 +3,13 @@ import { RouterLink } from 'vue-router'
 export default {
     data(){
         return{
+            //工時表相關
+            subordinatesWorkDayInfo:[],
+            workDayInfo:[],
+            //帳號相關
             name:'NONE',
+            employeeId:'',
+            accountId:'',
             langValue:'',
             addTimeSheet:'',
             changePwd:'',
@@ -19,32 +25,79 @@ export default {
             if(this.langValue === 'en'){
                 this.addTimeSheet = 'Add new timesheet';
                 this.changePwd = 'Change password';
-                this.checkTimesheet = 'Check my timesheets';
+                this.checkTimesheet = 'Check/Edit my timesheets';
                 this.approve = 'Review timesheets';
                 this.administrator = 'Administrator page';
             }else if(this.langValue === 'ch'){
                 this.addTimeSheet = '新增工作時數表';
                 this.changePwd = '變更密碼';
-                this.checkTimesheet = '查詢日工時表';
+                this.checkTimesheet = '查詢/編輯工時表';
                 this.approve = '審核工時表';
                 this.administrator = '系統管理員功能';
             }else if(this.langValue === 'jp'){
                 this.addTimeSheet = '勤務表追加';
                 this.changePwd = 'パスワード変更';
-                this.checkTimesheet = '勤務表一覧';
+                this.checkTimesheet = '勤務表一覧/編集';
                 this.approve = '勤務表承認';
                 this.administrator = 'システム管理者ページ';
             }
+        },
+        getAllworkDayInfo(){
+            fetch("http://localhost:3000/getAllWorkDayInfo" ,{
+                method:"get",
+                body: JSON.stringify(),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                console.log(data);
+                //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
+                        const nextDateStr = data.workDayInfoList[i+1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = data.workDayInfoList[i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if(nextDate > thisDate){
+                            container = data.workDayInfoList[i+1];
+                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
+                            data.workDayInfoList[i] = container;
+                        }       
+                    }
+                }
+                data.workDayInfoList.forEach((workDayInfo)=>{
+                    if(workDayInfo.employeeId.supervisor === this.employeeId){
+                        this.subordinatesWorkDayInfo.push(workDayInfo);
+                    }
+                })
+                console.log(this.subordinatesWorkDayInfo);
+            })
+            .catch(err => console.log(err))
         }
+    },
+    created(){
+        this.getAllworkDayInfo();
     },
     mounted(){
         //檢查及切換語言
-        this.name = sessionStorage.getItem('employeeName')
+        this.name = sessionStorage.getItem('employeeName');
         if(this.name === null){
-            this.name = localStorage.getItem('employeeName')
+            this.name = localStorage.getItem('employeeName');
             if(this.name === null){
                 this.name = 'NONE';
             }
+        }
+        this.employeeId = sessionStorage.getItem('employeeId');
+        if(this.employeeId === null){
+            this.employeeId = localStorage.getItem('employeeId');
+        }
+        this.accountId = sessionStorage.getItem('accountId');
+        if(this.accountId === null){
+            this.accountId = localStorage.getItem('accountId');
         }
         this.langValue = sessionStorage.getItem('langValue');
         if(this.langValue === null){

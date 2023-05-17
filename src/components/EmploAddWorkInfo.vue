@@ -15,6 +15,11 @@ data() {
             content: "Popup Content",
             backBtn: 'back',
         },
+        //帳號相關
+        employeeName:"",
+        employeeId:"",
+        accountId:"",
+        //文本
         addTitle:"新增工作時數表",
         model:"機型",
         caseNo:"製造號碼",
@@ -120,7 +125,7 @@ methods: {
     },
     commitReq(){
         let reqbody = {
-            employeeId : 'E00001',
+            employeeId : this.employeeId,
             date : this.dateValue,
             model : this.modelInput,
             caseNo : this.caseNoInput,
@@ -218,6 +223,19 @@ methods: {
     }
 },
 mounted() {
+    //獲取帳號資訊
+    this.employeeId = sessionStorage.getItem("employeeId")
+    if(this.employeeId === null){
+        this.employeeId = localStorage.getItem("employeeId");
+    }
+    this.employeeName = sessionStorage.getItem("employeeName")
+    if(this.employeeName === null){
+        this.employeeName = localStorage.getItem("employeeName");
+    }
+    this.accountId = sessionStorage.getItem("accountId")
+    if(this.accountId === null){
+        this.accountId = localStorage.getItem("accountId");
+    }
     //檢查及修改介面語言
     this.langValue = sessionStorage.getItem('langValue');
     if(this.langValue === null){

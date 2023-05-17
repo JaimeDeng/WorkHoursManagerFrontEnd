@@ -20,7 +20,10 @@ export default {
             enOption:'',
             jpOption:'',
             logout:'',
-            lang:''
+            lang:'',
+
+            //工時資料
+            subordinatesWorkDayInfo:[]
         };
     },
 
@@ -28,12 +31,6 @@ export default {
         //監看通知鈴鐺按鈕是否被點擊
         clickNotificationBtn(){
             this.notificationBtnIsClick = !this.notificationBtnIsClick;
-        },
-        //檢查待審工時表
-        checkPendingApprove(){
-            if(this.pendingApproveNum > 0){
-                this.hasAnyPendingApprove = true;
-            }
         },
         //添加點擊其他地方關閉通知列表的動作
         addCloseNotifyList(){
@@ -82,11 +79,69 @@ export default {
                     this.name = 'NONE';
                 }
             }
+        },
+        getAllworkDayInfo(){
+            fetch("http://localhost:3000/getAllWorkDayInfo" ,{
+                method:"get",
+                body: JSON.stringify(),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                console.log(data);
+                //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
+                let container = null;
+                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
+                        const nextDateStr = data.workDayInfoList[i+1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = data.workDayInfoList[i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if(nextDate > thisDate){
+                            container = data.workDayInfoList[i+1];
+                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
+                            data.workDayInfoList[i] = container;
+                        }       
+                    }
+                }
+                data.workDayInfoList.forEach((workDayInfo)=>{
+                    console.log(this.employeeId)
+                    if(workDayInfo.employeeId.supervisor === this.employeeId){
+                        this.subordinatesWorkDayInfo.push(workDayInfo);
+                    }
+                })
+                console.log(this.subordinatesWorkDayInfo);
+                this.checkSubordinatesWorkDayInfo();
+            })
+            .catch(err => console.log(err))
+        },
+        checkSubordinatesWorkDayInfo(){
+            if(this.subordinatesWorkDayInfo.length > 0){
+                this.hasAnyPendingApprove = true;
+            }
         }
     },
 
+    created() {
+        //獲取帳號資訊
+        this.employeeId = sessionStorage.getItem('employeeId');
+        if(this.employeeId === null){
+            this.employeeId = localStorage.getItem('employeeId');
+        }
+        this.name = sessionStorage.getItem("employeeName");
+        if(this.name === null){
+            this.name = localStorage.getItem("employeeName");
+        }
+        this.accountId = sessionStorage.getItem("accountId");
+        if(this.accountId === null){
+            this.accountId = localStorage.getItem("accountId");
+        }
+        this.getAllworkDayInfo();
+    },
     mounted() {
-        this.checkPendingApprove();
         this.addCloseNotifyList();
         this.calculateNotificationNum();
         this.langSelectValue = sessionStorage.getItem('langValue');
@@ -111,16 +166,7 @@ export default {
             this.enOption = '英語';
             this.jpOption = '日本語';
             this.logout = 'ログアウト';
-        }
-
-        this.name = sessionStorage.getItem("employeeName");
-        if(this.name === null){
-            this.name = localStorage.getItem("employeeName");
-            if(this.name === null){
-                this.name = "NONE";
-            }
-        }
-        
+        }      
     },
 };
 </script>
@@ -152,15 +198,9 @@ export default {
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">待審核通知</h5>
+                            <h5 class="mb-1">通知</h5>
                             </div>
-                            <p class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
-                        </RouterLink>
-                        <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
-                            <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">待審核通知</h5>
-                            </div>
-                            <p class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
                         </RouterLink>
                     </div>
                 </div>
@@ -250,8 +290,8 @@ export default {
                     }
 
                     .notifyIcon{
-                        height: 1rem;
-                        width: 1rem;
+                        height: 2vh;
+                        width: 2vh;
                         background-color: rgb(165, 20, 20);
                         border-radius: 3px;
                         font-family: "Cascadia Mono";
@@ -261,6 +301,7 @@ export default {
                         z-index: 1;
                         visibility: hidden;
                         pointer-events: none;
+                        font-size: 1.5vh;
                     }
                 }
             }

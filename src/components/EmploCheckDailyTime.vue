@@ -3,6 +3,10 @@ import { RouterLink, RouterView } from 'vue-router'
 export default {
     data(){
         return{
+            //帳戶資料
+            employeeId:'',
+            accountId:'',
+            employeeName:'',
             //工時表資料
             today:'',
             workDayInfo:[],
@@ -81,10 +85,10 @@ export default {
                 this.backBtn = '返回首頁';
             }
         },
-        fetchWorkHoursInfo(){
+        fetchWorkDayInfo(){
 
             let reqBody = {
-                employeeId : 'E00001'
+                employeeId : this.employeeId
             }
 
             fetch("http://localhost:3000/getWorkDayInfoByEmployeeId" ,{
@@ -663,7 +667,7 @@ export default {
         },
         workHoursInfo(event){
             let reqBody = {
-                employeeId : 'E00001'
+                employeeId : this.employeeId
             }
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
@@ -753,7 +757,7 @@ export default {
             deco2.style.left = "-130";
             setTimeout(()=>{
                 this.showWorkHoursInfo = false;
-            },800)
+            },300)
         },
         startAnimation() {
             setInterval(() => {
@@ -800,10 +804,26 @@ export default {
         }
     },
     created() {
-        this.fetchWorkHoursInfo();
+        //獲取帳號資訊
+        this.employeeId = sessionStorage.getItem('employeeId');
+        if(this.employeeId === null){
+            this.employeeId = localStorage.getItem('employeeId');
+        }
+        this.accountId = sessionStorage.getItem('accountId');
+        if(this.accountId === null){
+            this.accountId = localStorage.getItem('accountId');
+        }
+        this.employeeName = sessionStorage.getItem('employeeName');
+        if(this.employeeName === null){
+            this.employeeName = localStorage.getItem('employeeName');
+        }
+
+        //獲取工時表資訊
+        this.fetchWorkDayInfo();
         console.log(this.workDayInfoList);
     },
     mounted(){
+
         //檢查及切換語言
         this.langValue = sessionStorage.getItem('langValue');
         if(this.langValue === null){
@@ -866,10 +886,11 @@ export default {
                             <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
                                 <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
                                 <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
+                                <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>
+                                <i class="fa-solid fa-arrow-down" style="color: #24445c;"></i>
+                                <p style="color: #1a4e78">結束時間: {{ workHoursInfo.endTime }}</p>
                                 <p>機型: {{ workHoursInfo.model }}</p>
                                 <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
-                                <p>開始時間: {{ workHoursInfo.startTime }}</p>
-                                <p>結束時間: {{ workHoursInfo.endTime }}</p>
                                 <div class="detailTextFrame">
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
@@ -1142,7 +1163,7 @@ export default {
                                 left: 50%;
                                 transform: translateX(-50%);
                                 width: 98%;
-                                height: 60%;
+                                height: 57%;
                                 border-radius: 10px;
                                 border: 1.5px solid rgb(83, 78, 50);
                                 background-color: rgba(240, 235, 219, 0.4);
