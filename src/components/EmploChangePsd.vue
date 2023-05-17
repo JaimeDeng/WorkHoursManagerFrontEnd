@@ -264,7 +264,7 @@ export default {
                 this.oldPsdStr = 'Password'
                 this.oldPsdPHStr = 'Please set your old password'
             } else if (this.langValue === 'ch') {
-                this.pwdStr = '設置密碼';
+                this.pwdStr = '設置新密碼';
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
                 this.rePwdPHStr = '請再次輸入密碼';
