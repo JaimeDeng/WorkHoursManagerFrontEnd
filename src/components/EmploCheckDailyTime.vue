@@ -665,6 +665,7 @@ export default {
                 this.hasntThisTimeFrameInfo = false;
             }
         },
+        //
         workHoursInfo(event){
             let reqBody = {
                 employeeId : this.employeeId
@@ -733,6 +734,7 @@ export default {
             sheet.style.overflow = "hidden";
             sheet.style.marginLeft = "200%";
         },
+        //以點擊的日期查詢工時表
         workHoursInfoByDate(targetValue){
             this.selectedDateInfoList = [];
             this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
@@ -742,6 +744,7 @@ export default {
             })
             console.log(this.selectedDateInfoList);
         },
+        //返回日工時表
         backToWorkDayInfo(){
             let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
             workHoursInfoFrame.style.left = "-150%";
@@ -759,10 +762,14 @@ export default {
                 this.showWorkHoursInfo = false;
             },300)
         },
-        startAnimation() {
+        //icon動畫
+        startAnimation(){
             setInterval(() => {
                 this.isAnimating = !this.isAnimating;
             }, 500); //每隔0.5秒執行一次
+        },
+        editWorkHoursInfo(){
+            
         }
     },
     watch:{
@@ -895,7 +902,7 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workDayInfo.worInfoId" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button :value="workHoursInfo.worInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>

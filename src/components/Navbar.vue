@@ -13,6 +13,7 @@ export default {
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
+            hasntAccount: true, //是否已登入
             notificationNum:0,   //通知數量
             changeLangValue:"",
             langSelectValue:'',
@@ -127,6 +128,11 @@ export default {
             if(this.subordinatesWorkDayInfo.length > 0){
                 this.hasAnyPendingApprove = true;
             }
+        },
+        checkLoginOrNot(){
+            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
+                this.hasntAccount = false;
+            }
         }
     },
 
@@ -144,6 +150,7 @@ export default {
         if(this.accountId === null){
             this.accountId = localStorage.getItem("accountId");
         }
+        this.checkLoginOrNot();
         this.getAllworkDayInfo();
     },
     mounted() {
@@ -214,7 +221,7 @@ export default {
                         <option value="jp">{{ jpOption }}</option>
                     </select>
                     <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
-                    <button @click="clickNotificationBtn" type="button" class="notification" id="notification">
+                    <button v-if="!hasntAccount" @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
                         <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>

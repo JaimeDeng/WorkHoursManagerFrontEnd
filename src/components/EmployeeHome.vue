@@ -165,9 +165,9 @@ export default {
                 .buttonlink {
                     font-weight: 500;
                     letter-spacing: 0.03vw;
-                    box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.3);
+                    box-shadow: inset 0 -3vh 60px 0.1vh rgba(27, 46, 57, 0.3);
                     margin-top: 2%;
-                    color: #000;
+                    color: #3d3d3d;
                     width: 48%;
                     height: 10vh;
                     position: relative;
