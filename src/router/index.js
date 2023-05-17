@@ -12,7 +12,11 @@ import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
 import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
+<<<<<<< HEAD
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
+=======
+import ManaApprove from "../components/ManaApprove.vue"
+>>>>>>> origin/develop-chihli
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -88,6 +92,11 @@ const router = createRouter({
       path:'/EditEmployeeWorkHoursInfo/:editWorkHoursInfoId', //後面必須加上 :變數名 才能在此路徑讀取參數
       name: 'EditEmployeeWorkHoursInfo',
       component:EditEmployeeWorkHoursInfo
+    },
+    { //主管進入審核畫面
+      path:'/manaApprove',
+      name: ' ManaApprove',
+      component: ManaApprove
     }
   ]
 })

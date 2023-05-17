@@ -6,15 +6,70 @@
             <div class="left">
                 <div class="title_search">
                     <p>員工日工時表</p>
-                    <div>
-                        <label for="serch"><i class="fa-solid fa-magnifying-glass"></i></label>
+                    <!-- 篩選:員工ID,姓名 -->
+                    <div class="selectFrame">
+                        <label for="">員工ID,姓名</label>
                         <input id="serch" type="text" placeholder="請輸入員工ID,姓名">
                     </div>
+                    <!-- 篩選:審核狀態 -->
+                    <div class="selectFrame">
+                        <label for="">審核狀態</label>
+                        <select>
+                            <option selected>請選擇審核狀態</option>
+                            <option value="1">已審核</option>
+                            <option value="2">待審核</option>
+                        </select>
+                    </div>
+
+                    <!-- 篩選:人員部門 -->
+                    <div class="selectFrame">
+                        <label for="">人員部門</label>
+                        <select>
+                            <option selected>請選擇部門</option>
+                            <option value="1">管理部</option>
+                            <option value="2">IT部</option>
+                            <option value="3">營業部</option>
+                            <option value="4">製造部</option>
+                        </select>
+                    </div>
+
+                    <!-- 篩選:時間範圍 -->
+                    <div class="selectFrame">
+                        <label for="">時間範圍</label>
+                        <select>
+                            <option selected>請選擇時間範圍</option>
+                            <option value="1">7日</option>
+                            <option value="2">14日</option>
+                            <option value="3">30日</option>
+                        </select>
+                    </div>
+
 
                 </div>
                 <!-- 手風琴 -->
-                <div class="sheet" style="overflow-y: scroll; max-height: 320px;">
+                <div class="sheet" style="overflow: auto;">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                    aria-controls="flush-collapseOne">
+                                    員工ID:000929 時間:2023/05/07 已審核
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    <!-- 手風琴內容區 -->
+                                    <p>工作詳情:</p>
+                                    <p>姓名:</p>
+                                    <p>人員當日狀態:</p>
+                                    <p>審核進度:已審核</p>
+                                    <p>審核人員ID:</p>
+                                    <RouterLink to="/manaApprove">查看</RouterLink>
+                                </div>
+                            </div>
+                        </div>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="flush-headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -82,42 +137,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- 右側範圍 -->
-            <div class="right">
-                <div class="title">篩選範圍</div>
-                <div class="area1">
-                    <!-- 審核狀態 -->
-                    <label for="">審核狀態</label>
-                    <select>
-                        <option selected>請選擇審核狀態</option>
-                        <option value="1">已審核</option>
-                        <option value="2">待審核</option>
-                    </select>
-                    <!-- 人員部門 -->
-                    <label for="">人員部門</label>
-                    <select>
-                        <option selected>請選擇部門</option>
-                        <option value="1">管理部</option>
-                        <option value="2">IT部</option>
-                        <option value="3">營業部</option>
-                        <option value="4">製造部</option>
-                    </select>
-                    <!-- 人員ID -->
-                    <label for="personId">人員ID</label>
-                    <input id="personId" type="text" placeholder="請輸入員工ID">
-                    <!-- 時間範圍 -->
-                    <label for="">時間範圍</label>
-                    <select>
-                        <option selected>請選擇時間範圍</option>
-                        <option value="1">7日</option>
-                        <option value="2">14日</option>
-                        <option value="3">30日</option>
-                    </select>
-
-                </div>
                 <RouterLink to="/managerHome" class="buttonlink">返回</RouterLink>
             </div>
+
         </div>
 
     </div>
@@ -135,21 +157,22 @@
     .check {
 
         width: 70%;
-        height: 90%;
+        height: 95%;
         display: flex;
         justify-content: space-evenly;
 
         //左側
         .left {
-            padding: 12px;
+            padding: 2vw;
             background-color: rgba(255, 255, 255, 0.724);
             border: 2px solid rgb(177, 208, 224);
             border-radius: 5px;
-            width: 50%;
+            width: 100%;
 
             .title_search {
                 display: flex;
                 width: 100%;
+                height: 15%;
                 justify-content: space-between;
                 align-items: baseline;
 
@@ -158,22 +181,25 @@
                     font-weight: bold;
                 }
 
-                div {
-                    label {
-                        position: relative;
 
-                        i {
-                            position: absolute;
-                            top: -14px;
-                            left: 5px;
-                        }
-                    }
+                .selectFrame {
+                    width: 12vw;
 
+                    select,
                     input {
-                        border-radius: 50px;
-                        padding-left: 26px;
-                        border: 1px solid #000;
+                        cursor: pointer;
+                        width: 100%;
+                        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                        padding-left: 2%;
+                        height: 4vh;
+                        font-size: 2vh;
+                        border-radius: 5px;
+                        border: 1.5px solid #000;
+                        transition: 0.5s;
 
+                        &:focus {
+                            background-color: rgb(227, 244, 255);
+                        }
                     }
                 }
 
@@ -181,17 +207,20 @@
 
             .sheet {
                 border-radius: 5px;
-
+                height: 58vh;
+                margin-bottom: 2vh;
                 .accordion-button {
                     word-spacing: 1em;
+
                     i {
                         font-size: 8px;
                         margin-bottom: 6px;
                         margin-right: 8px;
                     }
-                    &:hover{
+
+                    &:hover {
                         background-color: rgb(105, 152, 171);
-                        color:white;
+                        color: white;
                     }
                 }
 
@@ -218,63 +247,25 @@
 
         }
 
-        //右側
-        .right {
-            background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 208, 224);
+        .buttonlink {
+            background: rgb(26, 55, 77);
+            border: 1px solid #000;
+            color: white;
             border-radius: 5px;
-            width: 35%;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .title {
-                font-size: 23px;
-                font-weight: bold;
-
+            padding: 4px;
+            margin: auto;
+            font-size: 16px;
+            text-decoration: none;
+        
+            &:hover {
+                background-color: rgb(64, 104, 130);
             }
 
-            .area1 {
-                display: flex;
-                flex-direction: column;
-                padding: 18px;
-
-                label {
-                    font-size: 15px;
-                }
-
-                select,
-                input {
-                    height: 35px;
-                    margin-bottom: 8px;
-                    border-radius: 5px;
-                    border: none;
-
-                }
-
-            }
-
-            .buttonlink {
-                background: rgb(26, 55, 77);
-                border: 1px solid #000;
-                color: white;
-                border-radius: 5px;
-                padding: 4px;
-                margin: auto;
-                font-size: 16px;
-                text-decoration: none;
-                &:hover {
-                    background-color: rgb(64, 104, 130);
-                }
-
-                &:active {
-                    transform: scale(0.95);
-                }
+            &:active {
+                transform: scale(0.95);
             }
         }
     }
 
 
-}
-</style>
+}</style>
