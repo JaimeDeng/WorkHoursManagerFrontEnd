@@ -111,8 +111,8 @@ export default {
 
                 .buttonlink {
                     font-weight: 500;
-                    letter-spacing: 0.05vw;
-                    box-shadow: inset 0 -1vh 50px 0.1vh rgba(101, 104, 110, 0.5);
+                    letter-spacing: 0.03vw;
+                    box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.3);
                     margin-top: 2%;
                     color: #000;
                     width: 48%;
@@ -121,7 +121,7 @@ export default {
                     background-color: rgb(255, 255, 255);
                     border-radius: 10px;
                     border: 1px solid #000;
-                    font-size: 2vh;
+                    font-size: 2.3vh;
                     text-decoration: none;
                     display: flex;
                     justify-content: center;
@@ -136,7 +136,7 @@ export default {
 
                     &:hover {
                         color: white;
-                        box-shadow: inset 0 -1vh 30px 0.1vh rgba(35, 35, 35, 0.5);
+                        box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.7);
                         background-color: rgb(64, 104, 130);
                     }
 

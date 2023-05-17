@@ -33,7 +33,9 @@ export default {
             backBtn:'',
             //輸入綁定
             reviewStatusSelect:'default',
-            timeFrameSelect:'default'
+            timeFrameSelect:'default',
+            //元件動畫
+            isAnimating:false
         }
     },
     methods:{
@@ -687,11 +689,17 @@ export default {
                         const thisTime = new Date();
                         const thisTimeHours = parseInt(thisTimeArr[0]);
                         const thisTimeMinutes = parseInt(thisTimeArr[1]);
-                        if(nextTime > thisTime){
+                        if(nextTimeHours === thisTimeHours){
+                            if(nextTimeMinutes < thisTimeMinutes){
+                                container = data.workHoursInfoList[i+1];
+                                data.workHoursInfoList[i+1] = data.workHoursInfoList[i];
+                                data.workHoursInfoList[i] = container;
+                            }
+                        }else if(nextTimeHours < thisTimeHours){
                             container = data.workHoursInfoList[i+1];
                             data.workHoursInfoList[i+1] = data.workHoursInfoList[i];
                             data.workHoursInfoList[i] = container;
-                        }       
+                        }
                     }
                 }
                 this.workHoursInfoData = data;
@@ -746,6 +754,11 @@ export default {
             setTimeout(()=>{
                 this.showWorkHoursInfo = false;
             },800)
+        },
+        startAnimation() {
+            setInterval(() => {
+                this.isAnimating = !this.isAnimating;
+            }, 500); //每隔0.5秒執行一次
         }
     },
     watch:{
@@ -801,6 +814,9 @@ export default {
         //獲取今天日期
         const today = new Date();
         this.today = today;
+        
+        //開始產生元件動畫
+        this.startAnimation();
     }
 }
 </script>
@@ -848,7 +864,7 @@ export default {
                         <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
-                                <p>日期: {{ workHoursInfo.date }}</p>
+                                <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
                                 <p>狀態: {{ workHoursInfo.status }}</p>
                                 <p>機型: {{ workHoursInfo.model }}</p>
                                 <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
@@ -857,6 +873,7 @@ export default {
                                 <p>工作內容: {{ workHoursInfo.detail }}</p>
                                 <button class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
                             </div>
+                            <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
                     </div>
                     <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
@@ -1047,6 +1064,7 @@ export default {
                     overflow: auto;
 
                     .dateTitle{
+                        font-size: 2.5vh;
                         height: max-content;
                     }
                     .cardFrame{
@@ -1056,17 +1074,17 @@ export default {
                         overflow: hidden;
                         white-space: nowrap;
                         cursor: grab;
-                        &::before {
-                            content: "拖曳觀看其他工時表";
-                            position: absolute;
-                            bottom: 1%;
+
+                        .tips{
+                            position: fixed;
+                            top: 2%;
                             left: 50%;
                             transform: translateX(-50%);
                             width: max-content;
                             padding: 0 0.5vw;
                             height: 3vh;
                             border-radius: 10px;
-                            background-color: rgba(119, 119, 119, 0.4);
+                            background-color: rgba(38, 38, 38, 0.5);
                             color: white;
                             display: flex;
                             align-items: center;
@@ -1076,9 +1094,11 @@ export default {
                             visibility: hidden;
                             opacity : 0;
                             z-index: 1;
+                            .fa-hand{
+                                transition: 0.3s;
+                            }
                         }
-
-                        &:hover::before {
+                        &:hover > .tips {
                             visibility: visible;
                             opacity: 1;
                         }
@@ -1092,29 +1112,39 @@ export default {
                             width: 40vw;
                             background-color: rgba(250, 250, 250, 0.7);
                             overflow: auto;
+                            overflow-wrap: break-word;
+                            white-space: break-spaces;
                             p{
                                 font-size: 2vh;
                             }
+                            .infoNum{
+                                font-size: 2.5vh;
+                                position: fixed;
+                                top: 2%;
+                                right: 2%;
+                            }
                             .editWorkHoursInfo{
                                 position: absolute;
-                                bottom: 2%;
-                                right: 2%;
-                                background: rgb(26, 55, 77);
-                                border: 1px solid #000;
-                                color: white;
-                                border-radius: 5px;
+                                top: 0%;
+                                left: 0%;
+                                background: rgb(233, 198, 84);
+                                border: none;
+                                color: rgb(32, 36, 44);
+                                border-radius: 10px 5px 15px 5px;
                                 width: max-content;
                                 padding: 0 1vw;
                                 height: 3vh;
-                                font-size: 1.5vh;
+                                font-size: 2vh;
                                 transition: 0.4s;
+                                z-index: 1;
 
                                 &:hover {
-                                    background-color: rgb(64, 104, 130);
+                                    color: white;
+                                    background-color: rgb(155, 121, 11);
                                 }
 
                                 &:active {
-                                    transform: scale(0.95);
+                                    transform: scale(0.97);
                                 }
                             }
                         }
