@@ -171,10 +171,10 @@ export default {
             this.enOption = 'English';
             this.jpOption = 'Japanese';
             if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
-                this.loginLogout = 'Log in';
+                this.loginLogout = 'Log out';
                 this.loginOrLogout = true;
             }else{
-                this.loginLogout = 'Log out';
+                this.loginLogout = 'Log in';
                 this.loginOrLogout = false;
             }
         }else if(this.langSelectValue === 'jp'){
