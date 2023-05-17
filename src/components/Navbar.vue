@@ -19,7 +19,8 @@ export default {
             chOption:'',
             enOption:'',
             jpOption:'',
-            logout:'',
+            loginLogout:'',
+            loginOrLogout:false,
             lang:'',
 
             //工時資料
@@ -61,15 +62,19 @@ export default {
             sessionStorage.setItem('langValue' , langValue);
             this.$emit("change");
         },
-        accountLogout(){
-            localStorage.removeItem('accountId');
-            localStorage.removeItem('employeeId');
-            localStorage.removeItem('employeeName');
-            sessionStorage.removeItem('accountId');
-            sessionStorage.removeItem('employeeId');
-            sessionStorage.removeItem('employeeName');
-            this.$router.push('/login');
-            this.$emit("logout");
+        accountLoginLogout(){
+            if(this.loginOrLogout === true){
+                localStorage.removeItem('accountId');
+                localStorage.removeItem('employeeId');
+                localStorage.removeItem('employeeName');
+                sessionStorage.removeItem('accountId');
+                sessionStorage.removeItem('employeeId');
+                sessionStorage.removeItem('employeeName');
+                this.$router.push('/login');
+                this.$emit("logout");
+            }else{
+                this.$router.push('/login');
+            }
         },
         updateNavbar(){
             this.name = sessionStorage.getItem('employeeName');
@@ -153,19 +158,37 @@ export default {
             this.chOption = '中文';
             this.enOption = '英文';
             this.jpOption = '日文';
-            this.logout = '登出';
+            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
+                this.loginLogout = '登出';
+                this.loginOrLogout = true;
+            }else{
+                this.loginLogout = '登入';
+                this.loginOrLogout = false;
+            }
         }else if(this.langSelectValue === 'en'){
             this.lang = 'Language'
             this.chOption = 'Chinese';
             this.enOption = 'English';
             this.jpOption = 'Japanese';
-            this.logout = 'Log out';
+            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
+                this.loginLogout = 'Log in';
+                this.loginOrLogout = true;
+            }else{
+                this.loginLogout = 'Log out';
+                this.loginOrLogout = false;
+            }
         }else if(this.langSelectValue === 'jp'){
             this.lang = '言語選択'
             this.chOption = '中国語';
             this.enOption = '英語';
             this.jpOption = '日本語';
-            this.logout = 'ログアウト';
+            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
+                this.loginLogout = 'ログアウト';
+                this.loginOrLogout = true;
+            }else{
+                this.loginLogout = 'ログイン';
+                this.loginOrLogout = false;
+            }
         }      
     },
 };
@@ -190,7 +213,7 @@ export default {
                         <option value="en">{{ enOption }}</option>
                         <option value="jp">{{ jpOption }}</option>
                     </select>
-                    <h3>{{ name }} |<button @click="accountLogout" class="btnback" type="button">{{ logout }}</button></h3>
+                    <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
                     <button @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
                         <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
@@ -286,7 +309,7 @@ export default {
                     z-index: 0;
 
                     .fa-bell{
-                        font-size: 2rem;
+                        font-size: 3vh;
                     }
 
                     .notifyIcon{
@@ -301,6 +324,7 @@ export default {
                         z-index: 1;
                         visibility: hidden;
                         pointer-events: none;
+                        line-height: 2vh;
                         font-size: 1.5vh;
                     }
                 }
