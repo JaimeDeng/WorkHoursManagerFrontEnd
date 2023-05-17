@@ -865,13 +865,16 @@ export default {
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
                                 <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
-                                <p>狀態: {{ workHoursInfo.status }}</p>
+                                <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
                                 <p>機型: {{ workHoursInfo.model }}</p>
                                 <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
                                 <p>開始時間: {{ workHoursInfo.startTime }}</p>
                                 <p>結束時間: {{ workHoursInfo.endTime }}</p>
-                                <p>工作內容: {{ workHoursInfo.detail }}</p>
-                                <button class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <div class="detailTextFrame">
+                                    <h5>工作內容</h5>
+                                    <p>{{ workHoursInfo.detail }}</p>
+                                </div>
+                                <button :value="workDayInfo.worInfoId" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
@@ -955,7 +958,7 @@ export default {
             position: relative;
             padding: 1vw;
             background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 208, 224);
+            border: 2px solid rgb(177, 201, 224);
             border-radius: 5px;
             width: 90%;
             height: 75vh;
@@ -995,7 +998,7 @@ export default {
                             width: 6vw;
                             height: 3vh;
                             font-size: 1vh;
-                            border-radius: 50px;
+                            border-radius: 30px;
                             padding-left: 20%;
                             border: 1px solid #000;
 
@@ -1107,6 +1110,7 @@ export default {
                             display: inline-block;
                             text-align: center;
                             border-radius: 10px;
+                            padding: 1% 1%;
                             margin: 0 1%;
                             height: 100%;
                             width: 40vw;
@@ -1114,7 +1118,11 @@ export default {
                             overflow: auto;
                             overflow-wrap: break-word;
                             white-space: break-spaces;
+                            h4{
+                                font-size: 3vh;
+                            }
                             p{
+                                margin: auto;
                                 font-size: 2vh;
                             }
                             .infoNum{
@@ -1123,11 +1131,28 @@ export default {
                                 top: 2%;
                                 right: 2%;
                             }
+                            .detailTextFrame{
+                                h5{
+                                    margin-top: 1%;
+                                    font-size: 2.5vh;
+                                    border-bottom: 1px solid rgb(83, 78, 50);
+                                }
+                                position: absolute;
+                                bottom: 1%;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                width: 98%;
+                                height: 60%;
+                                border-radius: 10px;
+                                border: 1.5px solid rgb(83, 78, 50);
+                                background-color: rgba(240, 235, 219, 0.4);
+                                overflow: auto;
+                            }
                             .editWorkHoursInfo{
                                 position: absolute;
                                 top: 0%;
-                                left: 0%;
-                                background: rgb(233, 198, 84);
+                                left: -0.5%;
+                                background: rgb(230, 218, 179);
                                 border: none;
                                 color: rgb(32, 36, 44);
                                 border-radius: 10px 5px 15px 5px;
@@ -1304,6 +1329,9 @@ export default {
 
             .back {
                 position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 bottom: 2%;
                 left: 1%;
                 background: rgb(26, 55, 77);
@@ -1312,7 +1340,8 @@ export default {
                 border-radius: 5px;
                 width: max-content;
                 height: 3vh;
-                font-size: 1.5vh;
+                font-size: 2vh;
+                padding: 1vh 1vw;
                 transition: 0.4s;
 
                 &:hover {
