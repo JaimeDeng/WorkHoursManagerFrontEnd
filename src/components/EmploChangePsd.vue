@@ -129,7 +129,7 @@ export default {
                 console.log(securePwd);
                 console.log(a);
 
-                fetch("http://localhost:3000/changPassword", {
+                fetch("http://localhost:3000/changePassword", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"

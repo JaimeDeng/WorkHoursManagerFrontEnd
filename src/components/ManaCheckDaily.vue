@@ -1,8 +1,21 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import checkPopup from './checkPopup.vue'
 export default {
+components: {
+    RouterLink,
+    checkPopup
+},
     data() {
         return {
+            //checkPopup的props變數
+            showCheckPopup: false,
+            checkPopupData: {
+                title: "Popup Title",
+                content: "Popup Content",
+                backBtn: 'back',
+                confirmBtn: 'confirm'
+            },
             //帳戶資料
             employeeId: '',
             accountId: '',
@@ -12,12 +25,17 @@ export default {
             workDayInfo: [],
             workHoursInfoData: [],
             selectedDateInfoList: [],
+            subordinateSelected: "",
+            subordinates: [],
+            subordinateName: "",
             queryDate: "",
             showWorkHoursInfo: false,
+            showApproveBtn: false,
             workDayInfoList: [],
             hasAnyWorkDayInfo: false,
             hasntThisDateInfo: false,
             hasntThisTimeFrameInfo: false,
+            hasntThisReviewStatusInfo: false,
             listRenderOver: false,
             message: '',
             //介面文字
@@ -38,6 +56,7 @@ export default {
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
+            subordinateSelect: 'default',
             //元件動畫
             isAnimating: false
         }
@@ -45,7 +64,7 @@ export default {
     methods: {
         changeLanguage() {
             if (this.langValue === 'ch') {
-                this.title = '日工時表一覽';
+                this.title = '日工時表審核一覽';
                 this.search = '以日期搜尋';
                 this.reviewStatus = '審核狀態';
                 this.reviewStatusPH = '選擇審核狀態';
@@ -57,6 +76,8 @@ export default {
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁';
+                this.checkPopupData.backBtn = '返回';
+                this.checkPopupData.confirmBtn = '確認';
             } else if (this.langValue === 'en') {
                 this.title = 'Timesheet List';
                 this.search = 'Search by date';
@@ -70,6 +91,8 @@ export default {
                 this.timeFrameOpt2 = '14days';
                 this.timeFrameOpt3 = '30days';
                 this.backBtn = 'Back to homepage';
+                this.checkPopupData.backBtn = 'Back';
+                this.checkPopupData.confirmBtn = 'Confirm';
             } else if (this.langValue === 'jp') {
                 this.title = '工時表一覽';
                 this.search = '以日期搜尋';
@@ -83,6 +106,8 @@ export default {
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁';
+                this.checkPopupData.backBtn = '返回';
+                this.checkPopupData.confirmBtn  = '確認';
             }
         },
         fetchWorkDayInfo() {
@@ -114,6 +139,21 @@ export default {
                         }
                     }
                     this.workDayInfo = subordinatesWorkDayInfoList;
+
+                    //建構下屬名單
+                    this.workDayInfo.forEach((workDayInfo)=>{
+                        let subordinateId = workDayInfo.employeeId;
+                        let subordinateName;
+                        this.getSubordinateInfo(subordinateId).then((res)=>{
+                            subordinateName = res;
+                            let subordinateInfo = subordinateId + " " + subordinateName;
+                            if(!this.subordinates.includes(subordinateInfo)){
+                                this.subordinates.push(subordinateInfo);
+                            }
+                            console.log(this.subordinates);
+                        });
+                    })
+
                     console.log(this.workDayInfo);
                     if (this.workDayInfo.length !== 0) {
                         this.hasAnyWorkDayInfo = true;
@@ -134,6 +174,7 @@ export default {
         renderList() {
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
+            this.hasntThisReviewStatusInfo = false;
             this.workDayInfo.forEach((workDayInfo) => {
                 let approvedStr = "";
                 if (workDayInfo.approved === true) {
@@ -145,9 +186,10 @@ export default {
                 if (workDayInfo.workingHours < 8) {
                     workingHoursIsNotEnough = true;
                 }
-                let dateAndEmployeeId = JSON.stringify({
+                let dateAndEmployeeIdAndApprove = JSON.stringify({
                         date : workDayInfo.date,
-                        employeeId :　workDayInfo.employeeId
+                        employeeId :　workDayInfo.employeeId,
+                        approved : workDayInfo.approved
                     });
                 this.workDayInfoList.push({
                     workInfoId: workDayInfo.workInfoId,
@@ -158,17 +200,69 @@ export default {
                     approved: workDayInfo.approved,
                     approvedStr: approvedStr,
                     workingHoursIsNotEnough: workingHoursIsNotEnough,
-                    dateAndEmployeeId: dateAndEmployeeId
+                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                 })
                 console.log(workDayInfo.date)
             })
             this.listRenderOver = true;
         },
+        async getSubordinateInfo(subordinateId) {
+        const response = await fetch("http://localhost:3000/getEmployeeInfoById", {
+            method: "put",
+            headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({ employeeId: subordinateId })
+        });
+        
+            const data = await response.json();
+            return data.name;
+        },
+        renderListBySubordinate(selectedSubornidate){
+            this.workDayInfoList = [];
+            if(selectedSubornidate === "default"){
+                this.renderList();
+            }else{
+                let subordinateInfoArr = selectedSubornidate.split(" ");
+                let subordinateId = subordinateInfoArr[0];
+                this.workDayInfo.forEach((workDayInfo) => {
+                    if(workDayInfo.employeeId === subordinateId){
+                        let approvedStr = "";
+                        if (workDayInfo.approved === true) {
+                            approvedStr = "已審核";
+                        } else {
+                            approvedStr = "未審核";
+                        }
+                        let workingHoursIsNotEnough = false;
+                        if (workDayInfo.workingHours < 8) {
+                            workingHoursIsNotEnough = true;
+                        }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                        this.workDayInfoList.push({
+                            workInfoId: workDayInfo.workInfoId,
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId,
+                            workingHours: workDayInfo.workingHours,
+                            status: workDayInfo.status,
+                            approved: workDayInfo.approved,
+                            approvedStr: approvedStr,
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                        })
+                    }
+                })
+            }
+        },
         renderListLimitedApproved() {
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if (this.timeFrameSelect === "default") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     if (workDayInfo.approved === true) {
                         let approvedStr = "已審核";
                         let workingHoursIsNotEnough = false;
@@ -178,18 +272,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "7days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -202,18 +302,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "14days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -226,18 +332,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "30days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -250,22 +362,29 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListLimitedNotApproved() {
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if (this.timeFrameSelect === "default") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     if (workDayInfo.approved === false) {
                         let approvedStr = "未審核";
                         let workingHoursIsNotEnough = false;
@@ -275,18 +394,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "7days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -299,18 +424,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "14days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -323,18 +454,24 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if (this.timeFrameSelect === "30days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -347,19 +484,25 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
                             workingHoursIsNotEnough: workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListByDate(date) {
-            this.workDayInfo = [];
+            this.workDayInfoList = [];
             let hasThisDateInfo = false;
             this.workDayInfo.forEach((workDayInfo) => {
                 if (workDayInfo.date === date) {
@@ -376,7 +519,7 @@ export default {
                     this.workDayInfoList.push({
                         workInfoId: workDayInfo.workInfoId,
                         date: workDayInfo.date,
-                        employeeId: workDayInfo.employeeId.employeeId,
+                        employeeId: workDayInfo.employeeId,
                         workingHours: workDayInfo.workingHours,
                         status: workDayInfo.status,
                         approved: workDayInfo.approved,
@@ -397,7 +540,7 @@ export default {
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -415,7 +558,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -427,7 +570,7 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -442,7 +585,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -454,7 +597,7 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -468,7 +611,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -490,7 +633,7 @@ export default {
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -508,7 +651,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -520,7 +663,7 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -535,7 +678,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -547,7 +690,7 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -561,7 +704,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -583,7 +726,7 @@ export default {
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
             if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
@@ -601,7 +744,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -613,11 +756,11 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且已審核
+                    //30天內且已審核
                     if (dayDiff <= 30 && workDayInfo.approved === true) {
                         let approvedStr = "已審核";
 
@@ -628,7 +771,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -640,11 +783,11 @@ export default {
                 })
             }
             if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+                this.workDayInfo.forEach((workDayInfo) => {
                     let workDay = new Date(workDayInfo.date);
                     let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                     let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且未審核
+                    //30天內且未審核
                     if (dayDiff <= 30 && workDayInfo.approved === false) {
                         let approvedStr = "未審核";
                         let workingHoursIsNotEnough = false;
@@ -654,7 +797,7 @@ export default {
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
+                            employeeId: workDayInfo.employeeId,
                             workingHours: workDayInfo.workingHours,
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
@@ -672,10 +815,15 @@ export default {
             }
         },
         workHoursInfo(event) {
-            let dateAndEmployeeId = JSON.parse(event.target.value);
-            console.log(dateAndEmployeeId);
+            let dateAndEmployeeIdAndApprove = JSON.parse(event.target.value);
+            if(dateAndEmployeeIdAndApprove.approved === false){
+                this.showApproveBtn = true;
+            }else{
+                this.showApproveBtn = false;
+            }
+            console.log(dateAndEmployeeIdAndApprove);
             let reqBody = {
-                employeeId: dateAndEmployeeId.employeeId
+                employeeId: dateAndEmployeeIdAndApprove.employeeId
             }
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId", {
@@ -718,7 +866,7 @@ export default {
                     console.log(this.workHoursInfoData);
                     this.showWorkHoursInfo = true;
                     setTimeout(() => {
-                        this.queryDate = dateAndEmployeeId.date;
+                        this.queryDate = dateAndEmployeeIdAndApprove.date;
                         let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
                         let deco1 = document.getElementById("deco1");
                         let deco2 = document.getElementById("deco2");
@@ -727,7 +875,7 @@ export default {
                         deco1.style.left = "110%";
                         deco2.style.left = "150%";
                     }, 100);
-                    this.workHoursInfoByDate(dateAndEmployeeId.date);
+                    this.workHoursInfoByDate(dateAndEmployeeIdAndApprove.date);
                     if (data.success === true) {
                         this.message = data.message;
                     } else {
@@ -766,6 +914,39 @@ export default {
             setTimeout(() => {
                 this.showWorkHoursInfo = false;
             }, 300)
+        },
+        approve() {
+            this.showCheckPopup = true;
+            if (this.langValue === 'ch') {
+            this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'en') {
+                this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "Confirm";
+            }
+            this.checkPopupData.content = "確定審核該日工時表嗎?";
+            this.showCheckPopup = true;
+            setTimeout(() => {
+                let checkPopup = this.$refs.checkPopup;
+                console.log(checkPopup);
+                let checkPopupEl = checkPopup.$el;
+                let checkPopupIcon = checkPopupEl.querySelector("i");
+                console.log(checkPopupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-triangle-exclamation";
+                checkPopupIcon.classList.add(iconStr1);
+                checkPopupIcon.classList.add(iconStr2);
+                checkPopupIcon.style.color = "#eedd20";
+                console.log(checkPopupIcon);
+                checkPopup.$el.style.opacity = "1";
+                checkPopup.$el.style.bottom = "0%";
+            }, 100);
+        },
+        closeCheckPopup() {
+            this.showCheckPopup = false;
+        },
+        confirmApprove() {
+            
         },
         startAnimation() {
             setInterval(() => {
@@ -809,6 +990,10 @@ export default {
             if (newValue === '30days') {
                 this.renderListWhitin30Days();
             }
+        },
+        subordinateSelect(newValue) {
+            console.log(newValue);
+            this.renderListBySubordinate(newValue);
         }
     },
     created() {
@@ -851,6 +1036,12 @@ export default {
 </script>
 <template>
     <div class="main">
+
+        <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
+        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup" 
+        @close="closeCheckPopup" @confirm="confirmApprove"></checkPopup>
+        <div v-if="showCheckPopup" ref="mask" class="mask"></div>
+
         <div class="check">
 
             <!-- 左側範圍 -->
@@ -876,15 +1067,12 @@ export default {
                                 <option value="false">{{ reviewStatusOpt2 }}</option>
                             </select>
                         </div>
-                        <!-- 篩選:人員部門 -->
+                        <!-- 篩選:下屬名單 -->
                         <div class="dpm">
-                            <label for="">人員部門</label>
-                            <select>
-                                <option selected>請選擇部門</option>
-                                <option value="1">管理部</option>
-                                <option value="2">IT部</option>
-                                <option value="3">營業部</option>
-                                <option value="4">製造部</option>
+                            <label for="subordinateSelect">人員</label>
+                            <select v-model="subordinateSelect" id="subordinateSelect">
+                                <option value="default" selected>請選擇人員</option>
+                                <option v-for="(subordinate , index) in subordinates" :value="subordinate" :key="index">{{ subordinate }}</option>
                             </select>
                         </div>
                         <div class="tim">
@@ -924,7 +1112,11 @@ export default {
                                     class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
                     </div>
-                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                    <div class="btnFrame">
+                        <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                        <button v-if="showApproveBtn" @click="approve" class="approve" id="approve">確認審核</button>
+                        <button v-if="!showApproveBtn" @click="revokeApprove" class="approve" id="revokeApprove">收回審核</button>
+                    </div>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
                 <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
@@ -940,7 +1132,7 @@ export default {
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    日期:{{ workDayInfo.date }}
+                                    日期:{{ workDayInfo.date }} 員工:{{ workDayInfo.employeeId }}
                                     <p
                                         :class="{ 'hasntApproved': !workDayInfo.approved, 'hasApproved': workDayInfo.approved }">
                                         {{ workDayInfo.approvedStr }}</p>
@@ -960,7 +1152,7 @@ export default {
                                     <p>出勤狀態: {{ workDayInfo.status }}</p>
                                     <p :class="{ 'hasntApproved': !workDayInfo.approved }">審核狀態: {{ workDayInfo.approvedStr
                                     }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeId" class="viewBtn"
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeIdAndApprove" class="viewBtn"
                                         type="button">查看</button>
                                 </div>
                             </div>
@@ -969,6 +1161,7 @@ export default {
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
                     <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -993,6 +1186,16 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .checkPopup{
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        z-index: 2;
+    }
 
     .check {
         position: relative;
@@ -1266,29 +1469,62 @@ export default {
                     }
                 }
 
-                .backToDayList {
+                .btnFrame{
+                    margin: 0 auto;
                     margin-top: 1%;
-                    margin-left: auto;
-                    margin-right: auto;
-                    padding-left: 1vw;
-                    padding-right: 1vw;
-                    background: rgb(26, 55, 77);
-                    border: 1px solid #000;
-                    color: white;
-                    border-radius: 5px;
-                    width: max-content;
-                    height: 3.5vh;
-                    bottom: 5%;
-                    font-size: 1.5vh;
-                    transition: 0.4s;
+                    height: auto;
+                    width: 80%;
+                    display: flex;
+                    justify-content: space-between;
 
-                    &:hover {
-                        background-color: rgb(64, 104, 130);
+                    .backToDayList {
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding-left: 1vw;
+                        padding-right: 1vw;
+                        background: rgb(26, 55, 77);
+                        border: 1px solid #000;
+                        color: white;
+                        border-radius: 5px;
+                        width: max-content;
+                        height: 3.5vh;
+                        bottom: 5%;
+                        font-size: 1.5vh;
+                        transition: 0.4s;
+
+                        &:hover {
+                            background-color: rgb(64, 104, 130);
+                        }
+
+                        &:active {
+                            scale: 0.95;
+                        }
                     }
 
-                    &:active {
-                        scale: 0.95;
+                    .approve{
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding-left: 1vw;
+                        padding-right: 1vw;
+                        background: rgb(26, 55, 77);
+                        border: 1px solid #000;
+                        color: white;
+                        border-radius: 5px;
+                        width: max-content;
+                        height: 3.5vh;
+                        bottom: 5%;
+                        font-size: 1.5vh;
+                        transition: 0.4s;
+
+                        &:hover {
+                            background-color: rgb(64, 104, 130);
+                        }
+
+                        &:active {
+                            scale: 0.95;
+                        }
                     }
+                    
                 }
             }
 
