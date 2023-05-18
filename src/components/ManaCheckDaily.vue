@@ -101,24 +101,26 @@ export default {
                 .then((data) => {
                     //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
                     let container = null;
-                    for (let i = data.workDayInfoList.length - 1; i > 0; i--) {
-                        for (let i = 0; i < data.workDayInfoList.length - 1; i++) {
-                            const nextDateStr = data.workDayInfoList[i + 1].date;
-                            const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
-                            const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                            const thisDateStr = data.workDayInfoList[i].date;
-                            const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
-                            const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
-                            if (nextDate > thisDate) {
-                                container = data.workDayInfoList[i + 1];
-                                data.workDayInfoList[i + 1] = data.workDayInfoList[i];
-                                data.workDayInfoList[i] = container;
+                    if(data.pendingApprovalWorkDayInfoList.length > 1){
+                        for (let i = data.pendingApprovalWorkDayInfoList.length - 1; i > 0; i--) {
+                            for (let i = 0; i < data.pendingApprovalWorkDayInfoList.length - 1; i++) {
+                                const nextDateStr = data.pendingApprovalWorkDayInfoList[i + 1].date;
+                                const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                                const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                                const thisDateStr = data.pendingApprovalWorkDayInfoList[i].date;
+                                const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                                const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                                if (nextDate > thisDate) {
+                                    container = data.pendingApprovalWorkDayInfoList[i + 1];
+                                    data.pendingApprovalWorkDayInfoList[i + 1] = data.pendingApprovalWorkDayInfoList[i];
+                                    data.pendingApprovalWorkDayInfoList[i] = container;
+                                }
                             }
                         }
                     }
                     this.workDayInfo = data;
                     console.log(this.workDayInfo);
-                    if (this.workDayInfo.workDayInfoList.length !== 0) {
+                    if (this.workDayInfo.pendingApprovalWorkDayInfoList.length !== 0) {
                         this.hasAnyWorkDayInfo = true;
                         this.renderList();
                     }
@@ -133,7 +135,7 @@ export default {
         renderList() {
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
-            this.workDayInfo.forEach((workDayInfo) => {
+            this.workDayInfo.pendingApprovalWorkDayInfoList.forEach((workDayInfo) => {
                 let approvedStr = "";
                 if (workDayInfo.approved === true) {
                     approvedStr = "已審核";
@@ -842,41 +844,40 @@ export default {
             method: "put",
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
-            }
-        }).then(res => res.json({supervisorId : this.employeeId}))
-            .then((data) => {
-                console.log(data);
-                let myS = data;
-                let container = null;
-                    for (let i = myS.length - 1; i > 0; i--) {
-                        for (let i = 0; i < myS.length - 1; i++) {
-                            const nextDateStr = myS[i + 1].date;
-                            const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
-                            const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                            const thisDateStr = myS[i].date;
-                            const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
-                            const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
-                            if (nextDate > thisDate) {
-                                container = myS[i + 1];
-                                myS[i + 1] = myS[i];
-                                myS[i] = container;
-                            }
+            },
+            body: JSON.stringify({supervisorId : this.employeeId})
+        }).then(res => res.json())
+        .then((data) => {
+            console.log(data);
+            let myS = data;
+            let container = null;
+                for (let i = myS.length - 1; i > 0; i--) {
+                    for (let i = 0; i < myS.length - 1; i++) {
+                        const nextDateStr = myS[i + 1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = myS[i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if (nextDate > thisDate) {
+                            container = myS[i + 1];
+                            myS[i + 1] = myS[i];
+                            myS[i] = container;
                         }
                     }
-                    this.workDayInfo = myS;
-                    console.log(this.workDayInfo);
-                    if (this.workDayInfo.length !== 0) {
-                        this.hasAnyWorkDayInfo = true;
-                        this.renderList();
-                    }
-                    if (data.success === true) {
-                        this.message = data.message;
-                    } else {
-                        this.message = data.message;
-                    }
-                
-
-            })
+                }
+                this.workDayInfo = myS;
+                console.log(this.workDayInfo);
+                if (this.workDayInfo.length !== 0) {
+                    this.hasAnyWorkDayInfo = true;
+                    this.renderList();
+                }
+                if (data.success === true) {
+                    this.message = data.message;
+                } else {
+                    this.message = data.message;
+                }
+        })
     }
 }
 </script>
