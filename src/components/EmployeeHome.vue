@@ -41,6 +41,7 @@ export default {
                 if(data.level === "課長" || data.level === "副理" || data.level === "經理"|| data.level === "總經理"){
                     this.isSupervisor = true;
                 }
+                this.hasRendered = true;
             })
             .catch(err => console.log(err))
         },

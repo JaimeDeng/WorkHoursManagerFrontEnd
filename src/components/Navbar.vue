@@ -10,6 +10,10 @@ export default {
     data() {
         return {
             name: "NONE",   //員工名
+            employeeId:'',
+            accountId:'',
+            isSupervisor:false,
+            isAdministrator:false,
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
@@ -30,6 +34,28 @@ export default {
     },
 
     methods: {
+        //職等檢查
+        levelCheck(){
+            fetch("http://localhost:3000/getEmployeeInfoById" ,{
+                method:"put",
+                body: JSON.stringify({employeeId : this.employeeId}),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                console.log(data);
+                if(data.level === "系統管理員"){
+                    this.isSupervisor = true;
+                    this.isAdministrator = true;
+                    this.hasRendered = true;
+                }
+                if(data.level === "課長" || data.level === "副理" || data.level === "經理"|| data.level === "總經理"){
+                    this.isSupervisor = true;
+                }
+            })
+            .catch(err => console.log(err))
+        },
         //監看通知鈴鐺按鈕是否被點擊
         clickNotificationBtn(){
             this.notificationBtnIsClick = !this.notificationBtnIsClick;
@@ -86,10 +112,10 @@ export default {
                 }
             }
         },
-        getAllworkDayInfo(){
-            fetch("http://localhost:3000/getAllWorkDayInfo" ,{
-                method:"get",
-                body: JSON.stringify(),
+        getPendingApprovalWorkDayInfo(){
+            fetch("http://localhost:3000/getPendingApprovalWorkDayInfoBySupervisorId" ,{
+                method:"put",
+                body: JSON.stringify({ supervisorId : this.employeeId}),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -98,24 +124,23 @@ export default {
                 console.log(data);
                 //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
                 let container = null;
-                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
-                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
-                        const nextDateStr = data.workDayInfoList[i+1].date;
+                for(let i = data.pendingApprovalWorkDayInfoList.length - 1 ; i > 0 ; i --){
+                    for(let i = 0 ; i < data.pendingApprovalWorkDayInfoList.length - 1 ; i++){
+                        const nextDateStr = data.pendingApprovalWorkDayInfoList[i+1].date;
                         const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
                         const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                        const thisDateStr = data.workDayInfoList[i].date;
+                        const thisDateStr = data.pendingApprovalWorkDayInfoList[i].date;
                         const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
                         const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
                         if(nextDate > thisDate){
-                            container = data.workDayInfoList[i+1];
-                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
-                            data.workDayInfoList[i] = container;
+                            container = data.pendingApprovalWorkDayInfoList[i+1];
+                            data.pendingApprovalWorkDayInfoList[i+1] = data.pendingApprovalWorkDayInfoList[i];
+                            data.pendingApprovalWorkDayInfoList[i] = container;
                         }       
                     }
                 }
-                data.workDayInfoList.forEach((workDayInfo)=>{
-                    console.log(this.employeeId)
-                    if(workDayInfo.employeeId.supervisor === this.employeeId){
+                data.pendingApprovalWorkDayInfoList.forEach((workDayInfo)=>{
+                    if(workDayInfo.supervisorId === this.employeeId){
                         this.subordinatesWorkDayInfo.push(workDayInfo);
                     }
                 })
@@ -151,7 +176,8 @@ export default {
             this.accountId = localStorage.getItem("accountId");
         }
         this.checkLoginOrNot();
-        this.getAllworkDayInfo();
+        this.levelCheck();
+        this.getPendingApprovalWorkDayInfo();
     },
     mounted() {
         this.addCloseNotifyList();
@@ -226,12 +252,17 @@ export default {
                         <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
-                        <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
+                        <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">通知</h5>
                             </div>
                             <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
                         </RouterLink>
+                        <div v-if="!hasAnyPendingApprove" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">沒有任何通知</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
