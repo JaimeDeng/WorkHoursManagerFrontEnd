@@ -445,6 +445,31 @@ mounted() {
             margin: 2vh 0;
             height: 20%;
             width: 50%;
+
+            //修改瀏覽器的scrollbar樣式
+            ::-webkit-scrollbar {
+                width: 0.5vw;
+            }
+
+            ::-webkit-scrollbar-button {
+                background: transparent;
+                height: 3%; //上下buffer的高度
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-track-piece {
+                background: transparent;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                border-radius: 4px;
+                background-color: rgba(78, 78, 78, 0.4);
+                border: none;
+            }
+
+            ::-webkit-scrollbar-track {
+                box-shadow: transparent;
+            }
             .detail{
                 padding: 0.5vh 0.3vw;
                 font-size: 1.5vh;

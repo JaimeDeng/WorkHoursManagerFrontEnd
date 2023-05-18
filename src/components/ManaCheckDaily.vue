@@ -18,7 +18,7 @@ export default {
             hasAnyWorkDayInfo: false,
             hasntThisDateInfo: false,
             hasntThisTimeFrameInfo: false,
-            listRenderOver: true,
+            listRenderOver: false,
             message: '',
             //介面文字
             searchDate: '',
@@ -87,38 +87,35 @@ export default {
         },
         fetchWorkDayInfo() {
 
-            let reqBody = {
-                employeeId: this.employeeId
-            }
-
-            fetch("http://localhost:3000/getWorkDayInfoByEmployeeId", {
-                method: "put",
-                body: JSON.stringify(reqBody),
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
+            fetch("http://localhost:3000/getWorkDayInfoBySupervisorId", {
+            method: "put",
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({supervisorId : this.employeeId})
             }).then(res => res.json())
-                .then((data) => {
-                    //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
-                    let container = null;
-                    for (let i = data.workDayInfoList.length - 1; i > 0; i--) {
-                        for (let i = 0; i < data.workDayInfoList.length - 1; i++) {
-                            const nextDateStr = data.workDayInfoList[i + 1].date;
+            .then((data) => {
+                console.log(data);
+                let subordinatesWorkDayInfoList = data.subordinatesWorkDayInfoList;
+                let container = null;
+                    for (let i = subordinatesWorkDayInfoList.length - 1; i > 0; i--) {
+                        for (let i = 0; i < subordinatesWorkDayInfoList.length - 1; i++) {
+                            const nextDateStr = subordinatesWorkDayInfoList[i + 1].date;
                             const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
                             const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                            const thisDateStr = data.workDayInfoList[i].date;
+                            const thisDateStr = subordinatesWorkDayInfoList[i].date;
                             const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
                             const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
                             if (nextDate > thisDate) {
-                                container = data.workDayInfoList[i + 1];
-                                data.workDayInfoList[i + 1] = data.workDayInfoList[i];
-                                data.workDayInfoList[i] = container;
+                                container = subordinatesWorkDayInfoList[i + 1];
+                                subordinatesWorkDayInfoList[i + 1] = subordinatesWorkDayInfoList[i];
+                                subordinatesWorkDayInfoList[i] = container;
                             }
                         }
                     }
-                    this.workDayInfo = data;
+                    this.workDayInfo = subordinatesWorkDayInfoList;
                     console.log(this.workDayInfo);
-                    if (this.workDayInfo.workDayInfoList.length !== 0) {
+                    if (this.workDayInfo.length !== 0) {
                         this.hasAnyWorkDayInfo = true;
                         this.renderList();
                     }
@@ -127,8 +124,13 @@ export default {
                     } else {
                         this.message = data.message;
                     }
-                })
-                .catch(err => console.log(err))
+
+                    if(this.workDayInfo.lenght === 0){
+                        this.listRenderOver = false;
+                    }else{
+                        this.listRenderOver = true;
+                    }
+            })
         },
         renderList() {
             this.workDayInfoList = [];
@@ -147,7 +149,7 @@ export default {
                 this.workDayInfoList.push({
                     workInfoId: workDayInfo.workInfoId,
                     date: workDayInfo.date,
-                    employeeId: workDayInfo.employeeId.employeeId,
+                    employeeId: workDayInfo.employeeId,
                     workingHours: workDayInfo.workingHours,
                     status: workDayInfo.status,
                     approved: workDayInfo.approved,
@@ -353,9 +355,9 @@ export default {
             }
         },
         renderListByDate(date) {
-            this.workDayInfoList = [];
+            this.workDayInfo = [];
             let hasThisDateInfo = false;
-            this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+            this.workDayInfo.forEach((workDayInfo) => {
                 if (workDayInfo.date === date) {
                     let approvedStr = "";
                     if (workDayInfo.approved === true) {
@@ -838,45 +840,6 @@ export default {
         //開始產生元件動畫
         this.startAnimation();
 
-        fetch("http://localhost:3000/getPendingApprovalWorkDayInfoBySupervisorId", {
-            method: "put",
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        }).then(res => res.json({supervisorId : this.employeeId}))
-            .then((data) => {
-                console.log(data);
-                let myS = data;
-                let container = null;
-                    for (let i = myS.length - 1; i > 0; i--) {
-                        for (let i = 0; i < myS.length - 1; i++) {
-                            const nextDateStr = myS[i + 1].date;
-                            const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
-                            const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                            const thisDateStr = myS[i].date;
-                            const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
-                            const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
-                            if (nextDate > thisDate) {
-                                container = myS[i + 1];
-                                myS[i + 1] = myS[i];
-                                myS[i] = container;
-                            }
-                        }
-                    }
-                    this.workDayInfo = myS;
-                    console.log(this.workDayInfo);
-                    if (this.workDayInfo.length !== 0) {
-                        this.hasAnyWorkDayInfo = true;
-                        this.renderList();
-                    }
-                    if (data.success === true) {
-                        this.message = data.message;
-                    } else {
-                        this.message = data.message;
-                    }
-                
-
-            })
     }
 }
 </script>
@@ -949,7 +912,7 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workDayInfo.worInfoId" class="editWorkHoursInfo"
+                                <button :value="workDayInfo.workInfoId" class="editWorkHoursInfo"
                                     id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i
@@ -966,7 +929,7 @@ export default {
                     <div v-if="hasAnyWorkDayInfo" class="accordion accordion-flush" id="accordionFlushExample"
                         style="overflow: auto;">
                         <!--手風琴格位-->
-                        <div v-for="(workDayInfo, index) in workDayInfoList" :value="workDayInfo.worInfoId" :key="index"
+                        <div v-for="(workDayInfo, index) in workDayInfoList" :value="workDayInfo.workInfoId" :key="index"
                             class="accordion-item">
                             <!--手風琴標題-->
                             <h2 class="accordion-header" id="flush-headingOne">
