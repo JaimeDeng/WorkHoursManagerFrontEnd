@@ -1,10 +1,12 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import checkPopup from './checkPopup.vue'
 export default (await import('vue')).defineComponent({
 components: {
     RouterLink,
-    popup
+    popup,
+    checkPopup
 },
 data() {
   return{
@@ -13,21 +15,29 @@ data() {
         popupData: {
             title: "Popup Title",
             content: "Popup Content",
-            backBtn: 'back',
+            backBtn: 'back'
         },
+        showCheckPopup: false,
+        checkPopupData: {
+            title: "Popup Title",
+            content: "Popup Content",
+            backBtn: 'back',
+            confirmBtn: 'confirm'
+        },
+        //Parmas傳來的參數值
+        editWorkHoursInfoId:"",
         //帳號相關
         employeeName:"",
         employeeId:"",
         accountId:"",
         //文本
-        addTitle:"新增工作時數表",
+        addTitle:"編輯工作時數表",
         model:"機型",
         caseNo:"製造號碼",
         status:"出勤狀態",
         statusValue:'default',
         selectStatus:"請選擇出勤狀態",
-        date:"日期",
-        dateValue:'',
+        date:"",
         satrtTime:"開始時間",
         startTimeValue:'default',
         selectStartTime:"請選擇開始時間",
@@ -35,7 +45,9 @@ data() {
         endTimeValue:'default',
         selectEndTime:"請選擇結束時間",
         detail:"",
+        detailLabel:"",
         back:"返回",
+        remove:"刪除工時表",
         commit:"新增",
         detailPlaceHolder:"工作內容(限制500字以內)",
         langValue:'ch',
@@ -43,7 +55,9 @@ data() {
         modelInput:'',
         modelIsInvalid:false,
         caseNoIsInvalid:false,
-        message:"",
+        getMessage:"",
+        editMessage:"",
+        deleteMessage:"",
         statusOptions:[
         {label : "出勤" , value : "出勤"},
         {label : "公假" , value : "公假"},
@@ -53,58 +67,70 @@ data() {
         {label : "工傷" , value : "工傷"},
         {label : "天災" , value : "天災"}],
         timeOptions:[],
+        hasRendered:false,
 
         //resp
-        resp:''
+        getResp:[],
+        editResp:[],
+        deleteResp:[]
     }
 },
 methods: {
     changeLanguage(){
         if(this.langValue === 'en'){
-            this.addTitle = "New Timesheet";
+            this.addTitle = "Edit Timesheet";
             this.model = "Type";
             this.caseNo = "Case no";
             this.status = "Attendance";
             this.selectStatus = "Select attendence status";
-            this.date = "Date";
             this.satrtTime = "Start time";
             this.selectStartTime = "Select start time";
             this.endTime = "End time";
             this.selectEndTime = "Select end time";
             this.back = "Back";
             this.commit = "Commit";
+            this.detailLabel = "Detail"
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
             this.popupData.backBtn = "Back";
+            this.checkPopupData.backBtn = "Back";
+            this.checkPopupData.confirmBtn = "confirm";
+            this.remove = "Delete Timesheet";
         }else if(this.langValue === 'jp'){
-            this.addTitle = "勤務表追加";
+            this.addTitle = "勤務表編集";
             this.model = "型番";
             this.caseNo = "案件番号";
             this.status = "出勤状況";
             this.selectStatus = "出勤状況を選択してください";
-            this.date = "日付";
             this.satrtTime = "開始時刻";
             this.selectStartTime = "開始時刻を選択してください";
             this.endTime = "終了時刻";
             this.selectEndTime = "終了時刻を選択してください";
             this.back = "戻る";
-            this.commit = "追加";
+            this.commit = "編集";
+            this.detailLabel = "仕事内容"
             this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
             this.popupData.backBtn = "戻る";
+            this.checkPopupData.backBtn = "戻る";
+            this.checkPopupData.confirmBtn = "確認";
+            this.remove = "勤務表を削除";
         }else if(this.langValue === 'ch'){
-            this.addTitle = "新增工作時數表";
+            this.addTitle = "編輯工作時數表";
             this.model = "機型";
             this.caseNo = "案件號碼";
             this.status = "出勤狀態";
             this.selectStatus = "請選擇出勤狀態";
-            this.date = "日期";
             this.satrtTime = "開始時間";
             this.selectStartTime = "請選擇開始時間";
             this.endTime = "結束時間";
             this.selectEndTime = "請選擇結束時間";
             this.back = "返回";
-            this.commit = "新增";
+            this.commit = "確認";
+            this.detailLabel = "工作內容"
             this.detailPlaceHolder = "工作內容(限制500字以內)";
             this.popupData.backBtn = "返回";
+            this.checkPopupData.backBtn = "返回";
+            this.checkPopupData.confirmBtn = "確認";
+            this.remove = "刪除此工時表";
         }
     },
     checkLength(input){
@@ -123,7 +149,40 @@ methods: {
             }
         }
     },
+    fetchWorkHoursInfoById(){
+        let reqbody = {
+            workInfoId : this.editWorkHoursInfoId
+        };
+        console.log(reqbody);
+        fetch("http://localhost:3000/getWorkHoursInfoById" ,{
+            method:"put",
+            body: JSON.stringify(reqbody),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        }).then(res => res.json())
+        .then((data)=>{
+            this.getResp = data;
+            console.log(this.getResp);
+            this.caseNoInput = this.getResp.caseNo;
+            this.modelInput = this.getResp.model;
+            this.statusValue = this.getResp.status;
+            this.startTimeValue = this.getResp.startTime;
+            this.endTimeValue = this.getResp.endTime;
+            this.detail = this.getResp.detail;
+            this.date = this.getResp.date;
+            this.hasRendered = true;
+        })
+        .catch(err => console.log(err))
+    },
     commitReq(){
+        if( this.modelInput.toString() === this.getResp.model && this.caseNoInput.toString() === this.getResp.caseNo 
+            && this.startTimeValue.toString() === this.getResp.startTime && this.endTimeValue.toString() === this.getResp.endTime
+            && this.detail.toString() === this.getResp.detail && this.statusValue.toString() === this.getResp.status){
+                this.editMessage = "資料尚未進行任何修改";
+                this.errorPopup(this.editMessage);
+                return;
+            }
         //如果是default轉成null給後端才能正確做判斷
         let status = this.statusValue;
         if(status === "default"){
@@ -138,7 +197,7 @@ methods: {
             endTime = null;
         }
         let reqbody = {
-            date : this.dateValue,
+            workInfoId : this.editWorkHoursInfoId,
             employeeId : this.employeeId,
             model : this.modelInput,
             caseNo : this.caseNoInput,
@@ -148,7 +207,59 @@ methods: {
             status : status
         };
         console.log(reqbody);
-        fetch("http://localhost:3000/setWorkHoursInfo" ,{
+        fetch("http://localhost:3000/editWorkHoursInfo" ,{
+            method:"put",
+            body: JSON.stringify(reqbody),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        }).then(res => res.json())
+        .then((data)=>{
+            this.editResp = data;
+            console.log(this.editResp);
+            if(data.success === true){
+                this.editMessage = this.editResp.message;
+                this.successPopup(this.editMessage);
+            }else{
+                this.editMessage = this.editResp.message;
+                this.errorPopup(this.editMessage);
+            }
+        })
+        .catch(err => console.log(err))
+    },
+    confirmRemove(){
+        if (this.langValue === 'ch') {
+            this.checkPopupData.title = "警告";
+        } else if (this.langValue === 'en') {
+            this.checkPopupData.title = "注意";
+        } else if (this.langValue === 'jp') {
+            this.checkPopupData.title = "Warning";
+        }
+        this.checkPopupData.content = "您即將刪除此工時表 , 刪除後無法復原";
+        this.showCheckPopup = true;
+        setTimeout(() => {
+            let checkPopup = this.$refs.checkPopup;
+            console.log(checkPopup);
+            let checkPopupEl = checkPopup.$el;
+            let checkPopupIcon = checkPopupEl.querySelector("i");
+            console.log(checkPopupIcon);
+            let iconStr1 = "fa-solid";
+            let iconStr2 = "fa-triangle-exclamation";
+            checkPopupIcon.classList.add(iconStr1);
+            checkPopupIcon.classList.add(iconStr2);
+            checkPopupIcon.style.color = "#ae3737";
+            console.log(checkPopupIcon);
+            checkPopup.$el.style.opacity = "1";
+            checkPopup.$el.style.bottom = "0%";
+        }, 100);
+    },
+    removeReq(){
+        this.showCheckPopup = false;
+        let reqbody = {
+            workInfoId : this.editWorkHoursInfoId,
+        };
+        console.log(reqbody);
+        fetch("http://localhost:3000/deleteWorkHoursInfo" ,{
             method:"post",
             body: JSON.stringify(reqbody),
             headers: {
@@ -156,14 +267,14 @@ methods: {
             }
         }).then(res => res.json())
         .then((data)=>{
-            this.resp = data;
-            console.log(this.resp);
+            this.deleteResp = data;
+            console.log(this.deleteResp);
             if(data.success === true){
-                this.message = this.resp.message;
-                this.successPopup();
+                this.deleteMessage = this.deleteResp.message;
+                this.successPopup(this.deleteMessage);
             }else{
-                this.message = this.resp.message;
-                this.errorPopup();
+                this.deleteMessage = this.deleteResp.message;
+                this.errorPopup(this.deleteMessage);
             }
         })
         .catch(err => console.log(err))
@@ -172,18 +283,14 @@ methods: {
         this.showPopup = false;
         this.popupData.title = "";
         this.popupData.content = "";
-        if (this.resp.success) {
-            this.dateValue = "";
-            this.modelInput = "";
-            this.caseNoInput = "";
-            this.startTimeValue = "default";
-            this.endTimeValue = "default";
-            this.statusValue = "default";
-            this.detail = "";
-
+        if (this.editResp.success || this.deleteResp.success) {
+            this.$router.push('/EmploCheckDailyTime');
         }
     },
-    successPopup() {
+    closeCheckPopup() {
+        this.showCheckPopup = false;
+    },
+    successPopup(message) {
         if (this.langValue === 'ch') {
             this.popupData.title = "成功";
         } else if (this.langValue === 'en') {
@@ -191,7 +298,7 @@ methods: {
         } else if (this.langValue === 'jp') {
             this.popupData.title = "追加完了";
         }
-        this.popupData.content = this.message;
+        this.popupData.content = message;
         this.showPopup = true;
         setTimeout(() => {
             let popup = this.$refs.popup;
@@ -208,7 +315,7 @@ methods: {
             popup.$el.style.bottom = "0%";
         }, 100);
     },
-    errorPopup() {
+    errorPopup(message) {
         if (this.langValue === 'ch') {
             this.popupData.title = "錯誤";
         } else if (this.langValue === 'en') {
@@ -216,7 +323,7 @@ methods: {
         } else if (this.langValue === 'jp') {
             this.popupData.title = "エラー";
         }
-        this.popupData.content = this.message;
+        this.popupData.content = message;
         this.showPopup = true;
         setTimeout(() => {
             let popup = this.$refs.popup;
@@ -236,6 +343,10 @@ methods: {
     }
 },
 mounted() {
+    console.log(this.$route.params.editWorkHoursInfoId);
+    //將傳來的參數值賦值給自己的變數
+    this.editWorkHoursInfoId = this.$route.params.editWorkHoursInfoId;
+    this.fetchWorkHoursInfoById();
     //獲取帳號資訊
     this.employeeId = sessionStorage.getItem("employeeId")
     if(this.employeeId === null){
@@ -277,7 +388,7 @@ mounted() {
             hours++;
         }
         count++;
-    }
+    };
 }
 })
 </script>
@@ -286,10 +397,14 @@ mounted() {
 
         <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
         <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
-        <div v-if="showPopup" ref="mask" class="mask"></div>
+        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup" 
+        @close="closeCheckPopup" @confirm="removeReq"></checkPopup>
+        <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
 
-        <div class="add">
+        <div v-if="hasRendered" class="add">
+            <button class="removeBtn" @click="confirmRemove" type="button">{{ remove }} <i class="fa-solid fa-delete-left"></i></button>
             <h4>{{ addTitle }}</h4>
+            <h5>{{ date }}</h5>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
@@ -311,8 +426,6 @@ mounted() {
                 </div>
                 <!-- 右側填寫區 -->
                 <div class="timeFrame">
-                    <label for="date">{{ date }}</label>
-                    <input v-model="dateValue" type="date" id="date">
                     <label for="startTime">{{ satrtTime }}</label>
                     <select v-model="startTimeValue" id="startTime">
                         <option value="default" selected>{{ selectStartTime }}</option>
@@ -327,16 +440,18 @@ mounted() {
             </div>
 
             <div class="detailFrame">
+                <label for="detail">{{ detailLabel }}</label>
                 <textarea v-model="detail" maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
             </div>
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
+                <RouterLink tag="button" to="/EmploCheckDailyTime" class="back">{{ back }}</RouterLink>
                 
                 <button @click="commitReq" type="button">{{ commit }}</button>
             </div>
         </div>
+        <div v-else class="spinner-border text-light" role="status"></div>
 
     </div>
 </template>
@@ -353,6 +468,15 @@ mounted() {
     z-index: -1;
     overflow: hidden;
 
+    .checkPopup{
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        z-index: 2;
+    }
     .popup{
         position: absolute;
         bottom: -20%;
@@ -382,11 +506,40 @@ mounted() {
         width: 50%;
         height: 80%;
         overflow: auto;
+
+        .removeBtn{
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgb(109, 35, 35);
+            border: none;
+            color: white;
+            border-radius: 10px 0px 20px 0px;
+            width: max-content;
+            height: 4vh;
+            padding-left: 1%;
+            padding-right: 2%;
+            font-size: 1.5vh;
+            transition: 0.4s;
+            overflow: hidden;
+
+            &:hover {
+                background-color: rgb(62, 16, 16);
+            }
+
+            &:active {
+                transform: scale(0.97);
+            }
+        }
+
         h4{
-            margin-top: 3%;
+            margin-top: 2%;
             margin-bottom: 3vh;
             font-size: 4vh;
             font-weight: bold;
+        }
+        h5{
+            font-size: 2.7vh;
         }
 
         .area1 {
@@ -442,9 +595,11 @@ mounted() {
 
         .detailFrame{
             position: relative;
-            margin: 2vh 0;
             height: 20%;
             width: 50%;
+            label{
+                font-size: 2vh;
+            }
             .detail{
                 padding: 0.5vh 0.3vw;
                 font-size: 1.5vh;
@@ -463,7 +618,7 @@ mounted() {
             justify-content: space-between;
             width: 40%;
             padding: 0 1vw;
-            margin-top: 3.3%;
+            margin-top: 6%;
 
             .back{
                 background: rgb(26, 55, 77);
@@ -491,7 +646,7 @@ mounted() {
 
             button {
                 background: rgb(26, 55, 77);
-                border: 1.5px solid #000;
+                border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
                 width: 5vw;
@@ -509,6 +664,11 @@ mounted() {
                 }
             }
         }
+    }
+    .text-light{
+        font-size: 4rem;
+        width: 5rem;
+        height: 5rem;
     }
 
 

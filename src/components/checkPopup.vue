@@ -3,11 +3,11 @@ export default {
 
     //props是設定此元件的變數值導出給其它元件 , 在命名上不可與data()內的變數相同!
     props: {
-        popupData: {
+        checkPopupData: {
             type: Object,
             required: true
         },
-        showPopup: {
+        showCheckPopup: {
             type: Boolean,
             required: true
         }
@@ -21,12 +21,16 @@ export default {
     },
 
     methods: {
-        closePopup(){
+        closeCheckPopup(){
             //emit可以雙向綁定父子元件 , 這邊綁定了close方法 , 當點擊了popup元件內的button執行了closePopup
             //popup的closePopup指定這個方法綁定v-on:close , 所以我們點擊popup這顆按鈕的動作就等於close
             //在父元素中引入的popup元件標籤宣告:close = "方法" , 即可在點擊按鈕時執行父元件中自定義的方法
             this.$emit('close');
         },
+        confirm(){
+            this.$emit('confirm');
+        }
+
     },
     mounted() {
 
@@ -39,14 +43,15 @@ export default {
 
 <template>
 
-    <div v-if="showPopup" class="frame">
+    <div v-if="showCheckPopup" class="frame">
         <div class="contentFrame">
             <i></i>
-            <h3 class="title">{{ popupData.title }}</h3>
-            <h5 class="content">{{ popupData.content }}</h5>
+            <h3 class="title">{{ checkPopupData.title }}</h3>
+            <h5 class="content">{{ checkPopupData.content }}</h5>
         </div>
         <div class="btnFrame">
-            <button @click="closePopup" class="back">{{ popupData.backBtn }}</button>
+            <button @click="closeCheckPopup" class="back">{{ checkPopupData.backBtn }}</button>
+            <button @click="confirm" class="confirm">{{ checkPopupData.confirmBtn }}</button>
         </div>
     </div>
     
@@ -72,7 +77,7 @@ export default {
         
 
         .contentFrame{
-            .fa-circle-xmark , .fa-check{
+            .fa-circle-xmark , .fa-check , .fa-triangle-exclamation{
                 font-size: 6vh;
                 margin-bottom: 10%;
             }
@@ -86,8 +91,10 @@ export default {
         }
 
         .btnFrame{
+            display: flex;
+            justify-content: space-between;
             margin-top: 10%;
-            width: 80%;
+            width: 60%;
             height: auto;
             margin-bottom: 2vh;
             .back{
@@ -102,6 +109,25 @@ export default {
 
                 &:hover {
                     background-color: rgb(64, 104, 130);
+                }
+
+                &:active {
+                    transform: scale(0.95);
+                }
+            }
+
+            .confirm{
+                background: rgb(128, 38, 38);
+                border: 1px solid #000;
+                color: white;
+                border-radius: 5px;
+                width: 8vw;
+                height: 5vh;
+                font-size: 2vh;
+                transition: 0.4s;
+
+                &:hover {
+                    background-color: rgb(91, 18, 18);
                 }
 
                 &:active {

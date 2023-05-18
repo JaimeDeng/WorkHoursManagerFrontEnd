@@ -16,11 +16,34 @@ export default {
             checkTimesheet:'',
             approve:'',
             administrator:'',
-            isSupervisor:true,
-            isAdministrator:true
+            //職等檢查
+            isSupervisor:false,
+            isAdministrator:false,
+            hasRendered:false
         }
     },
     methods:{
+        levelCheck(){
+            fetch("http://localhost:3000/getEmployeeInfoById" ,{
+                method:"put",
+                body: JSON.stringify({employeeId : this.employeeId}),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                console.log(data);
+                if(data.level === "系統管理員"){
+                    this.isSupervisor = true;
+                    this.isAdministrator = true;
+                    this.hasRendered = true;
+                }
+                if(data.level === "課長" || data.level === "副理" || data.level === "經理"|| data.level === "總經理"){
+                    this.isSupervisor = true;
+                }
+            })
+            .catch(err => console.log(err))
+        },
         changeLanguage(){
             if(this.langValue === 'en'){
                 this.addTimeSheet = 'Add new timesheet';
@@ -91,6 +114,7 @@ export default {
                 this.name = 'NONE';
             }
         }
+        //檢查帳號資訊
         this.employeeId = sessionStorage.getItem('employeeId');
         if(this.employeeId === null){
             this.employeeId = localStorage.getItem('employeeId');
@@ -105,12 +129,13 @@ export default {
         }
         console.log(this.langValue);
         this.changeLanguage();
+        this.levelCheck();
     }
 }
 </script>
 <template>
     <div class="main">
-        <div class="all">
+        <div v-if="hasRendered" class="all">
             <h4>{{ name }} , Fighting !</h4>
             <div class="funtionArea">
                 <!-- 選單 -->
@@ -123,6 +148,8 @@ export default {
                 </div>
             </div>
         </div>
+        <!--spinner在list還沒渲染好時顯示-->
+        <div v-else class="spinner-border text-light" role="status"></div>
 
         <!-- <RouterLink to="/login"><button class="btnback" type="button">返回登入頁</button></RouterLink> -->
     </div>
@@ -137,6 +164,11 @@ export default {
     justify-content: center;
     align-items: center;
 
+    .text-light{
+        font-size: 4rem;
+        width: 5rem;
+        height: 5rem;
+    }
     .all {
         display: flex;
         flex-direction: column;
@@ -165,9 +197,9 @@ export default {
                 .buttonlink {
                     font-weight: 500;
                     letter-spacing: 0.03vw;
-                    box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.3);
+                    box-shadow: inset 0 -3vh 60px 0.1vh rgba(27, 46, 57, 0.3);
                     margin-top: 2%;
-                    color: #000;
+                    color: #3d3d3d;
                     width: 48%;
                     height: 10vh;
                     position: relative;

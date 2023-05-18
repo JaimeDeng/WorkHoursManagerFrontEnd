@@ -23,21 +23,119 @@ components: {
             email : "",
             department : "default",
             position : "",
-            level : "",
+            level : "default",
             supervisor : "",
             phone : "",
             message : "none",
-            isInputInvalid : 0
+            isInputInvalid : 0,
+            //切換語言相關
+            langValue : 'ch',
+            employeeIdStr : '',
+            employeeIdPHStr : '',
+            nameStr:'',
+            namePHStr : '',
+            genderStr : '',
+            emailStr:'',
+            emailPHStr :'',
+            departmentStr:'',
+            positionStr:'',
+            positionPHStr:'',
+            levelStr:'',
+            levelPHStr:'',
+            supervisorStr:'',
+            supervisorPHStr:'',
+            phoneStr:'',
+            phonePHStr:'',
+            addBtnStr : '',
+            returnBtnStr : '',
+            //職等選項
+            levelOptions:[
+                {label : "一般" , value : "一般"},
+                {label : "高級" , value : "高級"},
+                {label : "課長" , value : "課長"},
+                {label : "副理" , value : "副理"},
+                {label : "經理" , value : "經理"},
+                {label : "總經理" , value : "總經理"},
+                {label : "系統管理員" , value : "系統管理員"}],
         }
     },
     methods:{
+        changeLanguage(){
+        if(this.langValue === 'en'){
+            this.employeeIdStr = 'Employee ID';
+            this.employeeIdPHStr = 'Please input your employee ID';
+            this.nameStr='Name';
+            this.namePHStr='Please input your name';
+            this.genderStr='Gender';
+            this.emailStr='Email';
+            this.emailPHStr='Please input your email';
+            this.departmentStr='Department';
+            this.positionStr='Position';
+            this.positionPHStr='Please input your position';
+            this.levelStr='Level';
+            this.levelPHStr='Please input your level';
+            this.supervisorStr='SupervisorID'
+            this.supervisorPHStr='Please input your supervisorID';
+            this.phoneStr='Phone';
+            this.phonePHStr='Please input your phone(7~10)';
+            this.addBtnStr='Create'
+            this.returnBtnStr='Back'
+            this.popupData.backBtn = 'Back'
+        }else if(this.langValue === 'ch'){
+            this.employeeIdStr = '員工ID';
+            this.employeeIdPHStr = '請輸入您的員工ID';
+            this.nameStr='姓名';
+            this.namePHStr='請輸入您的員工姓名';
+            this.genderStr='性別';
+            this.emailStr='信箱';
+            this.emailPHStr='請輸入您的信箱';
+            this.departmentStr='部門';
+            this.positionStr='職稱';
+            this.positionPHStr='請輸入您的職稱';
+            this.levelStr='職等';
+            this.levelPHStr='請輸入您的職等';
+            this.supervisorStr='主管ID'
+            this.supervisorPHStr='請輸入您的主管ID';
+            this.phoneStr='電話';
+            this.phonePHStr='請輸入您的電話(7-10碼)';
+            this.addBtnStr='新增'
+            this.returnBtnStr='返回'
+            this.popupData.backBtn = '返回';
+        }else if(this.langValue === 'jp'){
+            this.employeeIdStr = '社員番号';
+            this.employeeIdPHStr = '社員番号を入力してください';
+            this.nameStr='お名前';
+            this.namePHStr='お名前を入力してください';
+            this.genderStr='性別';
+            this.emailStr='メール';
+            this.emailPHStr='メールを入力してください';
+            this.departmentStr='部署';
+            this.positionStr='職名';
+            this.positionPHStr='職名を入力してください';
+            this.levelStr='職級';
+            this.levelPHStr='職級を入力してください';
+            this.supervisorStr='主管ID'
+            this.supervisorPHStr='主管IDを入力してください';
+            this.phoneStr='電話番号';
+            this.phonePHStr='電話番号を入力してください(7~10)';
+            this.addBtnStr='クリエイト';
+            this.returnBtnStr='戻る';
+            this.popupData.backBtn = '戻る';
+        }
+    },
         addInfo(){
         let error = false;
 
         let emailPattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         let phonePattern =/^[0-9]{7,10}$/;
         if(this.id.length === 0){
-            this.message = "請輸入員工ID欄位";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入員工ID欄位";
+            }else if(this.langValue === 'en'){
+                this.message = "You haven't filled in employee ID field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "社員番号欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -45,15 +143,29 @@ components: {
             }
         }
         if(this.name.length === 0){
-            this.message = "請輸入姓名";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入姓名";
+            }        
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in name field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "お名前欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
                 return;
             }
         }
-        if(this.gender==="請選擇性別"||this.gender==="default"){
-            this.message = "請選擇性別";
+        if(this.gender==="default"){
+            if(this.langValue === 'ch'){
+                this.message = "請選擇性別";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in gender field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "性別欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -61,7 +173,14 @@ components: {
             }
         }
         if(this.email.length === 0){
-            this.message = "請輸入信箱";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入信箱";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in email field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "メール欄を入力してください";
+            }
             error = true;
             if(error){
                 this.errorPopup();
@@ -69,13 +188,21 @@ components: {
             }
         }
         if(!emailPattern.test(this.email)){
-            this.message = "信箱格式錯誤";
+            if(this.langValue === 'ch'){
+                this.message = "信箱格式錯誤";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "Email format is not correct";
+            }else if(this.langValue === 'jp'){
+                this.message = "メールの形式が正しくありません";
+            }
             error = true;
             if(error){
                 this.errorPopup();
                 return;
             }
         }
+
         if(this.department==="請選擇部門"||this.department==="default"){
             this.message = "請選擇部門";
             error = true;
@@ -84,16 +211,56 @@ components: {
                 return;
             }
         }
-        if(this.position.length === 0){
-            this.message = "請輸入職稱";
+        if(this.department==="Please choose the positon"||this.department==="default"){
+            this.message = "Please choose the positon";
             error = true;
             if(error){
                 this.errorPopup();
                 return;
             }
         }
-        if(this.level.length === 0){
-            this.message = "請輸入職等";
+        if(this.department==="部署名を選択してください"||this.department==="default"){
+            this.message = "部署名を選択してください";
+            error = true;
+            if(error){
+                this.errorPopup();
+                return;
+            }
+        }
+        
+        if(this.position.length === 0){
+            if(this.langValue === 'ch'){
+                this.message = "請輸入職稱";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in position field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "職名欄を入力してください";
+            }
+            error = true;
+            if(error){
+                this.errorPopup();
+                return;
+            }
+        }
+        if(this.level==="default"){
+            this.message = "請選擇職等";
+            error = true;
+            if(error){
+                this.errorPopup();
+                return;
+            }
+        }
+        if(this.level==="default"){
+            this.message = "Please select the level";
+            error = true;
+            if(error){
+                this.errorPopup();
+                return;
+            }
+        }
+        if(this.level==="default"){
+            this.message = "職級を選択してください";
             error = true;
             if(error){
                 this.errorPopup();
@@ -101,7 +268,14 @@ components: {
             }
         }
         if(this.phone.length === 0){
-            this.message = "請輸入電話";
+            if(this.langValue === 'ch'){
+                this.message = "請輸入電話";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in phone field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "電話番号欄を入力してください";
+            }       
             error = true;
             if(error){
                 this.errorPopup();
@@ -109,7 +283,14 @@ components: {
             }
         }
         if(!phonePattern.test(this.phone)){
-            this.message = "電話格式錯誤";
+            if(this.langValue === 'ch'){
+                this.message = "電話格式錯誤";
+            }
+            else if(this.langValue === 'en'){
+                this.message = "Phone format is not correct";
+            }else if(this.langValue === 'jp'){
+                this.message = "電話番号の形式が正しくありません";
+            }     
             error = true;
             if(error){
                 this.errorPopup();
@@ -161,13 +342,17 @@ components: {
             this.email="";
             this.department="default";
             this.position="";
-            this.level="";
+            this.level="default";
             this.supervisor="";
             this.phone="";
         }
     },
     successPopup(){
-        this.popupData.title = "成功";
+        if(this.langValue === 'ch'||this.langValue === 'jp'){
+            this.popupData.title = "成功"
+        }else if(this.langValue === 'en'){
+            this.popupData.title = "Success";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {
@@ -186,7 +371,13 @@ components: {
         }, 100);
     },
     errorPopup(){
-        this.popupData.title = "錯誤";
+        if(this.langValue === 'ch'){
+            this.popupData.title = "錯誤";
+        }else if(this.langValue === 'en'){
+            this.popupData.title = "Failure";
+        }else if(this.langValue === 'jp'){
+            this.popupData.title = "エラー";
+        }
         this.popupData.content = this.message;
         this.showPopup = true;
         setTimeout(() => {
@@ -256,7 +447,13 @@ components: {
      }      
 },
     mounted() {
-
+         //檢查及切換語言
+        this.langValue = sessionStorage.getItem('langValue');
+        if(this.langValue === null){
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
     }
 })
 </script>
@@ -268,92 +465,102 @@ components: {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="add">
-            <h4>新增人員名單</h4>
+            <h4 v-if="langValue==='ch'">新增人員資訊</h4>
+            <h4 v-if="langValue==='jp'">人員情報追加</h4>
+            <h4 v-if="langValue==='en'">Create an employee information</h4>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
                 <div class="info">
 
                     <!-- 員工ID輸入 -->
-                    <label for="employeeId">員工ID</label>
+                    <label for="employeeId">{{employeeIdStr}}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLength('employeeId')" ref="employeeId" v-model="id" 
-                    id="employeeId" placeholder="請輸入您的員工ID" type="text"
+                    maxlength="20" @input="checkInputLegth('employeeId')" ref="employeeId" v-model="id" 
+                    id="employeeId" :placeholder="employeeIdPHStr" type="text"
                     >
                     <!-- 姓名輸入 -->
-                    <label for="name">姓名</label>
+                    <label for="name">{{ nameStr }}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLength('name')" ref="name" v-model="name" 
-                    id="setName" placeholder="請輸入您的姓名" type="text"
+                    maxlength="20" @input="checkInputLegth('name')" ref="name" v-model="name" 
+                    id="setName" :placeholder="namePHStr" type="text"
                     >
 
                     <!-- 性別輸入 -->
-                    <label for="">性別</label>
+                    <label for="">{{ genderStr }}*</label>
                     <select ref="gender" v-model="gender" id="setGender">
-                        <option value="default" selected >請選擇性別</option>
-                        <option value="男">男</option>
-                        <option value="女">女</option>                     
+                        <option v-if="langValue === 'ch'" value="default" selected >請選擇性別</option>
+                        <option v-else-if="langValue === 'en'" value="default" selected >Please choose your gender</option>
+                        <option v-else-if="langValue === 'jp'" value="default" selected >性別を選択してください</option>
+                        <option value="男">Male</option>
+                        <option value="女">Female</option>
                     </select>
 
                     <!-- Email輸入 -->
-                    <label for="">信箱</label>
+                    <label for="">{{ emailStr }}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
-                    @input="checkInputLength('email')" ref="email" v-model="email" 
-                    id="setEmail" placeholder="請輸入您的信箱" type="text"
+                    @input="checkInputLegth('email')" ref="email" v-model="email" 
+                    id="setEmail" :placeholder="emailPHStr" type="text"
                     >                  
                 </div>
                 <!-- 右側填寫區 -->
                 <div class="detail">
 
                     <!-- 部門輸入 -->
-                    <label for="">部門</label>
+                    <label for="">{{ departmentStr }}*</label>
                     <select ref="department" v-model="department" id="setDepartment">
-                        <option value="default" selected>請選擇部門</option>
-                        <option value="管理部">管理部</option>
-                        <option value="IT部">IT部</option>
-                        <option value="營業部">營業部</option>
-                        <option value="製造部">製造部</option>
+                        <option v-if="langValue === 'ch'" value="default" selected >請選擇部門</option>
+                        <option v-else-if="langValue === 'en'" value="default" selected >Please choose your department</option>
+                        <option v-else-if="langValue === 'jp'" value="default" selected >部署名を選択してください</option>
+                        <option v-if="langValue === 'ch' || langValue === 'jp'" value="管理部">管理部</option>
+                        <option v-else-if="langValue === 'en'" value="管理部">Management Department</option>
+                        <option v-if="langValue === 'ch'|| langValue === 'jp'" value="IT部">IT部</option>
+                        <option v-else-if="langValue === 'en'" value="IT部">IT Department</option>
+                        <option v-if="langValue === 'ch'" value="營業部">營業部</option>
+                        <option v-if="langValue === 'jp'" value="營業部">営業部</option>
+                        <option v-else-if="langValue === 'en'" value="營業部">Sales Department</option>
+                        <option v-if="langValue === 'ch' || langValue === 'jp'" value="製造部">製造部</option>
+                        <option v-else-if="langValue === 'en'" value="製造部">Production Department</option>
                     </select>
 
                     <!-- 職稱輸入 -->
-                    <label for="">職稱</label>
+                    <label for="">{{ positionStr }}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLength('position')" ref="position" v-model="position" 
-                    id="setPosition" placeholder="請輸入您職稱" type="text"
+                    maxlength="20" @input="checkInputLegth('position')" ref="position" v-model="position" 
+                    id="setPosition" :placeholder="positionPHStr" type="text"
                     >
 
                     <!-- 職等輸入 -->
-                    <label for="">職等</label>
-                    <input 
-                    :style="{ backgroundColor: isInputInvalid === 5 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="20" @input="checkInputLength('level')" ref="level" v-model="level" 
-                    id="setLevel" placeholder="請輸入您職等" type="text"
-                    >
+                    <label for="">{{ levelStr }}*</label>
+                    <select  ref="level" v-model="level" id="setLevel">
+                        <option value="default" selected>請選擇職等</option>
+                        <option v-for="(option , index) in levelOptions" :value="option.value" :key="index">{{option.label}}</option>
+                    </select>
 
                     <!-- 主管ID輸入 -->
-                    <label for="">主管ID</label>
-                    <input maxlength="20" @input="checkInputLength('supervisor')" ref="supervisor" 
-                    v-model="supervisor" id="supervisorId" placeholder="請輸入您的主管ID" type="text"
+                    <label for="">{{ supervisorStr }}</label>
+                    <input maxlength="20" @input="checkInputLegth('supervisor')" ref="supervisor" 
+                    v-model="supervisor" id="supervisorId" :placeholder="supervisorPHStr" type="text"
                     >
 
                     <!-- 電話輸入 -->
-                    <label for="">電話</label>
+                    <label for="">{{ phoneStr }}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(255, 205, 205)' : '' }"
-                    maxlength="10" @input="checkInputLength('phone')" ref="phone" v-model="phone" 
-                    id="setPhone" placeholder="請輸入您的電話(7-10碼)" type="text"
+                    maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
+                    id="setPhone" :placeholder="phonePHStr" type="text"
                     >
                 </div>
             </div>
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink to="/systemHome" class="btn1">返回</RouterLink>
-                <!-- <button type="button" class="btn1" @click="addInfo">新增</button>  -->
-                <button type="button" class="btn2" @click="addInfo" >新增</button>
+                <RouterLink to="/systemHome" class="btn1">{{ returnBtnStr }}</RouterLink>
+                <button type="button" class="btn2" @click="addInfo" >{{ addBtnStr }}</button>
+                
             </div>
         </div>
     </div>
@@ -369,6 +576,7 @@ components: {
     justify-content: center;
     align-items: center;
     z-index: -1;
+    overflow: hidden;
 
     .add {
         background-color: rgba(255, 255, 255, 0.724);
@@ -488,7 +696,9 @@ components: {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition: 0.2s;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
         z-index: 2;
     }
     .mask{

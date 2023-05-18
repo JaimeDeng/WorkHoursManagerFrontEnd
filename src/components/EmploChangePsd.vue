@@ -264,7 +264,7 @@ export default {
                 this.oldPsdStr = 'Password'
                 this.oldPsdPHStr = 'Please set your old password'
             } else if (this.langValue === 'ch') {
-                this.pwdStr = '設置密碼';
+                this.pwdStr = '設置新密碼';
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
                 this.rePwdPHStr = '請再次輸入密碼';
@@ -403,12 +403,15 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
     .popup {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition: 0.2s;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
         z-index: 2;
     }
 

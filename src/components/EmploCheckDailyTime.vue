@@ -1,6 +1,11 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue' //紅蚯蚓不用理他
 export default {
+    components: {
+        RouterLink,
+        EditEmployeeWorkHoursInfo
+    },
     data(){
         return{
             //帳戶資料
@@ -39,7 +44,9 @@ export default {
             reviewStatusSelect:'default',
             timeFrameSelect:'default',
             //元件動畫
-            isAnimating:false
+            isAnimating:false,
+            //傳遞變數
+            editWorkHoursInfoId:''
         }
     },
     methods:{
@@ -156,7 +163,12 @@ export default {
                 })
                 console.log(workDayInfo.date)
             })
-            this.listRenderOver = true;
+            //完全沒資料長度是0就不跑spinner
+            if(this.workDayInfoList.lenght === 0){
+                this.listRenderOver = false;
+            }else{
+                this.listRenderOver = true;
+            }
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
@@ -665,6 +677,7 @@ export default {
                 this.hasntThisTimeFrameInfo = false;
             }
         },
+        //查看此日期的workHoursInfo
         workHoursInfo(event){
             let reqBody = {
                 employeeId : this.employeeId
@@ -733,15 +746,18 @@ export default {
             sheet.style.overflow = "hidden";
             sheet.style.marginLeft = "200%";
         },
+        //以點擊的日期查詢工時表
         workHoursInfoByDate(targetValue){
             this.selectedDateInfoList = [];
             this.workHoursInfoData.workHoursInfoList.forEach((workHoursInfo)=>{
                 if(workHoursInfo.date === targetValue){
+                    workHoursInfo.workInfoId = workHoursInfo.workInfoId.toString();
                     this.selectedDateInfoList.push(workHoursInfo);
                 }
             })
             console.log(this.selectedDateInfoList);
         },
+        //返回日工時表
         backToWorkDayInfo(){
             let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
             workHoursInfoFrame.style.left = "-150%";
@@ -759,10 +775,18 @@ export default {
                 this.showWorkHoursInfo = false;
             },300)
         },
-        startAnimation() {
+        //icon動畫
+        startAnimation(){
             setInterval(() => {
                 this.isAnimating = !this.isAnimating;
             }, 500); //每隔0.5秒執行一次
+        },
+        editWorkHoursInfo(input){
+            this.editWorkHoursInfoId = input.target.value;
+            const editWorkHoursInfoId = this.editWorkHoursInfoId; // 保存 editWorkHoursInfoId
+            setTimeout(()=>{
+                this.$router.push({ name: 'EditEmployeeWorkHoursInfo', params: { editWorkHoursInfoId } });
+            },0)
         }
     },
     watch:{
@@ -895,7 +919,7 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workDayInfo.worInfoId" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
@@ -1099,6 +1123,31 @@ export default {
                         white-space: nowrap;
                         cursor: grab;
 
+                        //修改瀏覽器的scrollbar樣式
+                        ::-webkit-scrollbar {
+                            width: 0.5vw;
+                        }
+
+                        ::-webkit-scrollbar-button {
+                            background: transparent;
+                            height: 3%; //上下buffer的高度
+                            border-radius: 4px;
+                        }
+
+                        ::-webkit-scrollbar-track-piece {
+                            background: transparent;
+                        }
+
+                        ::-webkit-scrollbar-thumb {
+                            border-radius: 4px;
+                            background-color: rgba(129, 91, 21, 0.4);
+                            border: none;
+                        }
+
+                        ::-webkit-scrollbar-track {
+                            box-shadow: transparent;
+                        }
+
                         .tips{
                             position: fixed;
                             top: 2%;
@@ -1130,6 +1179,7 @@ export default {
                             position: relative;
                             display: inline-block;
                             text-align: center;
+                            border: none;
                             border-radius: 10px;
                             padding: 1% 1%;
                             margin: 0 1%;
@@ -1172,14 +1222,14 @@ export default {
                             .editWorkHoursInfo{
                                 position: absolute;
                                 top: 0%;
-                                left: -0.5%;
+                                left: 0%;
                                 background: rgb(237, 203, 89);
                                 border: none;
                                 color: rgb(32, 36, 44);
-                                border-radius: 10px 5px 15px 5px;
+                                border-radius: 10px 0px 15px 0px;
                                 width: max-content;
                                 padding: 0 1vw;
-                                height: 3vh;
+                                height: 3.5vh;
                                 font-size: 2vh;
                                 transition: 0.4s;
                                 z-index: 1;
@@ -1252,6 +1302,31 @@ export default {
                 transition-property: margin;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
+
+                //修改瀏覽器的scrollbar樣式
+                ::-webkit-scrollbar {
+                    width: 0.6vw;
+                }
+
+                ::-webkit-scrollbar-button {
+                    background: transparent;
+                    height: 0; //上下buffer的高度
+                    border-radius: 4px;
+                }
+
+                ::-webkit-scrollbar-track-piece {
+                    background: transparent;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 4px;
+                    background-color: rgba(71, 71, 71, 0.6);
+                    border: 1px solid rgb(140, 140, 150);
+                }
+
+                ::-webkit-scrollbar-track {
+                    box-shadow: transparent;
+                }
 
                 .emptyTitle{
                     position: absolute;

@@ -291,12 +291,15 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
     .popup {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition: 0.2s;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
         z-index: 2;
     }
 

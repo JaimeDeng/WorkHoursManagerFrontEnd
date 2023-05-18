@@ -12,6 +12,7 @@ import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
 import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
+import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,6 +84,11 @@ const router = createRouter({
       path:'/systemAddEmploList_success',
       name: 'SystemAddEmploList_success',
       component:SystemAddEmploList_success
+    },
+    { //修改工時表
+      path:'/EditEmployeeWorkHoursInfo/:editWorkHoursInfoId', //後面必須加上 :變數名 才能在此路徑讀取參數
+      name: 'EditEmployeeWorkHoursInfo',
+      component:EditEmployeeWorkHoursInfo
     },
     { //主管進入審核畫面
       path:'/manaApprove',
