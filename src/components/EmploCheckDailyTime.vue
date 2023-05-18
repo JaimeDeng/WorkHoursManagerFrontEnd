@@ -18,7 +18,7 @@ export default {
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
             hasntThisTimeFrameInfo:false,
-            listRenderOver:false,
+            listRenderOver:true,
             message:'',
             //介面文字
             searchDate:'',
