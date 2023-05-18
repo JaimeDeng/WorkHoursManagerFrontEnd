@@ -30,7 +30,7 @@ export default {
             <!-- 左側範圍 -->
             <div class="left">
                 <div class="title_search">
-                    <p>員工名單</p>
+                    <p>編輯人員資訊</p>
                     <div>
                         <label for="serch"><i class="fa-solid fa-magnifying-glass"></i></label>
                         <input id="serch" type="text" placeholder="請輸入員工ID,姓名">
@@ -38,7 +38,7 @@ export default {
 
                 </div>
                 <!-- 手風琴 -->
-                <div class="sheet" style="overflow-y: scroll; max-height: 320px;">
+                <div class="sheet" style="overflow-y: auto; ">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="flush-headingOne">
@@ -105,43 +105,12 @@ export default {
                         </div>
                     </div>
                 </div>
+
+                 <RouterLink to="/employeeHome"><button type="button" class="back">返回首頁</button></RouterLink>
             </div>
-            <!-- 右側範圍 -->
-            <div class="right">
-                <div class="title">修改人員資訊</div>
-                <div class="area1">
-                    <button type="button" class="who">000929 莊員工</button>
-                    <!-- 修改區 -->
-                    <div class="edit">
-                        <div>
-                            <label for="">員工ID:</label>
-                            <input type="text">
-                        </div>
-                        <div>
-                            <label for="">姓名:</label>
-                            <input type="text">
-                        </div>
-                        <div>
-                            <label for="">信箱:</label>
-                            <input type="email">
-                        </div>
-                        <!-- 主管權限 -->
-                        <div>
-                            <label for="">主管權限:</label>
-                            <select>
-                                <option selected>請選擇權限</option>
-                                <option value="1">是</option>
-                                <option value="2">否</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="delete" type="button">刪除該人員資訊</button>
-                </div>
-                <div class="btnArea">
-                    <RouterLink to="/systemHome" class="btnback">返回</RouterLink>
-                    <button type="button">送出修改</button>
-                </div>
-            </div>
+           
+           
+           
         </div>
 
     </div>
@@ -155,21 +124,28 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
+    height: 100vh;
+    width: 100%;
     .check {
 
-        width: 70%;
-        height: 90%;
+        position: relative;
+        width: 80%;
+        height: 100%;
         display: flex;
         justify-content: space-evenly;
+        align-items: center;
 
         //左側
         .left {
-            padding: 12px;
+            position: relative;
+            padding: 1vw;
             background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 208, 224);
+            border: 2px solid rgb(177, 201, 224);
             border-radius: 5px;
-            width: 50%;
+            width: 90%;
+            height: 75vh;
+            overflow: hidden;
+
 
             .title_search {
                 display: flex;
@@ -244,128 +220,32 @@ export default {
 
         }
 
-        //右側
-        .right {
-            background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 208, 224);
-            border-radius: 5px;
-            width: 35%;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            justify-content: flex-start;
-
-            .title {
-                font-size: 23px;
-                font-weight: bold;
-
-            }
-
-            .area1 {
+        .back {
+                position: absolute;
                 display: flex;
-                flex-direction: column;
+                justify-content: center;
                 align-items: center;
-                padding: 18px;
-
-                .who {
-                    color: #000;
-                    margin-bottom: 8px;
-                    border-radius: 5px;
-                    border: 1px solid #000;
-                    background-color: rgb(105, 152, 171);
-                }
-
-                .edit {
-                    display: flex;
-                    flex-direction: column;
-
-                    div {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                    }
-
-                    label {
-                        font-size: 15px;
-                    }
-
-                    select,
-                    input {
-                        height: 30px;
-                        width: 60%;
-                        margin-bottom: 8px;
-                        border-radius: 5px;
-                        border: 1px solid #000;
-                    }
-                }
-
-
-            }
-
-            .delete {
-                background: rgb(141, 51, 21);
+                bottom: 2%;
+                left: 1%;
+                background: rgb(26, 55, 77);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                height: 30px;
-                margin: auto;
-                font-size: 16px;
+                width: max-content;
+                height: 3vh;
+                font-size: 2vh;
+                padding: 1vh 1vw;
+                transition: 0.4s;
 
                 &:hover {
-                    background-color: rgb(184, 68, 29);
+                    background-color: rgb(64, 104, 130);
                 }
 
                 &:active {
                     transform: scale(0.95);
                 }
             }
-
-            .btnArea {
-                display: flex;
-                justify-content: space-between;
-                align-items: end;
-                width: 100%;
-                height: 100%;
-
-                .btnback {
-                    background: rgb(26, 55, 77);
-                    border: 1.5px solid #000;
-                    color: white;
-                    border-radius: 5px;
-                    padding: 4px;
-                    font-size: 18px;
-                    margin-top: 50px;
-                    text-decoration: none;
-
-                    &:hover {
-                        background-color: rgb(64, 104, 130);
-                    }
-
-                    &:active {
-                        transform: scale(0.95);
-                    }
-                }
-
-                button {
-                    background: rgb(26, 55, 77);
-                    border: 1.5px solid #000;
-                    color: white;
-                    border-radius: 5px;
-                    width: 100px;
-                    height: 30px;
-                    font-size: 15px;
-
-                    &:hover {
-                        background-color: rgb(64, 104, 130);
-                    }
-
-                    &:active {
-                        transform: scale(0.95);
-                    }
-                }
-            }
-        }
+        
     }
 
 
