@@ -1,10 +1,12 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import checkPopup from './checkPopup.vue'
 export default (await import('vue')).defineComponent({
 components: {
     RouterLink,
-    popup
+    popup,
+    checkPopup
 },
 data() {
   return{
@@ -13,7 +15,14 @@ data() {
         popupData: {
             title: "Popup Title",
             content: "Popup Content",
+            backBtn: 'back'
+        },
+        showCheckPopup: false,
+        checkPopupData: {
+            title: "Popup Title",
+            content: "Popup Content",
             backBtn: 'back',
+            confirmBtn: 'confirm'
         },
         //Parmas傳來的參數值
         editWorkHoursInfoId:"",
@@ -36,6 +45,7 @@ data() {
         endTimeValue:'default',
         selectEndTime:"請選擇結束時間",
         detail:"",
+        detailLabel:"",
         back:"返回",
         remove:"刪除工時表",
         commit:"新增",
@@ -57,6 +67,7 @@ data() {
         {label : "工傷" , value : "工傷"},
         {label : "天災" , value : "天災"}],
         timeOptions:[],
+        hasRendered:false,
 
         //resp
         getResp:[],
@@ -78,8 +89,11 @@ methods: {
             this.selectEndTime = "Select end time";
             this.back = "Back";
             this.commit = "Commit";
+            this.detailLabel = "Detail"
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
             this.popupData.backBtn = "Back";
+            this.checkPopupData.backBtn = "Back";
+            this.checkPopupData.confirmBtn = "confirm";
             this.remove = "Delete Timesheet";
         }else if(this.langValue === 'jp'){
             this.addTitle = "勤務表編集";
@@ -93,8 +107,11 @@ methods: {
             this.selectEndTime = "終了時刻を選択してください";
             this.back = "戻る";
             this.commit = "編集";
+            this.detailLabel = "仕事内容"
             this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
             this.popupData.backBtn = "戻る";
+            this.checkPopupData.backBtn = "戻る";
+            this.checkPopupData.confirmBtn = "確認";
             this.remove = "勤務表を削除";
         }else if(this.langValue === 'ch'){
             this.addTitle = "編輯工作時數表";
@@ -108,8 +125,11 @@ methods: {
             this.selectEndTime = "請選擇結束時間";
             this.back = "返回";
             this.commit = "確認";
+            this.detailLabel = "工作內容"
             this.detailPlaceHolder = "工作內容(限制500字以內)";
             this.popupData.backBtn = "返回";
+            this.checkPopupData.backBtn = "返回";
+            this.checkPopupData.confirmBtn = "確認";
             this.remove = "刪除此工時表";
         }
     },
@@ -150,19 +170,41 @@ methods: {
             this.startTimeValue = this.getResp.startTime;
             this.endTimeValue = this.getResp.endTime;
             this.detail = this.getResp.detail;
+            this.date = this.getResp.date;
+            this.hasRendered = true;
         })
         .catch(err => console.log(err))
     },
     commitReq(){
+        if( this.modelInput.toString() === this.getResp.model && this.caseNoInput.toString() === this.getResp.caseNo 
+            && this.startTimeValue.toString() === this.getResp.startTime && this.endTimeValue.toString() === this.getResp.endTime
+            && this.detail.toString() === this.getResp.detail && this.statusValue.toString() === this.getResp.status){
+                this.editMessage = "資料尚未進行任何修改";
+                this.errorPopup(this.editMessage);
+                return;
+            }
+        //如果是default轉成null給後端才能正確做判斷
+        let status = this.statusValue;
+        if(status === "default"){
+            status = null;
+        }
+        let satrtTime = this.startTimeValue;
+        if(satrtTime === "default"){
+            satrtTime = null;
+        }
+        let endTime = this.endTimeValue;
+        if(endTime === "default"){
+            endTime = null;
+        }
         let reqbody = {
             workInfoId : this.editWorkHoursInfoId,
             employeeId : this.employeeId,
             model : this.modelInput,
             caseNo : this.caseNoInput,
-            startTime : this.startTimeValue,
-            endTime : this.endTimeValue,
+            startTime : satrtTime,
+            endTime : endTime,
             detail : this.detail,
-            status : this.statusValue
+            status : status
         };
         console.log(reqbody);
         fetch("http://localhost:3000/editWorkHoursInfo" ,{
@@ -185,7 +227,34 @@ methods: {
         })
         .catch(err => console.log(err))
     },
+    confirmRemove(){
+        if (this.langValue === 'ch') {
+            this.checkPopupData.title = "警告";
+        } else if (this.langValue === 'en') {
+            this.checkPopupData.title = "注意";
+        } else if (this.langValue === 'jp') {
+            this.checkPopupData.title = "Warning";
+        }
+        this.checkPopupData.content = "您即將刪除此工時表 , 刪除後無法復原";
+        this.showCheckPopup = true;
+        setTimeout(() => {
+            let checkPopup = this.$refs.checkPopup;
+            console.log(checkPopup);
+            let checkPopupEl = checkPopup.$el;
+            let checkPopupIcon = checkPopupEl.querySelector("i");
+            console.log(checkPopupIcon);
+            let iconStr1 = "fa-solid";
+            let iconStr2 = "fa-triangle-exclamation";
+            checkPopupIcon.classList.add(iconStr1);
+            checkPopupIcon.classList.add(iconStr2);
+            checkPopupIcon.style.color = "#ae3737";
+            console.log(checkPopupIcon);
+            checkPopup.$el.style.opacity = "1";
+            checkPopup.$el.style.bottom = "0%";
+        }, 100);
+    },
     removeReq(){
+        this.showCheckPopup = false;
         let reqbody = {
             workInfoId : this.editWorkHoursInfoId,
         };
@@ -217,6 +286,9 @@ methods: {
         if (this.editResp.success || this.deleteResp.success) {
             this.$router.push('/EmploCheckDailyTime');
         }
+    },
+    closeCheckPopup() {
+        this.showCheckPopup = false;
     },
     successPopup(message) {
         if (this.langValue === 'ch') {
@@ -316,7 +388,7 @@ mounted() {
             hours++;
         }
         count++;
-    }
+    };
 }
 })
 </script>
@@ -325,11 +397,14 @@ mounted() {
 
         <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
         <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
-        <div v-if="showPopup" ref="mask" class="mask"></div>
+        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup" 
+        @close="closeCheckPopup" @confirm="removeReq"></checkPopup>
+        <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
 
-        <div class="add">
-            <button class="removeBtn" @click="removeReq" type="button">{{ remove }} <i class="fa-solid fa-delete-left"></i></button>
+        <div v-if="hasRendered" class="add">
+            <button class="removeBtn" @click="confirmRemove" type="button">{{ remove }} <i class="fa-solid fa-delete-left"></i></button>
             <h4>{{ addTitle }}</h4>
+            <h5>{{ date }}</h5>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
@@ -365,16 +440,18 @@ mounted() {
             </div>
 
             <div class="detailFrame">
+                <label for="detail">{{ detailLabel }}</label>
                 <textarea v-model="detail" maxlength="500" class="detail" name="detail" id="detail" :placeholder="detailPlaceHolder"></textarea>
             </div>
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
+                <RouterLink tag="button" to="/EmploCheckDailyTime" class="back">{{ back }}</RouterLink>
                 
                 <button @click="commitReq" type="button">{{ commit }}</button>
             </div>
         </div>
+        <div v-else class="spinner-border text-light" role="status"></div>
 
     </div>
 </template>
@@ -389,12 +466,24 @@ mounted() {
     align-items: center;
     position: relative;
     z-index: -1;
+    overflow: hidden;
 
+    .checkPopup{
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        z-index: 2;
+    }
     .popup{
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition: 0.2s;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
         z-index: 2;
     }
     .mask{
@@ -444,10 +533,13 @@ mounted() {
         }
 
         h4{
-            margin-top: 3%;
+            margin-top: 2%;
             margin-bottom: 3vh;
             font-size: 4vh;
             font-weight: bold;
+        }
+        h5{
+            font-size: 2.7vh;
         }
 
         .area1 {
@@ -503,9 +595,11 @@ mounted() {
 
         .detailFrame{
             position: relative;
-            margin: 2vh 0;
             height: 20%;
             width: 50%;
+            label{
+                font-size: 2vh;
+            }
             .detail{
                 padding: 0.5vh 0.3vw;
                 font-size: 1.5vh;
@@ -524,7 +618,7 @@ mounted() {
             justify-content: space-between;
             width: 40%;
             padding: 0 1vw;
-            margin-top: 3.3%;
+            margin-top: 6%;
 
             .back{
                 background: rgb(26, 55, 77);
@@ -570,6 +664,11 @@ mounted() {
                 }
             }
         }
+    }
+    .text-light{
+        font-size: 4rem;
+        width: 5rem;
+        height: 5rem;
     }
 
 

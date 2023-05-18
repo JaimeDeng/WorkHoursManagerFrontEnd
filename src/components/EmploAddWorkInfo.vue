@@ -124,15 +124,28 @@ methods: {
         }
     },
     commitReq(){
+        //如果是default轉成null給後端才能正確做判斷
+        let status = this.statusValue;
+        if(status === "default"){
+            status = null;
+        }
+        let satrtTime = this.startTimeValue;
+        if(satrtTime === "default"){
+            satrtTime = null;
+        }
+        let endTime = this.endTimeValue;
+        if(endTime === "default"){
+            endTime = null;
+        }
         let reqbody = {
-            employeeId : this.employeeId,
             date : this.dateValue,
+            employeeId : this.employeeId,
             model : this.modelInput,
             caseNo : this.caseNoInput,
-            startTime : this.startTimeValue,
-            endTime : this.endTimeValue,
+            startTime : satrtTime,
+            endTime : endTime,
             detail : this.detail,
-            status : this.statusValue
+            status : status
         };
         console.log(reqbody);
         fetch("http://localhost:3000/setWorkHoursInfo" ,{
@@ -338,12 +351,15 @@ mounted() {
     align-items: center;
     position: relative;
     z-index: -1;
+    overflow: hidden;
 
     .popup{
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition: 0.2s;
+        transition-property: bottom;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
         z-index: 2;
     }
     .mask{

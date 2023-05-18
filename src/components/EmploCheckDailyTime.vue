@@ -1,6 +1,6 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue'
+import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue' //紅蚯蚓不用理他
 export default {
     components: {
         RouterLink,
@@ -1179,6 +1179,7 @@ export default {
                             position: relative;
                             display: inline-block;
                             text-align: center;
+                            border: none;
                             border-radius: 10px;
                             padding: 1% 1%;
                             margin: 0 1%;
@@ -1221,14 +1222,14 @@ export default {
                             .editWorkHoursInfo{
                                 position: absolute;
                                 top: 0%;
-                                left: -0.5%;
+                                left: 0%;
                                 background: rgb(237, 203, 89);
                                 border: none;
                                 color: rgb(32, 36, 44);
-                                border-radius: 10px 5px 15px 5px;
+                                border-radius: 10px 0px 15px 0px;
                                 width: max-content;
                                 padding: 0 1vw;
-                                height: 3vh;
+                                height: 3.5vh;
                                 font-size: 2vh;
                                 transition: 0.4s;
                                 z-index: 1;
