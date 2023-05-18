@@ -133,7 +133,7 @@ export default {
         renderList() {
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
-            this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
+            this.workDayInfo.forEach((workDayInfo) => {
                 let approvedStr = "";
                 if (workDayInfo.approved === true) {
                     approvedStr = "已審核";
@@ -838,14 +838,44 @@ export default {
         //開始產生元件動畫
         this.startAnimation();
 
-        fetch("http://localhost:3000/getAllWorkDayInfo", {
-            method: "get",
+        fetch("http://localhost:3000/getPendingApprovalWorkDayInfoBySupervisorId", {
+            method: "put",
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
             }
-        }).then(res => res.json())
+        }).then(res => res.json({supervisorId : this.employeeId}))
             .then((data) => {
                 console.log(data);
+                let myS = data;
+                let container = null;
+                    for (let i = myS.length - 1; i > 0; i--) {
+                        for (let i = 0; i < myS.length - 1; i++) {
+                            const nextDateStr = myS[i + 1].date;
+                            const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                            const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                            const thisDateStr = myS[i].date;
+                            const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                            const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                            if (nextDate > thisDate) {
+                                container = myS[i + 1];
+                                myS[i + 1] = myS[i];
+                                myS[i] = container;
+                            }
+                        }
+                    }
+                    this.workDayInfo = myS;
+                    console.log(this.workDayInfo);
+                    if (this.workDayInfo.length !== 0) {
+                        this.hasAnyWorkDayInfo = true;
+                        this.renderList();
+                    }
+                    if (data.success === true) {
+                        this.message = data.message;
+                    } else {
+                        this.message = data.message;
+                    }
+                
+
             })
     }
 }
