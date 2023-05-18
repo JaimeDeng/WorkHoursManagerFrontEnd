@@ -119,17 +119,16 @@ export default {
                         this.hasAnyWorkDayInfo = true;
                         this.renderList();
                     }
+                    if(this.hasAnyWorkDayInfo === false){
+                        this.listRenderOver = true;
+                    }
                     if (data.success === true) {
                         this.message = data.message;
                     } else {
                         this.message = data.message;
                     }
 
-                    if(this.workDayInfo.lenght === 0){
-                        this.listRenderOver = false;
-                    }else{
-                        this.listRenderOver = true;
-                    }
+                    this.listRenderOver = true;
             })
         },
         renderList() {
@@ -919,8 +918,6 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workDayInfo.workInfoId" class="editWorkHoursInfo"
-                                    id="editWorkHoursInfo">編輯</button>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i
                                     :style="{ transform: isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }"
@@ -1264,30 +1261,6 @@ export default {
                                 border: 1.5px solid rgb(83, 78, 50);
                                 background-color: rgba(240, 235, 219, 0.4);
                                 overflow: auto;
-                            }
-
-                            .editWorkHoursInfo {
-                                position: absolute;
-                                top: 0%;
-                                left: -0.5%;
-                                background: rgb(237, 203, 89);
-                                border: none;
-                                color: rgb(32, 36, 44);
-                                border-radius: 10px 5px 15px 5px;
-                                width: max-content;
-                                padding: 0 1vw;
-                                height: 3vh;
-                                font-size: 2vh;
-                                transition: 0.4s;
-                                z-index: 1;
-
-                                &:hover {
-                                    background-color: rgb(216, 179, 57);
-                                }
-
-                                &:active {
-                                    transform: scale(0.97);
-                                }
                             }
                         }
                     }

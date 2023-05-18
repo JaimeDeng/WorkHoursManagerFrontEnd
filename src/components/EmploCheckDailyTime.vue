@@ -127,8 +127,12 @@ export default {
                 console.log(this.workDayInfo);
                 if(this.workDayInfo.workDayInfoList.length !== 0){
                     this.hasAnyWorkDayInfo = true;
-                    this.renderList();
                 }
+                //完全沒資料就不跑spinner
+                if(this.hasAnyWorkDayInfo === false){
+                    this.listRenderOver = true;
+                }
+                this.renderList();
                 if(data.success === true){
                     this.message = data.message;
                 }else{
@@ -163,12 +167,7 @@ export default {
                 })
                 console.log(workDayInfo.date)
             })
-            //完全沒資料長度是0就不跑spinner
-            if(this.workDayInfoList.lenght === 0){
-                this.listRenderOver = false;
-            }else{
-                this.listRenderOver = true;
-            }
+            this.listRenderOver = true;
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
