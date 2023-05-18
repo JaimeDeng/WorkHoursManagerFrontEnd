@@ -1,4 +1,47 @@
-<script></script>
+<script>
+export default {
+    data() {
+        return {
+            //切換語言相關
+            langValue: 'ch',
+            addEmploList: '',
+            editemploInfo: '',
+            checkAllTimeSheet: '',
+            backBtn: '',
+            langValue:''
+        }
+    },
+    methods: {
+        changeLanguage() {
+            if (this.langValue === 'ch') {
+                this.addEmploList = '新增人員名單',
+                    this.editemploInfo = '修改人員資料',
+                    this.checkAllTimeSheet = '查看所有人員工時表',
+                    this.backBtn = '返回首頁';
+            } else if (this.langValue === 'en') {
+                this.addEmploList = 'Create an employee information',
+                    this.editemploInfo = 'Edit employee information',
+                    this.checkAllTimeSheet = 'Check all timesheets',
+                    this.backBtn = 'Back to homepage';
+            } else if (this.langValue === 'jp') {
+                this.addEmploList = '人員情報追加',
+                    this.editemploInfo = '人員情報編集',
+                    this.checkAllTimeSheet = '勤務表一覧',
+                    this.backBtn = '戻る';
+            }
+        }
+    },
+    mounted(){
+         //切換語言
+         this.langValue = sessionStorage.getItem('langValue');
+        if(this.langValue === null){
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
+    }
+}
+</script>
 <template>
     <div class="main">
         <div class="all">
@@ -6,16 +49,16 @@
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="area1">
-                    <RouterLink to="/systemAddEmploList" class="buttonlink">新增人員名單</RouterLink>
-                    <RouterLink to="/ststemEditInfo" class="buttonlink">修改人員資訊</RouterLink>
-                    <RouterLink to="" class="buttonlink">查看所有人員工時表</RouterLink>
+                    <RouterLink to="/systemAddEmploList" class="buttonlink">{{addEmploList}}</RouterLink>
+                    <RouterLink to="/ststemEditInfo" class="buttonlink">{{editemploInfo}}</RouterLink>
+                    <RouterLink to="" class="buttonlink">{{checkAllTimeSheet}}</RouterLink>
                 </div>
-                
+
 
             </div>
         </div>
 
-        <RouterLink to="/employeeHome" class="btnback">返回</RouterLink>
+        <RouterLink to="/employeeHome" class="btnback">{{backBtn}}</RouterLink>
     </div>
 </template>
 
@@ -84,7 +127,7 @@
                         background-color: rgb(64, 104, 130);
                     }
 
-                    &::after{
+                    &::after {
                         content: "";
                         z-index: -1;
                         position: absolute;
@@ -96,7 +139,7 @@
                         transition: 0.5s;
                     }
 
-                    &::before{
+                    &::before {
                         content: "";
                         z-index: -1;
                         position: absolute;
@@ -108,11 +151,11 @@
                         transition: 0.5s;
                     }
 
-                    &:hover::after{
+                    &:hover::after {
                         transform: translateY(53%);
                     }
 
-                    &:hover::before{
+                    &:hover::before {
                         transform: translateY(-44%);
                     }
 

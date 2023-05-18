@@ -50,11 +50,11 @@ export default {
                 console.log(data)
                 if (this.password.length === 0 && this.employeeId.length === 0) {
                     if (this.langValue === 'ch') {
-                        this.message = "請輸入員工ID欄位及密碼欄位";
+                        this.message = "請輸入員工ID或帳號及密碼";
                     } else if (this.langValue === 'en') {
-                        this.message = "You haven't filled in employee ID and password field yet";
+                        this.message = "You haven't filled in Employee ID or account and password field yet";
                     } else if (this.langValue === 'jp') {
-                        this.message = "社員番号欄とパスワード欄を入力してください";
+                        this.message = "社員番号またはアカウントとパスワードを入力してください";
                     }
                     this.errorPopup()
                 } else if (this.password.length === 0) {
@@ -68,20 +68,20 @@ export default {
                     this.errorPopup()
                 } else if (this.employeeId.length === 0) {
                     if (this.langValue === 'ch') {
-                        this.message = "請輸入員工ID欄位";
+                        this.message = "請輸入員工ID或帳號";
                     } else if (this.langValue === 'en') {
-                        this.message = "You haven't filled in employee ID field yet";
+                        this.message = "You haven't filled in employee ID or account yet";
                     } else if (this.langValue === 'jp') {
-                        this.message = "社員番号欄とを入力してください";
+                        this.message = "社員番号またはアカウントを入力してください";
                     }
                     this.errorPopup()
                 } else if (data.success === false) {
                     if (this.langValue === 'ch') {
-                        this.message = "此員工ID不存在";
+                        this.message = "此員工ID或帳號不存在";
                     } else if (this.langValue === 'en') {
-                        this.message = "This employee ID does not exist.";
+                        this.message = "This Employee ID or account does not exist.";
                     } else if (this.langValue === 'jp') {
-                        this.message = "社員番号は存在しません";
+                        this.message = "社員番号またはアカウントは存在しません";
                     }
                     this.errorPopup()
                 } else if (this.password !== atob(data.password)) {
@@ -172,7 +172,7 @@ export default {
         changeLanguage() {
             if (this.langValue === 'en') {
                 this.titleStr = 'Login';
-                this.employeeIdPHStr = 'Please input your employee ID';
+                this.employeeIdPHStr = 'Please input your employee ID or account';
                 this.pwdPHStr = 'Please input your password';
                 this.commitBtnStr = 'Sign up';
                 this.loginBtnStr = 'Login'
@@ -180,10 +180,10 @@ export default {
                 this.forgetPsdStr = 'Forgot Password'
                 this.popupData.backBtn = 'Back';
                 this.pwdStr = 'Password',
-                    this.employeeIdStr = 'Employee ID'
+                this.employeeIdStr = 'Employee ID / Account'
             } else if (this.langValue === 'ch') {
                 this.titleStr = '登入';
-                this.employeeIdPHStr = '請輸入您的員工ID';
+                this.employeeIdPHStr = '請輸入您的員工ID或帳號';
                 this.pwdPHStr = '請輸入密碼';
                 this.commitBtnStr = '註冊';
                 this.loginBtnStr = '登入'
@@ -191,10 +191,10 @@ export default {
                 this.forgetPsdStr = '忘記密碼'
                 this.popupData.backBtn = '返回';
                 this.pwdStr = '密碼',
-                    this.employeeIdStr = '員工ID'
+                this.employeeIdStr = '員工ID / 帳號'
             } else if (this.langValue === 'jp') {
                 this.titleStr = 'ログイン';
-                this.employeeIdPHStr = '社員番号を入力してください';
+                this.employeeIdPHStr = '社員番号またはアカウントを入力してください';
                 this.pwdPHStr = 'パスワードを入力してください';
                 this.commitBtnStr = 'アカウント登録';
                 this.loginBtnStr = 'ログイン'
@@ -202,7 +202,7 @@ export default {
                 this.forgetPsdStr = 'パスワードを忘れた場合'
                 this.popupData.backBtn = '戻る';
                 this.pwdStr = 'パスワード',
-                    this.employeeIdStr = '社員番号'
+                this.employeeIdStr = '社員番号/アカウント'
             }
         }
     },
@@ -319,8 +319,8 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
-        width: 25%;
-        height: 70%;
+        width: 28%;
+        height: 74%;
         border-radius: 5px;
 
         label {
@@ -339,7 +339,7 @@ export default {
             display: flex;
             flex-direction: column;
             height: 40%;
-            width: 70%;
+            width: 80%;
             justify-content: space-around;
 
             %inputFrameSetting {
@@ -354,7 +354,7 @@ export default {
                     padding-left: 28px;
                     height: 5vh;
                     border-radius: 5px;
-                    font-size: 2vh;
+                    font-size: 2.1vh;
                     border: 1.5px solid #000;
                     transition: 0.5s;
 
@@ -409,7 +409,7 @@ export default {
 
                     label {
                         cursor: pointer;
-                        font-size: 2vh;
+                        font-size: 2.1vh;
                     }
 
                     input {
@@ -448,7 +448,7 @@ export default {
                 width: 8vw;
                 height: 5vh;
                 transition: 0.4s;
-                font-size: 2vh;
+                font-size: 2.1vh;
 
 
                 &:hover {
