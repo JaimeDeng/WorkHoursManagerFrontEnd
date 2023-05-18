@@ -144,7 +144,7 @@ export default {
                     <RouterLink class="buttonlink" to="/emploAddWorkInfo">{{ addTimeSheet }}</RouterLink>
                     <RouterLink class="buttonlink" to="/emploCheckDailyTime">{{ checkTimesheet }}</RouterLink>
                     <RouterLink class="buttonlink" to="/emploChangePsd">{{ changePwd }}</RouterLink>
-                    <RouterLink v-if="isSupervisor" class="buttonlink" to="/managerHome">{{ approve }}</RouterLink>
+                    <RouterLink v-if="isSupervisor" class="buttonlink" to="/manaCheckDaily">{{ approve }}</RouterLink>
                     <RouterLink v-if="isAdministrator" class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>       
                 </div>
             </div>

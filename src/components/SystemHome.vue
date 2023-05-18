@@ -8,11 +8,9 @@
                 <div class="area1">
                     <RouterLink to="/systemAddEmploList" class="buttonlink">新增人員名單</RouterLink>
                     <RouterLink to="/ststemEditInfo" class="buttonlink">修改人員資訊</RouterLink>
+                    <RouterLink to="" class="buttonlink">查看所有人員工時表</RouterLink>
                 </div>
-                <!-- 下排 -->
-                <!-- <div class="area2">
-                    <button type="button">查詢日工時表</button>
-                </div> -->
+                
 
             </div>
         </div>
@@ -47,33 +45,75 @@
             flex-direction: column;
             justify-content: space-evenly;
 
-            .area1,
-            .area2 {
+            .area1 {
                 width: 100%;
-                height: 40%;
+                height: auto;
                 display: flex;
-                justify-content: space-between;
+                flex-direction: column;
+                align-items: center;
+
 
                 .buttonlink {
-                    color: #000;
-                    width: 40%;
-                    background-color: white;
-                    border-radius: 5px;
-                    border: 2px solid #000;
-                    font-size: 22px;
+                    font-weight: 500;
+                    letter-spacing: 0.03vw;
+                    box-shadow: inset 0 -3vh 60px 0.1vh rgba(27, 46, 57, 0.3);
+                    margin-top: 2%;
+                    color: #3d3d3d;
+                    width: 48%;
+                    height: 10vh;
+                    position: relative;
+                    background-color: rgb(255, 255, 255);
+                    border-radius: 10px;
+                    border: 1px solid #000;
+                    font-size: 2.3vh;
                     text-decoration: none;
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    margin-right: 12px;
+                    transition: 0.5s;
+                    z-index: 1;
+                    overflow: hidden;
 
                     &:active {
-                        transform: scale(0.97);
+                        transform: scale(0.9);
                     }
 
                     &:hover {
                         color: white;
+                        box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.7);
                         background-color: rgb(64, 104, 130);
+                    }
+
+                    &::after{
+                        content: "";
+                        z-index: -1;
+                        position: absolute;
+                        transform: translateY(100%);
+                        border-radius: 100%;
+                        height: 70vh;
+                        width: 60vw;
+                        background-color: rgba(61, 62, 63, 0.5);
+                        transition: 0.5s;
+                    }
+
+                    &::before{
+                        content: "";
+                        z-index: -1;
+                        position: absolute;
+                        transform: translateY(-100%);
+                        border-radius: 100%;
+                        height: 70vh;
+                        width: 60vw;
+                        background-color: rgba(130, 204, 223, 0.5);
+                        transition: 0.5s;
+                    }
+
+                    &:hover::after{
+                        transform: translateY(53%);
+                    }
+
+                    &:hover::before{
+                        transform: translateY(-44%);
                     }
 
 

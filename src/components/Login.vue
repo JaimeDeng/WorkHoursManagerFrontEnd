@@ -81,7 +81,7 @@ export default {
                     } else if (this.langValue === 'en') {
                         this.message = "This employee ID does not exist.";
                     } else if (this.langValue === 'jp') {
-                        this.message = "社員番号欄は存在しません";
+                        this.message = "社員番号は存在しません";
                     }
                     this.errorPopup()
                 } else if (this.password !== atob(data.password)) {
