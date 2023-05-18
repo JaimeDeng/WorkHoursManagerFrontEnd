@@ -146,6 +146,10 @@ export default {
                 if (workDayInfo.workingHours < 8) {
                     workingHoursIsNotEnough = true;
                 }
+                let dateAndEmployeeId = JSON.stringify({
+                        date : workDayInfo.date,
+                        employeeId :　workDayInfo.employeeId
+                    });
                 this.workDayInfoList.push({
                     workInfoId: workDayInfo.workInfoId,
                     date: workDayInfo.date,
@@ -154,7 +158,8 @@ export default {
                     status: workDayInfo.status,
                     approved: workDayInfo.approved,
                     approvedStr: approvedStr,
-                    workingHoursIsNotEnough: workingHoursIsNotEnough
+                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                    dateAndEmployeeId: dateAndEmployeeId
                 })
                 console.log(workDayInfo.date)
             })
@@ -668,8 +673,10 @@ export default {
             }
         },
         workHoursInfo(event) {
+            let dateAndEmployeeId = JSON.parse(event.target.value);
+            console.log(dateAndEmployeeId);
             let reqBody = {
-                employeeId: this.employeeId
+                employeeId: dateAndEmployeeId.employeeId
             }
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId", {
@@ -712,7 +719,7 @@ export default {
                     console.log(this.workHoursInfoData);
                     this.showWorkHoursInfo = true;
                     setTimeout(() => {
-                        this.queryDate = event.target.value;
+                        this.queryDate = dateAndEmployeeId.date;
                         let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
                         let deco1 = document.getElementById("deco1");
                         let deco2 = document.getElementById("deco2");
@@ -721,7 +728,7 @@ export default {
                         deco1.style.left = "110%";
                         deco2.style.left = "150%";
                     }, 100);
-                    this.workHoursInfoByDate(event.target.value);
+                    this.workHoursInfoByDate(dateAndEmployeeId.date);
                     if (data.success === true) {
                         this.message = data.message;
                     } else {
@@ -956,7 +963,7 @@ export default {
                                     <p>出勤狀態: {{ workDayInfo.status }}</p>
                                     <p :class="{ 'hasntApproved': !workDayInfo.approved }">審核狀態: {{ workDayInfo.approvedStr
                                     }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn"
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeId" class="viewBtn"
                                         type="button">查看</button>
                                 </div>
                             </div>
@@ -1155,6 +1162,31 @@ export default {
                         white-space: nowrap;
                         cursor: grab;
 
+                        //修改瀏覽器的scrollbar樣式
+                        ::-webkit-scrollbar {
+                            width: 0.5vw;
+                        }
+
+                        ::-webkit-scrollbar-button {
+                            background: transparent;
+                            height: 3%; //上下buffer的高度
+                            border-radius: 4px;
+                        }
+
+                        ::-webkit-scrollbar-track-piece {
+                            background: transparent;
+                        }
+
+                        ::-webkit-scrollbar-thumb {
+                            border-radius: 4px;
+                            background-color: rgba(129, 91, 21, 0.4);
+                            border: none;
+                        }
+
+                        ::-webkit-scrollbar-track {
+                            box-shadow: transparent;
+                        }
+
                         .tips {
                             position: fixed;
                             top: 2%;
@@ -1320,6 +1352,31 @@ export default {
                 transition-property: margin;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9, 0.7, 0.2, 1);
+
+                //修改瀏覽器的scrollbar樣式
+                ::-webkit-scrollbar {
+                    width: 0.6vw;
+                }
+
+                ::-webkit-scrollbar-button {
+                    background: transparent;
+                    height: 0; //上下buffer的高度
+                    border-radius: 4px;
+                }
+
+                ::-webkit-scrollbar-track-piece {
+                    background: transparent;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 4px;
+                    background-color: rgba(71, 71, 71, 0.6);
+                    border: 1px solid rgb(140, 140, 150);
+                }
+
+                ::-webkit-scrollbar-track {
+                    box-shadow: transparent;
+                }
 
                 .emptyTitle {
                     position: absolute;
