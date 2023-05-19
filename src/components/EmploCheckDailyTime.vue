@@ -22,6 +22,7 @@ export default {
             workDayInfoList:[],
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
+            hasntThisReviewStatusInfo: false,
             hasntThisTimeFrameInfo:false,
             listRenderOver:false,
             hasntBeenApproved: true,
@@ -145,6 +146,7 @@ export default {
         renderList(){
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
+            this.hasntThisReviewStatusInfo = false;
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
@@ -172,6 +174,7 @@ export default {
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -191,8 +194,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -215,8 +224,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -239,8 +254,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -263,12 +284,19 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListLimitedNotApproved(){
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -288,8 +316,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -312,8 +346,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -336,8 +376,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -360,8 +406,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListByDate(date){
@@ -984,6 +1036,7 @@ export default {
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
                     <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>

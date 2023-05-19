@@ -351,14 +351,19 @@ export default {
                     cursor: pointer;
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+                    background-color: rgba(255, 255, 255, 0.9);
                     padding-left: 28px;
                     height: 5vh;
                     border-radius: 5px;
                     font-size: 2vh;
-                    border: 1.5px solid #000;
+                    border-top: none;
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: 2px solid #514d4d;
                     transition: 0.5s;
 
                     &:focus {
+                        outline: none;
                         background-color: rgb(227, 244, 255);
                     }
                 }
