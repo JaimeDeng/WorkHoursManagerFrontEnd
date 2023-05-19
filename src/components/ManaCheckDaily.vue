@@ -283,6 +283,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -291,7 +296,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -313,6 +319,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -321,7 +332,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -343,6 +355,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -351,7 +368,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -373,6 +391,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -381,7 +404,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -405,6 +429,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -413,7 +442,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -435,6 +465,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -443,7 +478,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -465,6 +501,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -473,7 +514,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -495,6 +537,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -503,7 +550,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisReviewStatusInfo = true;
                     }
@@ -530,15 +578,21 @@ components: {
                     if (workDayInfo.workingHours < 8) {
                         workingHoursIsNotEnough = true;
                     }
-                    this.workDayInfoList.push({
-                        workInfoId: workDayInfo.workInfoId,
-                        date: workDayInfo.date,
-                        employeeId: workDayInfo.employeeId,
-                        workingHours: workDayInfo.workingHours,
-                        status: workDayInfo.status,
-                        approved: workDayInfo.approved,
-                        approvedStr: approvedStr,
-                        workingHoursIsNotEnough: workingHoursIsNotEnough
+                    let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                        this.workDayInfoList.push({
+                            workInfoId: workDayInfo.workInfoId,
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId,
+                            workingHours: workDayInfo.workingHours,
+                            status: workDayInfo.status,
+                            approved: workDayInfo.approved,
+                            approvedStr: approvedStr,
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                     })
                     hasThisDateInfo = true;
                 }
@@ -569,6 +623,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -577,7 +636,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -596,6 +656,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -604,7 +669,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -622,6 +688,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -630,7 +701,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -662,6 +734,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -670,7 +747,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -689,6 +767,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -697,7 +780,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -715,6 +799,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -723,7 +812,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -755,6 +845,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -763,7 +858,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -782,6 +878,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -790,7 +891,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }
@@ -808,6 +910,11 @@ components: {
                         if (workDayInfo.workingHours < 8) {
                             workingHoursIsNotEnough = true;
                         }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
                             date: workDayInfo.date,
@@ -816,7 +923,8 @@ components: {
                             status: workDayInfo.status,
                             approved: workDayInfo.approved,
                             approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisTimeFrameInfo = true;
                     }

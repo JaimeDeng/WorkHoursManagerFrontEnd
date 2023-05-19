@@ -119,7 +119,7 @@ export default {
                 }
                 console.log(this.hasTodaysWorkInfo);
                 console.log(this.notificationNum);
-            },100)
+            },0)
         },
         //監聽切換語言
         changeLang(){
