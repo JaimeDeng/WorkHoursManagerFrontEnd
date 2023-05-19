@@ -73,7 +73,7 @@ export default {
                 //下午五點時才會檢查是否有無今日工時表
                 this.hasTodaysWorkInfo = true;
                 //只有在星期一到星期五下午五點過後才會檢查
-                if(this.nowHours >= 17 && this.day > 0 && this.day < 6){
+                if(this.nowHours >= 16 && this.day > 0 && this.day < 6){
                     this.hasTodaysWorkInfo = false;
                     console.log(data);
                     if(data.success === false){
@@ -119,7 +119,7 @@ export default {
                 }
                 console.log(this.hasTodaysWorkInfo);
                 console.log(this.notificationNum);
-            },0)
+            },100)
         },
         //監聽切換語言
         changeLang(){

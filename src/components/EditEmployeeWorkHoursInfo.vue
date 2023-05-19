@@ -314,6 +314,7 @@ methods: {
             popup.$el.style.opacity = "1";
             popup.$el.style.bottom = "0%";
         }, 100);
+        this.$emit('editWorkInfoSuccess');
     },
     errorPopup(message) {
         if (this.langValue === 'ch') {

@@ -4,7 +4,7 @@ import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue' //紅蚯
 export default {
     components: {
         RouterLink,
-        EditEmployeeWorkHoursInfo
+        EditEmployeeWorkHoursInfo,
     },
     data(){
         return{
@@ -815,6 +815,7 @@ export default {
         searchDate(date){
             console.log(date);
             if(date === ''){
+                this.hasntThisDateInfo = false;
                 this.renderList();
             }else{
                 this.renderListByDate(date);
@@ -846,7 +847,7 @@ export default {
             if(newValue === '30days'){
                 this.renderListWhitin30Days();
             }
-        }
+        },
     },
     created() {
         //獲取帳號資訊
@@ -887,6 +888,7 @@ export default {
 </script>
 <template>
     <div class="main">
+
         <div class="check">
 
             <!-- 左側範圍 -->
@@ -897,7 +899,7 @@ export default {
                         <label for="serch">{{ search }}</label>
                         <div class="dateFrame">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input @input="searchByDate" v-model="searchDate" id="serch" type="date">
+                            <input :disabled="this.timeFrameSelect !== 'default'" @input="searchByDate" v-model="searchDate" id="serch" type="date">
                         </div>
                     </div>
                     
@@ -905,7 +907,7 @@ export default {
                         <div class="ap">
                             <!-- 審核狀態 -->
                             <label for="approvedStatusSelect">{{ reviewStatus }}</label>
-                            <select v-model="reviewStatusSelect" id="approvedStatusSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="reviewStatusSelect" id="approvedStatusSelect">
                                 <option value="default" selected>{{ reviewStatusPH }}</option>
                                 <option value="true">{{ reviewStatusOpt1 }}</option>
                                 <option value="false">{{ reviewStatusOpt2 }}</option>
@@ -914,7 +916,7 @@ export default {
                         <div class="tim">
                             <!-- 時間範圍 -->
                             <label for="timeFrameSelect">{{ timeFrame }}</label>
-                            <select v-model="timeFrameSelect" for="timeFrameSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="timeFrameSelect" for="timeFrameSelect">
                                 <option value="default" selected>{{ timeFramePH }}</option>
                                 <option value="7days">{{ timeFrameOpt1 }}</option>
                                 <option value="14days">{{ timeFrameOpt2 }}</option>
@@ -1006,6 +1008,11 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+
+    select:disabled , input:disabled{
+        background-color: rgb(179, 177, 171);
+    }
 
     .check {
         position: relative;
