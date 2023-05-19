@@ -12,12 +12,16 @@ export default {
             name: "NONE",   //員工名
             employeeId:'',
             accountId:'',
+            date:'',
+            nowHours:'',
+            day:'',
             isSupervisor:false,
             isAdministrator:false,
             pendingApproveNum: 1,   //待審表單數量
             notificationBtnIsClick: false,  //是否按下通知按鈕
             hasAnyPendingApprove: false,    //是否有任何待審表單
             hasntAccount: true, //是否已登入
+            hasTodaysWorkInfo: false,
             notificationNum:0,   //通知數量
             changeLangValue:"",
             langSelectValue:'',
@@ -56,6 +60,35 @@ export default {
             })
             .catch(err => console.log(err))
         },
+        //工時表尚未建立檢察
+        todaysWorkDayInfoCheck(){
+            fetch("http://localhost:3000/getWorkDayInfoByDate" ,{
+                method:"put",
+                body: JSON.stringify({date : this.date}),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data)=>{
+                //下午五點時才會檢查是否有無今日工時表
+                this.hasTodaysWorkInfo = true;
+                //只有在星期一到星期五下午五點過後才會檢查
+                if(this.nowHours >= 17 && this.day > 0 && this.day < 6){
+                    this.hasTodaysWorkInfo = false;
+                    console.log(data);
+                    if(data.success === false){
+                        this.hasTodaysWorkInfo = false;
+                    }else{
+                        data.workDayInfoList.forEach((workDayInfo) => {
+                            if(workDayInfo.employeeId.employeeId === this.employeeId){
+                                this.hasTodaysWorkInfo = true;
+                            }
+                        })
+                    }
+                }
+            })
+            .catch(err => console.log(err))
+        },
         //監看通知鈴鐺按鈕是否被點擊
         clickNotificationBtn(){
             this.notificationBtnIsClick = !this.notificationBtnIsClick;
@@ -77,10 +110,16 @@ export default {
         },
         //計算有多少通知
         calculateNotificationNum(){
-            let listGroup = document.getElementById("list-group");
-            let notifications = listGroup.querySelectorAll(".list-group-item");
-            this.notificationNum = notifications.length;
-            console.log(notifications)
+            setTimeout(()=>{
+                if(this.hasAnyPendingApprove === true){
+                    this.notificationNum += 1;
+                }
+                if(this.hasTodaysWorkInfo === false){
+                    this.notificationNum += 1;
+                }
+                console.log(this.hasTodaysWorkInfo);
+                console.log(this.notificationNum);
+            },100)
         },
         //監聽切換語言
         changeLang(){
@@ -162,6 +201,19 @@ export default {
     },
 
     created() {
+        //獲取目前時間及日期
+        const now = new Date();
+        console.log(now.getHours());
+        let dateString = now.toLocaleDateString();  //抓現在日期的字串 格式為: yyyy/M or MM/dd
+        //修改日期字串格式
+        dateString = dateString.replace(/\//g , "-");
+        if((now.getMonth()+1) < 10){    //如果月份小於10要自己補0進去字串
+            dateString = dateString.substring(0 , 5) + "0" + dateString.substring(5);
+        }
+        this.nowHours = now.getHours();     //抓現在小時數
+        this.date = dateString;
+        this.day = now.getDay();    //抓今天星期幾
+
         //獲取帳號資訊
         this.employeeId = sessionStorage.getItem('employeeId');
         if(this.employeeId === null){
@@ -175,9 +227,12 @@ export default {
         if(this.accountId === null){
             this.accountId = localStorage.getItem("accountId");
         }
+        
         this.checkLoginOrNot();
         this.levelCheck();
         this.getPendingApprovalWorkDayInfo();
+        //檢查今天工時表填了沒
+        this.todaysWorkDayInfoCheck();
     },
     mounted() {
         this.addCloseNotifyList();
@@ -249,7 +304,7 @@ export default {
                     <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
                     <button v-if="!hasntAccount" @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
-                        <div :style="{ visibility: hasAnyPendingApprove ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
+                        <div :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
@@ -258,11 +313,17 @@ export default {
                             </div>
                             <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
                         </RouterLink>
-                        <div v-if="!hasAnyPendingApprove" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
+                        <div v-if="!hasAnyPendingApprove && hasTodaysWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1">沒有任何通知</h5>
                             </div>
                         </div>
+                        <RouterLink v-if="!hasTodaysWorkInfo" to="/EmploAddWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">通知</h5>
+                            </div>
+                            <p class="mb-1">您尚未登錄今日的工時表</p>
+                        </RouterLink>
                     </div>
                 </div>
             </div>
