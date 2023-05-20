@@ -4,7 +4,7 @@ import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue' //紅蚯
 export default {
     components: {
         RouterLink,
-        EditEmployeeWorkHoursInfo
+        EditEmployeeWorkHoursInfo,
     },
     data(){
         return{
@@ -22,8 +22,10 @@ export default {
             workDayInfoList:[],
             hasAnyWorkDayInfo:false,
             hasntThisDateInfo:false,
+            hasntThisReviewStatusInfo: false,
             hasntThisTimeFrameInfo:false,
             listRenderOver:false,
+            hasntBeenApproved: true,
             message:'',
             //介面文字
             searchDate:'',
@@ -144,6 +146,7 @@ export default {
         renderList(){
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
+            this.hasntThisReviewStatusInfo = false;
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
@@ -171,6 +174,7 @@ export default {
         },
         renderListLimitedApproved(){
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -190,8 +194,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -214,8 +224,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -238,8 +254,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -262,12 +284,19 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListLimitedNotApproved(){
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
             if(this.timeFrameSelect === "default"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -287,8 +316,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "7days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -311,8 +346,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "14days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -335,8 +376,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
             if(this.timeFrameSelect === "30days"){
                 this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
@@ -359,8 +406,14 @@ export default {
                             approvedStr : approvedStr,
                             workingHoursIsNotEnough : workingHoursIsNotEnough
                         })
+                        hasThisReviewStatusInfo = true;
                     }
                 })
+                if(hasThisReviewStatusInfo === false){
+                    this.hasntThisReviewStatusInfo = true;
+                }else{
+                    this.hasntThisReviewStatusInfo = false;
+                }
             }
         },
         renderListByDate(date){
@@ -676,11 +729,32 @@ export default {
                 this.hasntThisTimeFrameInfo = false;
             }
         },
-        //查看此日期的workHoursInfo
+        //查看此日期的workHoursInfo 同時檢查是否被審核
         workHoursInfo(event){
             let reqBody = {
                 employeeId : this.employeeId
             }
+
+            //先看此日期此張工時表是否已審核 , 決定可否編輯
+            fetch("http://localhost:3000/getWorkDayInfoByEmployeeId" ,{
+            method:"put",
+            body: JSON.stringify(reqBody),
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+            }).then(res => res.json())
+            .then((data)=>{
+                data.workDayInfoList.forEach((workDayInfo) =>{
+                    if(workDayInfo.date === event.target.value){
+                        if(workDayInfo.approved === true){
+                            this.hasntBeenApproved = false;
+                        }else{
+                            this.hasntBeenApproved = true;
+                        }
+                    }
+                })
+            })
+            .catch(err => console.log(err))
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
                 method:"put",
@@ -793,6 +867,7 @@ export default {
         searchDate(date){
             console.log(date);
             if(date === ''){
+                this.hasntThisDateInfo = false;
                 this.renderList();
             }else{
                 this.renderListByDate(date);
@@ -824,7 +899,7 @@ export default {
             if(newValue === '30days'){
                 this.renderListWhitin30Days();
             }
-        }
+        },
     },
     created() {
         //獲取帳號資訊
@@ -865,6 +940,7 @@ export default {
 </script>
 <template>
     <div class="main">
+
         <div class="check">
 
             <!-- 左側範圍 -->
@@ -875,7 +951,7 @@ export default {
                         <label for="serch">{{ search }}</label>
                         <div class="dateFrame">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input @input="searchByDate" v-model="searchDate" id="serch" type="date">
+                            <input :disabled="this.timeFrameSelect !== 'default'" @input="searchByDate" v-model="searchDate" id="serch" type="date">
                         </div>
                     </div>
                     
@@ -883,7 +959,7 @@ export default {
                         <div class="ap">
                             <!-- 審核狀態 -->
                             <label for="approvedStatusSelect">{{ reviewStatus }}</label>
-                            <select v-model="reviewStatusSelect" id="approvedStatusSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="reviewStatusSelect" id="approvedStatusSelect">
                                 <option value="default" selected>{{ reviewStatusPH }}</option>
                                 <option value="true">{{ reviewStatusOpt1 }}</option>
                                 <option value="false">{{ reviewStatusOpt2 }}</option>
@@ -892,7 +968,7 @@ export default {
                         <div class="tim">
                             <!-- 時間範圍 -->
                             <label for="timeFrameSelect">{{ timeFrame }}</label>
-                            <select v-model="timeFrameSelect" for="timeFrameSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="timeFrameSelect" for="timeFrameSelect">
                                 <option value="default" selected>{{ timeFramePH }}</option>
                                 <option value="7days">{{ timeFrameOpt1 }}</option>
                                 <option value="14days">{{ timeFrameOpt2 }}</option>
@@ -906,11 +982,11 @@ export default {
                     <div class="infoFrame" id="infoFrame">
                         <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
-                            <div class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
+                            <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
                                 <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
                                 <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
                                 <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>
-                                <i class="fa-solid fa-arrow-down" style="color: #24445c;"></i>
+                                <i class="fa-solid fa-arrow-down" style="color: #245c54;"></i>
                                 <p style="color: #1a4e78">結束時間: {{ workHoursInfo.endTime }}</p>
                                 <p>機型: {{ workHoursInfo.model }}</p>
                                 <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
@@ -918,7 +994,8 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <div v-if="!hasntBeenApproved" class="hasBeenApproved"><i class="fa-solid fa-check"></i>已審核</div>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
@@ -959,6 +1036,7 @@ export default {
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
                     <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -983,6 +1061,11 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+
+    select:disabled , input:disabled{
+        background-color: rgb(179, 177, 171);
+    }
 
     .check {
         position: relative;
@@ -1240,6 +1323,22 @@ export default {
                                 &:active {
                                     transform: scale(0.97);
                                 }
+                            }
+
+                            .hasBeenApproved{
+                                position: absolute;
+                                top: 0%;
+                                left: 0%;
+                                background: rgb(132, 184, 216);
+                                border: none;
+                                color: rgb(47, 47, 47);
+                                border-radius: 10px 0px 15px 0px;
+                                width: max-content;
+                                padding: 0 1vw;
+                                height: 3.5vh;
+                                font-size: 2vh;
+                                transition: 0.4s;
+                                z-index: 1;
                             }
                         }
                     }

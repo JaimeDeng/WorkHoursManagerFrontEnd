@@ -1,25 +1,54 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import popup from './popup.vue'
+import checkPopup from './checkPopup.vue'
 export default {
+components: {
+    RouterLink,
+    popup,
+    checkPopup
+},
     data() {
         return {
+            //checkPopup的props變數
+            showPopup: false,
+            popupData: {
+                title: "Popup Title",
+                content: "Popup Content",
+                backBtn: 'back'
+            },
+            showCheckPopup: false,
+            checkPopupData: {
+                title: "Popup Title",
+                content: "Popup Content",
+                backBtn: 'back',
+                confirmBtn: 'confirm'
+            },
             //帳戶資料
-            employeeId: '',
-            accountId: '',
-            employeeName: '',
+            employeeId: "",
+            accountId: "",
+            employeeName: "",
             //工時表資料
-            today: '',
+            today: "",
+            subordinatesWorkDayInfo: [],
             workDayInfo: [],
             workHoursInfoData: [],
             selectedDateInfoList: [],
+            subordinates: [],
+            subordinateName: "",
             queryDate: "",
             showWorkHoursInfo: false,
+            showApproveBtn: false,
             workDayInfoList: [],
             hasAnyWorkDayInfo: false,
             hasntThisDateInfo: false,
             hasntThisTimeFrameInfo: false,
+            hasntThisReviewStatusInfo: false,
             listRenderOver: false,
-            message: '',
+            reviewingWorkDayInfoId: "",
+            reviewingWorkDayInfoApproval: false,
+            hasntBeenApproved: true,
+            message: "",
             //介面文字
             searchDate: '',
             langValue: 'ch',
@@ -38,6 +67,7 @@ export default {
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
+            subordinateSelect: 'default',
             //元件動畫
             isAnimating: false
         }
@@ -45,7 +75,7 @@ export default {
     methods: {
         changeLanguage() {
             if (this.langValue === 'ch') {
-                this.title = '日工時表一覽';
+                this.title = '日工時表審核一覽';
                 this.search = '以日期搜尋';
                 this.reviewStatus = '審核狀態';
                 this.reviewStatusPH = '選擇審核狀態';
@@ -57,6 +87,9 @@ export default {
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁';
+                this.popupData.backBtn = '返回';
+                this.checkPopupData.backBtn = '返回';
+                this.checkPopupData.confirmBtn = '確認';
             } else if (this.langValue === 'en') {
                 this.title = 'Timesheet List';
                 this.search = 'Search by date';
@@ -70,6 +103,9 @@ export default {
                 this.timeFrameOpt2 = '14days';
                 this.timeFrameOpt3 = '30days';
                 this.backBtn = 'Back to homepage';
+                this.popupData.backBtn = 'Back';
+                this.checkPopupData.backBtn = 'Back';
+                this.checkPopupData.confirmBtn = 'Confirm';
             } else if (this.langValue === 'jp') {
                 this.title = '工時表一覽';
                 this.search = '以日期搜尋';
@@ -83,6 +119,9 @@ export default {
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
                 this.backBtn = '返回首頁';
+                this.popupData.backBtn = '返回';
+                this.checkPopupData.backBtn = '返回';
+                this.checkPopupData.confirmBtn  = '確認';
             }
         },
         fetchWorkDayInfo() {
@@ -114,6 +153,21 @@ export default {
                         }
                     }
                     this.workDayInfo = subordinatesWorkDayInfoList;
+
+                    //建構下屬名單
+                    this.workDayInfo.forEach((workDayInfo)=>{
+                        let subordinateId = workDayInfo.employeeId;
+                        let subordinateName;
+                        this.getSubordinateInfo(subordinateId).then((res)=>{
+                            subordinateName = res;
+                            let subordinateInfo = subordinateId + " " + subordinateName;
+                            if(!this.subordinates.includes(subordinateInfo)){
+                                this.subordinates.push(subordinateInfo);
+                            }
+                            console.log(this.subordinates);
+                        });
+                    })
+
                     console.log(this.workDayInfo);
                     if (this.workDayInfo.length !== 0) {
                         this.hasAnyWorkDayInfo = true;
@@ -134,6 +188,7 @@ export default {
         renderList() {
             this.workDayInfoList = [];
             this.hasntThisTimeFrameInfo = false;
+            this.hasntThisReviewStatusInfo = false;
             this.workDayInfo.forEach((workDayInfo) => {
                 let approvedStr = "";
                 if (workDayInfo.approved === true) {
@@ -145,9 +200,10 @@ export default {
                 if (workDayInfo.workingHours < 8) {
                     workingHoursIsNotEnough = true;
                 }
-                let dateAndEmployeeId = JSON.stringify({
+                let dateAndEmployeeIdAndApprove = JSON.stringify({
                         date : workDayInfo.date,
-                        employeeId :　workDayInfo.employeeId
+                        employeeId :　workDayInfo.employeeId,
+                        approved : workDayInfo.approved
                     });
                 this.workDayInfoList.push({
                     workInfoId: workDayInfo.workInfoId,
@@ -158,525 +214,1468 @@ export default {
                     approved: workDayInfo.approved,
                     approvedStr: approvedStr,
                     workingHoursIsNotEnough: workingHoursIsNotEnough,
-                    dateAndEmployeeId: dateAndEmployeeId
+                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                 })
                 console.log(workDayInfo.date)
             })
             this.listRenderOver = true;
         },
+        async getSubordinateInfo(subordinateId) {
+            const response = await fetch("http://localhost:3000/getEmployeeInfoById", {
+            method: "put",
+            headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify({ employeeId: subordinateId })
+        });
+        
+            const data = await response.json();
+            return data.name;
+        },
+        async getSubordinateWorkDayInfo() {
+            let subordinateArr = this.subordinateSelect.split(" ");
+            let subordinateId = subordinateArr[0];
+            const response = await fetch("http://localhost:3000/getWorkDayInfoByEmployeeId", {
+                method: "put",
+                headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify({ employeeId: subordinateId })
+            });
+        
+            const data = await response.json();
+            return data.workDayInfoList;
+        },
+        renderListBySubordinate(selectedSubornidate){
+            this.workDayInfoList = [];
+            this.getSubordinateWorkDayInfo().then((res)=>{
+                if(selectedSubornidate === "default"){
+                    this.renderList();
+                }else{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    console.log(this.subordinatesWorkDayInfo)
+                    this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                        let approvedStr = "";
+                        if (workDayInfo.approved === true) {
+                            approvedStr = "已審核";
+                        } else {
+                            approvedStr = "未審核";
+                        }
+                        let workingHoursIsNotEnough = false;
+                        if (workDayInfo.workingHours < 8) {
+                            workingHoursIsNotEnough = true;
+                        }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                            date : workDayInfo.date,
+                            employeeId : workDayInfo.employeeId.employeeId,
+                            approved : workDayInfo.approved
+                        });
+                        this.workDayInfoList.push({
+                            workInfoId: workDayInfo.workInfoId,
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId.employeeId,
+                            workingHours: workDayInfo.workingHours,
+                            status: workDayInfo.status,
+                            approved: workDayInfo.approved,
+                            approvedStr: approvedStr,
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                        })
+                    })
+                }
+            })
+        },
         renderListLimitedApproved() {
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
-            if (this.timeFrameSelect === "default") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    if (workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+            if(this.subordinateSelect === "default"){
+                //沒有指定員工
+                if (this.timeFrameSelect === "default") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        if (workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "7days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 7 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "7days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 7 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "14days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 14 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "14days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 14 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "30days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 30 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "30days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 30 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
+                    }
+                }
+                
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    if (this.timeFrameSelect === "default") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            if (workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
                         })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "7days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 7 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "14days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 14 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "30days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 30 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
                     }
                 })
             }
         },
         renderListLimitedNotApproved() {
             this.workDayInfoList = [];
+            let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
-            if (this.timeFrameSelect === "default") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    if (workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+            if( this.subordinateSelect === "default"){
+                //沒有指定員工
+                if (this.timeFrameSelect === "default") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        if (workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "7days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 7 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "7days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 7 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "14days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 14 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "14days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 14 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
                     }
-                })
-            }
-            if (this.timeFrameSelect === "30days") {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 30 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                }
+                if (this.timeFrameSelect === "30days") {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 30 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                date : workDayInfo.date,
+                                employeeId : workDayInfo.employeeId,
+                                approved : workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisReviewStatusInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                    })
+                    if(hasThisReviewStatusInfo === false){
+                        this.hasntThisReviewStatusInfo = true;
+                    }else{
+                        this.hasntThisReviewStatusInfo = false;
+                    }
+                }
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    if (this.timeFrameSelect === "default") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            if (workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
                         })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "7days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 7 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "14days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 14 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
+                    }
+                    if (this.timeFrameSelect === "30days") {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 30 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisReviewStatusInfo = true;
+                            }
+                        })
+                        if(hasThisReviewStatusInfo === false){
+                            this.hasntThisReviewStatusInfo = true;
+                        }else{
+                            this.hasntThisReviewStatusInfo = false;
+                        }
                     }
                 })
             }
         },
         renderListByDate(date) {
-            this.workDayInfo = [];
+            this.workDayInfoList = [];
             let hasThisDateInfo = false;
-            this.workDayInfo.forEach((workDayInfo) => {
-                if (workDayInfo.date === date) {
-                    let approvedStr = "";
-                    if (workDayInfo.approved === true) {
-                        approvedStr = "已審核";
-                    } else {
-                        approvedStr = "未審核";
+            //混合天數範圍查詢
+            if(this.subordinateSelect === "default"){
+                this.workDayInfo.forEach((workDayInfo) => {
+                    if (workDayInfo.date === date) {
+                        let approvedStr = "";
+                        if (workDayInfo.approved === true) {
+                            approvedStr = "已審核";
+                        } else {
+                            approvedStr = "未審核";
+                        }
+                        let workingHoursIsNotEnough = false;
+                        if (workDayInfo.workingHours < 8) {
+                            workingHoursIsNotEnough = true;
+                        }
+                        let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                        })
+                        hasThisDateInfo = true;
                     }
-                    let workingHoursIsNotEnough = false;
-                    if (workDayInfo.workingHours < 8) {
-                        workingHoursIsNotEnough = true;
-                    }
-                    this.workDayInfoList.push({
-                        workInfoId: workDayInfo.workInfoId,
-                        date: workDayInfo.date,
-                        employeeId: workDayInfo.employeeId.employeeId,
-                        workingHours: workDayInfo.workingHours,
-                        status: workDayInfo.status,
-                        approved: workDayInfo.approved,
-                        approvedStr: approvedStr,
-                        workingHoursIsNotEnough: workingHoursIsNotEnough
-                    })
-                    hasThisDateInfo = true;
+                })
+                if (hasThisDateInfo === false) {
+                    this.hasntThisDateInfo = true;
+                } else {
+                    this.hasntThisDateInfo = false;
                 }
-            })
-            if (hasThisDateInfo === false) {
-                this.hasntThisDateInfo = true;
-            } else {
-                this.hasntThisDateInfo = false;
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                        if (workDayInfo.date === date) {
+                            let approvedStr = "";
+                            if (workDayInfo.approved === true) {
+                                approvedStr = "已審核";
+                            } else {
+                                approvedStr = "未審核";
+                            }
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisDateInfo = true;
+                        }
+                    })
+                    if (hasThisDateInfo === false) {
+                        this.hasntThisDateInfo = true;
+                    } else {
+                        this.hasntThisDateInfo = false;
+                    }
+                })
             }
         },
         renderListWhitin7Days() {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 7) {
-                        let approvedStr = "";
-                        if (workDayInfo.approved === true) {
-                            approvedStr = "已審核";
-                        } else {
-                            approvedStr = "未審核";
+            if(this.subordinateSelect === "default"){
+                //沒有指定員工
+                if (this.reviewStatusSelect === 'default') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 7) {
+                            let approvedStr = "";
+                            if (workDayInfo.approved === true) {
+                                approvedStr = "已審核";
+                            } else {
+                                approvedStr = "未審核";
+                            }
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且已審核
-                    if (dayDiff <= 7 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
+                    })
+                }
+                if (this.reviewStatusSelect === 'true') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且已審核
+                        if (dayDiff <= 7 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
 
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                    })
+                }
+                if (this.reviewStatusSelect === 'false') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且未審核
+                        if (dayDiff <= 7 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
+                        }
+                    })
+                }
+                if (hasThisTimeFrameInfo === false) {
+                    this.hasntThisTimeFrameInfo = true;
+                } else {
+                    this.hasntThisTimeFrameInfo = false;
+                }
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    if (this.reviewStatusSelect === 'default') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 7) {
+                                let approvedStr = "";
+                                if (workDayInfo.approved === true) {
+                                    approvedStr = "已審核";
+                                } else {
+                                    approvedStr = "未審核";
+                                }
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
                         })
-                        hasThisTimeFrameInfo = true;
+                    }
+                    if (this.reviewStatusSelect === 'true') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且已審核
+                            if (dayDiff <= 7 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (this.reviewStatusSelect === 'false') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且未審核
+                            if (dayDiff <= 7 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (hasThisTimeFrameInfo === false) {
+                        this.hasntThisTimeFrameInfo = true;
+                    } else {
+                        this.hasntThisTimeFrameInfo = false;
                     }
                 })
-            }
-            if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且未審核
-                    if (dayDiff <= 7 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (hasThisTimeFrameInfo === false) {
-                this.hasntThisTimeFrameInfo = true;
-            } else {
-                this.hasntThisTimeFrameInfo = false;
             }
         },
         renderListWhitin14Days() {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 14) {
-                        let approvedStr = "";
-                        if (workDayInfo.approved === true) {
-                            approvedStr = "已審核";
-                        } else {
-                            approvedStr = "未審核";
+            if(this.subordinateSelect === "default"){
+                //沒有指定員工
+                if (this.reviewStatusSelect === 'default') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 14) {
+                            let approvedStr = "";
+                            if (workDayInfo.approved === true) {
+                                approvedStr = "已審核";
+                            } else {
+                                approvedStr = "未審核";
+                            }
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且已審核
-                    if (dayDiff <= 14 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
+                    })
+                }
+                if (this.reviewStatusSelect === 'true') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且已審核
+                        if (dayDiff <= 14 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
 
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                    })
+                }
+                if (this.reviewStatusSelect === 'false') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且未審核
+                        if (dayDiff <= 14 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
+                        }
+                    })
+                }
+                if (hasThisTimeFrameInfo === false) {
+                    this.hasntThisTimeFrameInfo = true;
+                } else {
+                    this.hasntThisTimeFrameInfo = false;
+                }
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    if (this.reviewStatusSelect === 'default') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 14 ){
+                                let approvedStr = "";
+                                if (workDayInfo.approved === true) {
+                                    approvedStr = "已審核";
+                                } else {
+                                    approvedStr = "未審核";
+                                }
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
                         })
-                        hasThisTimeFrameInfo = true;
+                    }
+                    if (this.reviewStatusSelect === 'true') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且已審核
+                            if (dayDiff <= 14 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (this.reviewStatusSelect === 'false') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且未審核
+                            if (dayDiff <= 14 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (hasThisTimeFrameInfo === false) {
+                        this.hasntThisTimeFrameInfo = true;
+                    } else {
+                        this.hasntThisTimeFrameInfo = false;
                     }
                 })
-            }
-            if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且未審核
-                    if (dayDiff <= 14 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (hasThisTimeFrameInfo === false) {
-                this.hasntThisTimeFrameInfo = true;
-            } else {
-                this.hasntThisTimeFrameInfo = false;
             }
         },
         renderListWhitin30Days() {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if (this.reviewStatusSelect === 'default') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    if (dayDiff <= 30) {
-                        let approvedStr = "";
-                        if (workDayInfo.approved === true) {
-                            approvedStr = "已審核";
-                        } else {
-                            approvedStr = "未審核";
+            if(this.subordinateSelect === "default"){
+                //沒有指定員工
+                if (this.reviewStatusSelect === 'default') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (dayDiff <= 30) {
+                            let approvedStr = "";
+                            if (workDayInfo.approved === true) {
+                                approvedStr = "已審核";
+                            } else {
+                                approvedStr = "未審核";
+                            }
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (this.reviewStatusSelect === 'true') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且已審核
-                    if (dayDiff <= 30 && workDayInfo.approved === true) {
-                        let approvedStr = "已審核";
+                    })
+                }
+                if (this.reviewStatusSelect === 'true') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且已審核
+                        if (dayDiff <= 30 && workDayInfo.approved === true) {
+                            let approvedStr = "已審核";
 
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
                         }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
+                    })
+                }
+                if (this.reviewStatusSelect === 'false') {
+                    this.workDayInfo.forEach((workDayInfo) => {
+                        let workDay = new Date(workDayInfo.date);
+                        let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                        let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        //7天內且未審核
+                        if (dayDiff <= 30 && workDayInfo.approved === false) {
+                            let approvedStr = "未審核";
+                            let workingHoursIsNotEnough = false;
+                            if (workDayInfo.workingHours < 8) {
+                                workingHoursIsNotEnough = true;
+                            }
+                            let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                    date : workDayInfo.date,
+                                    employeeId : workDayInfo.employeeId,
+                                    approved : workDayInfo.approved
+                                });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            })
+                            hasThisTimeFrameInfo = true;
+                        }
+                    })
+                }
+                if (hasThisTimeFrameInfo === false) {
+                    this.hasntThisTimeFrameInfo = true;
+                } else {
+                    this.hasntThisTimeFrameInfo = false;
+                }
+            }else{
+                //有指定員工
+                this.getSubordinateWorkDayInfo().then((res)=>{
+                    this.subordinatesWorkDayInfo = []
+                    this.subordinatesWorkDayInfo = res;
+                    if (this.reviewStatusSelect === 'default') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            if (dayDiff <= 30) {
+                                let approvedStr = "";
+                                if (workDayInfo.approved === true) {
+                                    approvedStr = "已審核";
+                                } else {
+                                    approvedStr = "未審核";
+                                }
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
                         })
-                        hasThisTimeFrameInfo = true;
+                    }
+                    if (this.reviewStatusSelect === 'true') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且已審核
+                            if (dayDiff <= 30 && workDayInfo.approved === true) {
+                                let approvedStr = "已審核";
+
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (this.reviewStatusSelect === 'false') {
+                        this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
+                            let workDay = new Date(workDayInfo.date);
+                            let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
+                            let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            //7天內且未審核
+                            if (dayDiff <= 30 && workDayInfo.approved === false) {
+                                let approvedStr = "未審核";
+                                let workingHoursIsNotEnough = false;
+                                if (workDayInfo.workingHours < 8) {
+                                    workingHoursIsNotEnough = true;
+                                }
+                                let dateAndEmployeeIdAndApprove = JSON.stringify({
+                                        date : workDayInfo.date,
+                                        employeeId : workDayInfo.employeeId.employeeId,
+                                        approved : workDayInfo.approved
+                                    });
+                                this.workDayInfoList.push({
+                                    workInfoId: workDayInfo.workInfoId,
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    workingHours: workDayInfo.workingHours,
+                                    status: workDayInfo.status,
+                                    approved: workDayInfo.approved,
+                                    approvedStr: approvedStr,
+                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                })
+                                hasThisTimeFrameInfo = true;
+                            }
+                        })
+                    }
+                    if (hasThisTimeFrameInfo === false) {
+                        this.hasntThisTimeFrameInfo = true;
+                    } else {
+                        this.hasntThisTimeFrameInfo = false;
                     }
                 })
-            }
-            if (this.reviewStatusSelect === 'false') {
-                this.workDayInfo.workDayInfoList.forEach((workDayInfo) => {
-                    let workDay = new Date(workDayInfo.date);
-                    let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
-                    let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    //7天內且未審核
-                    if (dayDiff <= 30 && workDayInfo.approved === false) {
-                        let approvedStr = "未審核";
-                        let workingHoursIsNotEnough = false;
-                        if (workDayInfo.workingHours < 8) {
-                            workingHoursIsNotEnough = true;
-                        }
-                        this.workDayInfoList.push({
-                            workInfoId: workDayInfo.workInfoId,
-                            date: workDayInfo.date,
-                            employeeId: workDayInfo.employeeId.employeeId,
-                            workingHours: workDayInfo.workingHours,
-                            status: workDayInfo.status,
-                            approved: workDayInfo.approved,
-                            approvedStr: approvedStr,
-                            workingHoursIsNotEnough: workingHoursIsNotEnough
-                        })
-                        hasThisTimeFrameInfo = true;
-                    }
-                })
-            }
-            if (hasThisTimeFrameInfo === false) {
-                this.hasntThisTimeFrameInfo = true;
-            } else {
-                this.hasntThisTimeFrameInfo = false;
             }
         },
         workHoursInfo(event) {
-            let dateAndEmployeeId = JSON.parse(event.target.value);
-            console.log(dateAndEmployeeId);
-            let reqBody = {
-                employeeId: dateAndEmployeeId.employeeId
+            let dateAndEmployeeIdAndApprove = JSON.parse(event.target.value);
+            if(dateAndEmployeeIdAndApprove.approved === false){
+                this.showApproveBtn = true;
+            }else{
+                this.showApproveBtn = false;
             }
+            console.log(dateAndEmployeeIdAndApprove);
+
+            //先獲取這張日工時表的ID以便審核使用
+            let reqBody = {
+                employeeId: dateAndEmployeeIdAndApprove.employeeId
+            }
+
+            fetch("http://localhost:3000/getWorkDayInfoByEmployeeId", {
+                method: "put",
+                body: JSON.stringify(reqBody),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }).then(res => res.json())
+            .then((data) => {
+                data.workDayInfoList.forEach((workDayInfo) => {
+                    if(workDayInfo.date === dateAndEmployeeIdAndApprove.date){
+                        this.reviewingWorkDayInfoId = workDayInfo.workInfoId;
+                        if(workDayInfo.approved === true){
+                            this.hasntBeenApproved = false;
+                        }else{
+                            this.hasntBeenApproved = true;
+                        }
+                    }
+                })
+            })
+            .catch(err => console.log(err))
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId", {
                 method: "put",
@@ -718,7 +1717,7 @@ export default {
                     console.log(this.workHoursInfoData);
                     this.showWorkHoursInfo = true;
                     setTimeout(() => {
-                        this.queryDate = dateAndEmployeeId.date;
+                        this.queryDate = dateAndEmployeeIdAndApprove.date;
                         let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
                         let deco1 = document.getElementById("deco1");
                         let deco2 = document.getElementById("deco2");
@@ -727,7 +1726,7 @@ export default {
                         deco1.style.left = "110%";
                         deco2.style.left = "150%";
                     }, 100);
-                    this.workHoursInfoByDate(dateAndEmployeeId.date);
+                    this.workHoursInfoByDate(dateAndEmployeeIdAndApprove.date);
                     if (data.success === true) {
                         this.message = data.message;
                     } else {
@@ -767,18 +1766,190 @@ export default {
                 this.showWorkHoursInfo = false;
             }, 300)
         },
+        approve() {
+
+            console.log("目前審核的表單號: " + this.reviewingWorkDayInfoId);
+            this.reviewingWorkDayInfoApproval = false;
+            this.showCheckPopup = true;
+            if (this.langValue === 'ch') {
+            this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'en') {
+                this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "Confirm";
+            }
+            this.checkPopupData.content = "確定審核該日工時表嗎?";
+            this.showCheckPopup = true;
+            setTimeout(() => {
+                let checkPopup = this.$refs.checkPopup;
+                console.log(checkPopup);
+                let checkPopupEl = checkPopup.$el;
+                let checkPopupIcon = checkPopupEl.querySelector("i");
+                console.log(checkPopupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-triangle-exclamation";
+                checkPopupIcon.classList.add(iconStr1);
+                checkPopupIcon.classList.add(iconStr2);
+                checkPopupIcon.style.color = "#eedd20";
+                console.log(checkPopupIcon);
+                checkPopup.$el.style.opacity = "1";
+                checkPopup.$el.style.bottom = "0%";
+            }, 100);
+
+        },
+        closePopup() {
+            this.showPopup = false;
+            this.$router.go(0);
+        },
+        closeCheckPopup() {
+            this.showCheckPopup = false;
+        },
+        confirmApprove(reviewingWorkDayInfoApproval) {
+
+            this.showCheckPopup = false;
+
+            //要審核
+            if(reviewingWorkDayInfoApproval === false){
+                let reqBody = {
+                    workInfoId : this.reviewingWorkDayInfoId,
+                    approved : true
+                }
+                fetch("http://localhost:3000/editWorkDayInfoApproved", {
+                    method: "post",
+                    body: JSON.stringify(reqBody),
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }).then(res => res.json())
+                .then((data) => {
+                    if(data.success === true){
+                        this.successPopup("已審核該日工時表");
+                    }else{
+                        this.errorPopup(data.message);
+                    }
+                })
+                .catch(err => console.log(err))
+            }else{
+                //要收回審核
+                let reqBody = {
+                    workInfoId : this.reviewingWorkDayInfoId,
+                    approved : false
+                }
+                fetch("http://localhost:3000/editWorkDayInfoApproved", {
+                    method: "post",
+                    body: JSON.stringify(reqBody),
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }).then(res => res.json())
+                .then((data) => {
+                    if(data.success === true){
+                        this.successPopup("已收回該日工時表審核");
+                    }else{
+                        this.errorPopup(data.message);
+                    }
+                })
+                .catch(err => console.log(err))
+            }
+            
+
+        },
+        revokeApprove() {
+
+            console.log("目前審核的表單號: " + this.reviewingWorkDayInfoId);
+            this.reviewingWorkDayInfoApproval = true;
+            this.showCheckPopup = true;
+            if (this.langValue === 'ch') {
+            this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'en') {
+                this.checkPopupData.title = "確認";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "Confirm";
+            }
+            this.checkPopupData.content = "確定收回該日工時表審核狀態嗎?";
+            this.showCheckPopup = true;
+            setTimeout(() => {
+                let checkPopup = this.$refs.checkPopup;
+                console.log(checkPopup);
+                let checkPopupEl = checkPopup.$el;
+                let checkPopupIcon = checkPopupEl.querySelector("i");
+                console.log(checkPopupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-triangle-exclamation";
+                checkPopupIcon.classList.add(iconStr1);
+                checkPopupIcon.classList.add(iconStr2);
+                checkPopupIcon.style.color = "#eedd20";
+                console.log(checkPopupIcon);
+                checkPopup.$el.style.opacity = "1";
+                checkPopup.$el.style.bottom = "0%";
+            }, 100);
+
+        },
         startAnimation() {
             setInterval(() => {
                 this.isAnimating = !this.isAnimating;
             }, 500); //每隔0.5秒執行一次
-        }
+        },
+        successPopup(message) {
+            if (this.langValue === 'ch') {
+                this.popupData.title = "成功";
+            } else if (this.langValue === 'en') {
+                this.popupData.title = "Success";
+            } else if (this.langValue === 'jp') {
+                this.popupData.title = "追加完了";
+            }
+            this.popupData.content = message;
+            this.showPopup = true;
+            setTimeout(() => {
+                let popup = this.$refs.popup;
+                let popupEl = popup.$el;
+                let popupIcon = popupEl.querySelector("i");
+                console.log(popupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-check";
+                popupIcon.classList.add(iconStr1);
+                popupIcon.classList.add(iconStr2);
+                popupIcon.style.color = "#3771ae";
+                console.log(popupIcon);
+                popup.$el.style.opacity = "1";
+                popup.$el.style.bottom = "0%";
+            }, 100);
+        },
+        errorPopup(message) {
+            if (this.langValue === 'ch') {
+                this.popupData.title = "錯誤";
+            } else if (this.langValue === 'en') {
+                this.popupData.title = "Failure";
+            } else if (this.langValue === 'jp') {
+                this.popupData.title = "エラー";
+            }
+            this.popupData.content = message;
+            this.showPopup = true;
+            setTimeout(() => {
+                let popup = this.$refs.popup;
+                console.log(popup);
+                let popupEl = popup.$el;
+                let popupIcon = popupEl.querySelector("i");
+                console.log(popupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-circle-xmark";
+                popupIcon.classList.add(iconStr1);
+                popupIcon.classList.add(iconStr2);
+                popupIcon.style.color = "#ae3737";
+                console.log(popupIcon);
+                popup.$el.style.opacity = "1";
+                popup.$el.style.bottom = "0%";
+            }, 100);
+        },
     },
     watch: {
         //監看searchDate的值變化 , date則是回遞該變數值
         searchDate(date) {
             console.log(date);
             if (date === '') {
+                this.subordinateSelect = 'default';
                 this.renderList();
+                this.hasntThisDateInfo = false;
             } else {
                 this.renderListByDate(date);
             }
@@ -809,6 +1980,14 @@ export default {
             if (newValue === '30days') {
                 this.renderListWhitin30Days();
             }
+            this.hasntThisDateInfo = false;
+        },
+        subordinateSelect(newValue) {
+            this.searchDate = '';
+            this.reviewStatusSelect = 'default';
+            this.timeFrameSelect = 'default';
+            console.log(newValue);
+            this.renderListBySubordinate(newValue);
         }
     },
     created() {
@@ -851,6 +2030,13 @@ export default {
 </script>
 <template>
     <div class="main">
+
+        <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
+        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup" 
+        @close="closeCheckPopup" @confirm="confirmApprove(this.reviewingWorkDayInfoApproval)"></checkPopup>
+        <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
+        <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
+
         <div class="check">
 
             <!-- 左側範圍 -->
@@ -858,11 +2044,12 @@ export default {
                 <div class="title_search">
                     <h4 class="fw-bold title">{{ title }}</h4>
 
+                    <!-- 篩選:日期 -->
                     <div class="searchFrame">
                         <label for="serch">{{ search }}</label>
                         <div class="dateFrame">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input @input="searchByDate" v-model="searchDate" id="serch" type="date">
+                            <input :disabled="this.timeFrameSelect!=='default'" @input="searchByDate" v-model="searchDate" id="serch" type="date">
                         </div>
                     </div>
 
@@ -870,27 +2057,24 @@ export default {
                         <div class="ap">
                             <!-- 審核狀態 -->
                             <label for="approvedStatusSelect">{{ reviewStatus }}</label>
-                            <select v-model="reviewStatusSelect" id="approvedStatusSelect">
+                            <select :disabled="this.searchDate!==''" v-model="reviewStatusSelect" id="approvedStatusSelect">
                                 <option value="default" selected>{{ reviewStatusPH }}</option>
                                 <option value="true">{{ reviewStatusOpt1 }}</option>
                                 <option value="false">{{ reviewStatusOpt2 }}</option>
                             </select>
                         </div>
-                        <!-- 篩選:人員部門 -->
+                        <!-- 篩選:下屬名單 -->
                         <div class="dpm">
-                            <label for="">人員部門</label>
-                            <select>
-                                <option selected>請選擇部門</option>
-                                <option value="1">管理部</option>
-                                <option value="2">IT部</option>
-                                <option value="3">營業部</option>
-                                <option value="4">製造部</option>
+                            <label for="subordinateSelect">人員</label>
+                            <select v-model="subordinateSelect" id="subordinateSelect">
+                                <option value="default" selected>請選擇人員</option>
+                                <option v-for="(subordinate , index) in subordinates" :value="subordinate" :key="index">{{ subordinate }}</option>
                             </select>
                         </div>
                         <div class="tim">
                             <!-- 時間範圍 -->
                             <label for="timeFrameSelect">{{ timeFrame }}</label>
-                            <select v-model="timeFrameSelect" for="timeFrameSelect">
+                            <select :disabled="this.searchDate!==''" v-model="timeFrameSelect" for="timeFrameSelect">
                                 <option value="default" selected>{{ timeFramePH }}</option>
                                 <option value="7days">{{ timeFrameOpt1 }}</option>
                                 <option value="14days">{{ timeFrameOpt2 }}</option>
@@ -904,7 +2088,7 @@ export default {
                     <div class="infoFrame" id="infoFrame">
                         <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
-                            <div class="workHoursInfoCard" v-for="(workHoursInfo, index) in selectedDateInfoList">
+                            <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo, index) in selectedDateInfoList">
                                 <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
                                 <h4 class="fw-bold"
                                     :style="{ color: workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)' }">
@@ -918,13 +2102,18 @@ export default {
                                     <h5>工作內容</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
+                                <div v-if="!hasntBeenApproved" class="hasBeenApproved"><i class="fa-solid fa-check"></i>已審核</div>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i
                                     :style="{ transform: isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }"
                                     class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
                     </div>
-                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                    <div class="btnFrame">
+                        <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                        <button v-if="showApproveBtn" @click="approve" class="approve" id="approve">確認審核</button>
+                        <button v-if="!showApproveBtn" @click="revokeApprove" class="approve" id="revokeApprove">收回審核</button>
+                    </div>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
                 <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
@@ -940,7 +2129,7 @@ export default {
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    日期:{{ workDayInfo.date }}
+                                    日期:{{ workDayInfo.date }} 員工:{{ workDayInfo.employeeId }}
                                     <p
                                         :class="{ 'hasntApproved': !workDayInfo.approved, 'hasApproved': workDayInfo.approved }">
                                         {{ workDayInfo.approvedStr }}</p>
@@ -960,7 +2149,7 @@ export default {
                                     <p>出勤狀態: {{ workDayInfo.status }}</p>
                                     <p :class="{ 'hasntApproved': !workDayInfo.approved }">審核狀態: {{ workDayInfo.approvedStr
                                     }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeId" class="viewBtn"
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeIdAndApprove" class="viewBtn"
                                         type="button">查看</button>
                                 </div>
                             </div>
@@ -969,6 +2158,7 @@ export default {
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
                     <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -993,6 +2183,21 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+
+    select:disabled , input:disabled{
+        background-color: rgb(179, 177, 171);
+    }
+
+    .popup , .checkPopup{
+        position: absolute;
+        bottom: -20%;
+        opacity: 0;
+        transition-property: bottom , opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        z-index: 2;
+    }
 
     .check {
         position: relative;
@@ -1262,33 +2467,82 @@ export default {
                                 background-color: rgba(240, 235, 219, 0.4);
                                 overflow: auto;
                             }
+
+                            .hasBeenApproved{
+                                position: absolute;
+                                top: 0%;
+                                left: 0%;
+                                background: rgb(132, 184, 216);
+                                border: none;
+                                color: rgb(47, 47, 47);
+                                border-radius: 10px 0px 15px 0px;
+                                width: max-content;
+                                padding: 0 1vw;
+                                height: 3.5vh;
+                                font-size: 2vh;
+                                transition: 0.4s;
+                                z-index: 1;
+                            }
                         }
                     }
                 }
 
-                .backToDayList {
+                .btnFrame{
+                    margin: 0 auto;
                     margin-top: 1%;
-                    margin-left: auto;
-                    margin-right: auto;
-                    padding-left: 1vw;
-                    padding-right: 1vw;
-                    background: rgb(26, 55, 77);
-                    border: 1px solid #000;
-                    color: white;
-                    border-radius: 5px;
-                    width: max-content;
-                    height: 3.5vh;
-                    bottom: 5%;
-                    font-size: 1.5vh;
-                    transition: 0.4s;
+                    height: auto;
+                    width: 80%;
+                    display: flex;
+                    justify-content: space-between;
 
-                    &:hover {
-                        background-color: rgb(64, 104, 130);
+                    .backToDayList {
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding-left: 1vw;
+                        padding-right: 1vw;
+                        background: rgb(26, 55, 77);
+                        border: 1px solid #000;
+                        color: white;
+                        border-radius: 5px;
+                        width: max-content;
+                        height: 3.5vh;
+                        bottom: 5%;
+                        font-size: 1.5vh;
+                        transition: 0.4s;
+
+                        &:hover {
+                            background-color: rgb(64, 104, 130);
+                        }
+
+                        &:active {
+                            scale: 0.95;
+                        }
                     }
 
-                    &:active {
-                        scale: 0.95;
+                    .approve{
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding-left: 1vw;
+                        padding-right: 1vw;
+                        background: rgb(26, 55, 77);
+                        border: 1px solid #000;
+                        color: white;
+                        border-radius: 5px;
+                        width: max-content;
+                        height: 3.5vh;
+                        bottom: 5%;
+                        font-size: 1.5vh;
+                        transition: 0.4s;
+
+                        &:hover {
+                            background-color: rgb(64, 104, 130);
+                        }
+
+                        &:active {
+                            scale: 0.95;
+                        }
                     }
+                    
                 }
             }
 

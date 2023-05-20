@@ -55,7 +55,7 @@ export default {
         <div class="content">
             <Navbar :key="navBarKey" @login="updateNavbar" @logout="updateNavbar" @change="langChange" />
             
-            <RouterView @changePwdSuccess="updateNavbar" @login="updateNavbar" />
+            <RouterView @editWorkInfoSuccess="updateNavbar" @addWorkInfoSuccess="updateNavbar" @changePwdSuccess="updateNavbar" @login="updateNavbar" />
             <FooterView />
         </div>
     </div>
