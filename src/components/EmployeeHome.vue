@@ -52,18 +52,21 @@ export default {
                 this.checkTimesheet = 'Check/Edit my timesheets';
                 this.approve = 'Review timesheets';
                 this.administrator = 'Administrator page';
+                this.encourage = 'Keep up the good work!';
             }else if(this.langValue === 'ch'){
                 this.addTimeSheet = '新增工作時數表';
                 this.changePwd = '變更密碼';
                 this.checkTimesheet = '查詢/編輯工時表';
                 this.approve = '審核工時表';
                 this.administrator = '系統管理員功能';
+                this.encourage = 'Fighting!';
             }else if(this.langValue === 'jp'){
                 this.addTimeSheet = '勤務表追加';
                 this.changePwd = 'パスワード変更';
                 this.checkTimesheet = '勤務表一覧/編集';
                 this.approve = '勤務表承認';
                 this.administrator = 'システム管理者ページ';
+                this.encourage = 'お疲れ様です';
             }
         },
         getAllworkDayInfo(){
@@ -137,7 +140,7 @@ export default {
 <template>
     <div class="main">
         <div v-if="hasRendered" class="all">
-            <h4>{{ name }} , Fighting !</h4>
+            <h4>{{ name }}<h4 v-if="this.langValue==='jp'">さん</h4> , {{ encourage }}</h4>
             <div class="funtionArea">
                 <!-- 選單 -->
                 <div class="linkFrame">
@@ -178,6 +181,7 @@ export default {
         height: 85%;
 
         h4 {
+            display: inline;
             font-size: 4vh;
             color: white;
             margin-bottom: 5vh;
@@ -224,7 +228,7 @@ export default {
                     &:hover {
                         color: white;
                         box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.7);
-                        background-color: rgb(64, 104, 130);
+                        background-color: rgb(64, 84, 130);
                     }
 
                     &::after{
@@ -247,12 +251,13 @@ export default {
                         border-radius: 100%;
                         height: 70vh;
                         width: 60vw;
-                        background-color: rgba(130, 204, 223, 0.5);
+                        box-shadow: 0px 0px 50px 10px rgba(148, 149, 214, 0.5) inset;
+                        background-color: rgba(67, 105, 146, 0.7);
                         transition: 0.5s;
                     }
 
                     &:hover::after{
-                        transform: translateY(53%);
+                        transform: translateY(52%);
                     }
 
                     &:hover::before{
@@ -320,6 +325,7 @@ export default {
 
                     &:hover{
                         border: none;
+                        text-shadow: -1px 0 rgb(96, 90, 108), 0 1px rgb(96, 90, 108), 1px 0 rgb(96, 90, 108), 0 -1px rgb(96, 90, 108);
                         font-size: 2.2vh;
                         box-shadow: 0px 0px 30px 20px white;
                         border-radius: 1vh 3vh 1vh 3vh;

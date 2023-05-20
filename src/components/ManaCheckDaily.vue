@@ -2472,9 +2472,9 @@ components: {
                                 position: absolute;
                                 top: 0%;
                                 left: 0%;
-                                background: rgb(132, 184, 216);
+                                background: linear-gradient(to left, rgba(97, 137, 168, 0.5), rgba(116, 69, 211, 0.5));
                                 border: none;
-                                color: rgb(47, 47, 47);
+                                color: rgb(31, 27, 50);
                                 border-radius: 10px 0px 15px 0px;
                                 width: max-content;
                                 padding: 0 1vw;

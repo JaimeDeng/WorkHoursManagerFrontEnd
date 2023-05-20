@@ -304,7 +304,7 @@ export default {
                     <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
                     <button v-if="!hasntAccount" @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
-                        <div :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
+                        <div v-show="this.notificationNum !== 0" :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
