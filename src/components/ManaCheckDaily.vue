@@ -2546,29 +2546,28 @@ components: {
                 }
             }
 
-            .deco1 {
+            .deco1{
                 position: absolute;
                 left: -150%;
                 transform: skew(-20deg);
                 height: 140%;
                 width: 30vw;
-                background-color: rgb(67, 74, 79);
+                background-color: rgba(67, 74, 79, 0.5);
                 transition-property: left;
                 transition-duration: 0.2s;
-                transition-timing-function: cubic-bezier(0.5, 0.2, 0.2, 0.5);
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
                 z-index: 1;
             }
-
-            .deco2 {
+            .deco2{
                 position: absolute;
                 left: -130%;
                 transform: skew(-20deg);
                 height: 100%;
                 width: 30vw;
-                background-color: rgb(67, 74, 79);
+                background-color: rgba(75, 61, 102, 0.6);
                 transition-property: left;
                 transition-duration: 0.6s;
-                transition-timing-function: cubic-bezier(0.5, 0.2, 0.2, 0.5);
+                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
                 z-index: 1;
             }
 

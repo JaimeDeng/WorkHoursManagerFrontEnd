@@ -12,9 +12,10 @@
 <style lang="scss" scoped>
 .footer{
     
+    height: 7vh;
     display: flex;
     justify-content: center;
-    background-color: rgb(26, 55, 77,0.7);
+    background: linear-gradient(to left, rgba(26, 55, 77,0.7) 10%, rgba(75, 61, 102, 0.8));
     // border-top: 2px solid rgb(177, 208, 224);
     color: white;
     padding: 8px;

@@ -1375,7 +1375,7 @@ export default {
                 transform: skew(-20deg);
                 height: 140%;
                 width: 30vw;
-                background-color: rgb(67, 74, 79);
+                background-color: rgba(67, 74, 79, 0.5);
                 transition-property: left;
                 transition-duration: 0.2s;
                 transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
@@ -1387,7 +1387,7 @@ export default {
                 transform: skew(-20deg);
                 height: 100%;
                 width: 30vw;
-                background-color: rgb(67, 74, 79);
+                background-color: rgba(75, 61, 102, 0.6);
                 transition-property: left;
                 transition-duration: 0.6s;
                 transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);

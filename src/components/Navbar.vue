@@ -288,7 +288,7 @@ export default {
             <div class="left">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <RouterLink to="/login" class="link">
-                    <h3>WHM.</h3>
+                    <h3 class="logoTitle">WorkHoursManager<SUP>TM</SUP></h3>
                 </RouterLink>
 
 
@@ -351,6 +351,15 @@ export default {
 
             .link {
                 text-decoration: none;
+
+                .logoTitle{
+                    font-family: "book antiqua";
+                    font-size: 2.5vh;
+                }
+                SUP{
+                    font-family: "book antiqua";
+                    font-size: 1.2vh;
+                }
             }
 
             i {

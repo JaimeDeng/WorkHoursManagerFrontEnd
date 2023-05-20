@@ -14,6 +14,7 @@ import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
+import WorkNeuro from "../components/WorkNeuro.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -94,6 +95,11 @@ const router = createRouter({
       path:'/manaApprove',
       name: ' ManaApprove',
       component: ManaApprove
+    },
+    {
+      path:'/WorkNeuro',
+      name: 'WorkNeuro',
+      component: WorkNeuro
     }
   ]
 })

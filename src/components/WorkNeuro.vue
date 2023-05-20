@@ -23,6 +23,10 @@ export default {
         }
     },
     methods:{
+        deco(){
+            let deco = document.getElementById("deco");
+            deco.style.left = "200%";
+        },
         levelCheck(){
             fetch("http://localhost:3000/getEmployeeInfoById" ,{
                 method:"put",
@@ -66,47 +70,41 @@ export default {
                 this.administrator = 'システム管理者ページ';
             }
         },
-        getAllworkDayInfo(){
-            fetch("http://localhost:3000/getAllWorkDayInfo" ,{
-                method:"get",
-                body: JSON.stringify(),
+        getCaseInfoByCaseId(Id){
+            fetch("http://localhost:3000/getCaseInfoById" ,{
+                method:"put",
+                body: JSON.stringify({caseInfoId : Id}),
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             }).then(res => res.json())
             .then((data)=>{
                 console.log(data);
-                //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
-                let container = null;
-                for(let i = data.workDayInfoList.length - 1 ; i > 0 ; i --){
-                    for(let i = 0 ; i < data.workDayInfoList.length - 1 ; i++){
-                        const nextDateStr = data.workDayInfoList[i+1].date;
-                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
-                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                        const thisDateStr = data.workDayInfoList[i].date;
-                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
-                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
-                        if(nextDate > thisDate){
-                            container = data.workDayInfoList[i+1];
-                            data.workDayInfoList[i+1] = data.workDayInfoList[i];
-                            data.workDayInfoList[i] = container;
-                        }       
-                    }
+            })
+            .catch(err => console.log(err))
+        },
+        getCaseInfoByEmployeeId(){
+            fetch("http://localhost:3000/getCaseInfoByEmployeeId" ,{
+                method:"put",
+                body: JSON.stringify({employeeId : this.employeeId}),
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
                 }
-                data.workDayInfoList.forEach((workDayInfo)=>{
-                    if(workDayInfo.employeeId.supervisor === this.employeeId){
-                        this.subordinatesWorkDayInfo.push(workDayInfo);
-                    }
-                })
-                console.log(this.subordinatesWorkDayInfo);
+            }).then(res => res.json())
+            .then((data)=>{
+                console.log(data);
             })
             .catch(err => console.log(err))
         }
     },
     created(){
-        this.getAllworkDayInfo();
+
     },
     mounted(){
+        //進入頁面deco特效
+        setTimeout(()=>{
+            this.deco();
+        },10)
         //檢查及切換語言
         this.name = sessionStorage.getItem('employeeName');
         if(this.name === null){
@@ -131,23 +129,17 @@ export default {
         console.log(this.langValue);
         this.changeLanguage();
         this.levelCheck();
+        this.getCaseInfoByEmployeeId();
     }
 }
 </script>
 <template>
+    <div class="deco" id="deco"></div>
     <div class="main">
         <div v-if="hasRendered" class="all">
-            <h4>{{ name }} , Fighting !</h4>
-            <div class="funtionArea">
-                <!-- 選單 -->
-                <div class="linkFrame">
-                    <RouterLink class="buttonlink" to="/emploAddWorkInfo">{{ addTimeSheet }}</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploCheckDailyTime">{{ checkTimesheet }}</RouterLink>
-                    <RouterLink class="buttonlink" to="/emploChangePsd">{{ changePwd }}</RouterLink>
-                    <RouterLink v-if="isSupervisor" class="buttonlink" to="/ManaCheckDaily">{{ approve }}</RouterLink>
-                    <RouterLink v-if="isAdministrator" class="buttonlink" to="/systemHome">{{ administrator }}</RouterLink>
-                    <RouterLink class="workNeuro" to="/WorkNeuro">WorkNeuro</RouterLink>  
-                </div>
+            <div class="titleFrame">
+                <h3 class="title">WorkNeuro</h3>
+                <p> 您的效率分析工具 </p>
             </div>
         </div>
         <!--spinner在list還沒渲染好時顯示-->
@@ -159,12 +151,23 @@ export default {
 
 
 <style lang="scss" scoped>
+.deco{
+    position: absolute;
+    transition: 1s;
+    left: -200%;
+    height: 100%;
+    width: 70vw;
+    transform: skew(45deg);
+    background: linear-gradient(45deg, rgba(97, 137, 168, 0.5), rgba(116, 69, 211, 0.5));
+}
 .main {
+    position: relative;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 
     .text-light{
         font-size: 4rem;
@@ -175,12 +178,21 @@ export default {
         display: flex;
         flex-direction: column;
         width: 55%;
-        height: 85%;
+        height: 90%;
 
-        h4 {
-            font-size: 4vh;
-            color: white;
-            margin-bottom: 5vh;
+        .titleFrame{
+            height: 10%;
+            .title {
+                font-size: 5vh;
+                font-family: "OCR A";
+                background-clip: text;
+                -webkit-background-clip: text;
+                color: transparent;
+                background-image: linear-gradient(45deg, rgb(97, 137, 168), rgb(116, 69, 211));
+            }
+            P{
+                color: white;
+            }
         }
 
         .funtionArea {
