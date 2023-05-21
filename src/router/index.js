@@ -14,6 +14,7 @@ import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
+import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -76,7 +77,7 @@ const router = createRouter({
       component:SystemAddEmploList
     },
     { //修改人員資訊
-      path:'/ststemEditInfo',
+      path:'/ststemEditInfo/:sysEditEmployeeInfo',
       name: 'StstemEditInfo',
       component:StstemEditInfo
     },
@@ -94,6 +95,11 @@ const router = createRouter({
       path:'/manaApprove',
       name: ' ManaApprove',
       component: ManaApprove
+    },
+    { //系統管理員，查看所有人員資訊
+      path:'/sysCheckAllEmploInfo',
+      name: 'SysCheckAllEmploInfo',
+      component: SysCheckAllEmploInfo
     }
   ]
 })

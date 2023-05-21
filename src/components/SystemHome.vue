@@ -50,7 +50,7 @@ export default {
                 <!-- 上排 -->
                 <div class="area1">
                     <RouterLink to="/systemAddEmploList" class="buttonlink">{{addEmploList}}</RouterLink>
-                    <RouterLink to="/ststemEditInfo" class="buttonlink">{{editemploInfo}}</RouterLink>
+                    <RouterLink to="/sysCheckAllEmploInfo" class="buttonlink">{{editemploInfo}}</RouterLink>
                     <RouterLink to="" class="buttonlink">{{checkAllTimeSheet}}</RouterLink>
                 </div>
 
