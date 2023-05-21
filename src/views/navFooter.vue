@@ -42,7 +42,6 @@ export default {
         if(this.langValue = null){
             this.langValue = 'ch';
         }
-        console.log(this.langValue);
         this.changeLanguage();
     }
 }

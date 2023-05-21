@@ -309,7 +309,7 @@ export default {
                         position: absolute;
                         height: 100vh;
                         width: 0vw;
-                        background-color: rgba(211, 211, 211, 0.3);
+                        background-color: rgba(121, 121, 121, 0.2);
                         z-index: -1;
                         transform: rotate(260deg);
                         opacity: 0;
@@ -319,7 +319,7 @@ export default {
                     &:hover::after{
                         opacity: 1;
                         width: 4.5vw;
-                        background-color: rgba(211, 211, 211, 0.3);
+                        background-color: rgba(194, 194, 194, 0.2);
                         transform: rotate(295deg);
                     }
 
