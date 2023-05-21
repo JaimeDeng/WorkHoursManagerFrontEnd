@@ -337,9 +337,26 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>變更密碼</h2>
-
-            <div class="area1">
+            
+            <div class="title mt-2">
+                <h3 v-if="langValue==='ch'">
+                    <strong>
+                        變更密碼
+                    </strong>    
+                </h3>
+                <h3 v-if="langValue==='jp'">
+                    <strong>
+                        パスワード變更
+                    </strong>                 
+                </h3>
+                <h3 v-if="langValue==='en'">
+                    <strong>
+                        Change Password
+                    </strong>
+                </h3>
+            </div>
+           
+            <div class="area1 mb-4">
 
                 <!-- 舊密碼 -->
                 <div>
@@ -385,7 +402,7 @@ export default {
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome" tag="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
+                <RouterLink to="/employeeHome" scope-slot="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
 
                 <button type="button" class="btnChangPsd" @click="changePsd">{{ change }}</button>
 

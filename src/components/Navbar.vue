@@ -152,15 +152,23 @@ export default {
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='ch'" class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='jp'" class="mb-1">お知らせ</h5>
+                            <h6  v-if="langSelectValue==='en'" class="mb-1">A notify of apporve</h6>
                             </div>
-                            <p class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='ch'" class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='jp'" class="mb-1">残り {{ pendingApproveNum }} 審査してない</p>
+                            <p v-if="langSelectValue==='en'" class="mb-1">You have {{ pendingApproveNum }} need to apporve</p>
                         </RouterLink>
                         <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='ch'" class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='jp'" class="mb-1">お知らせ</h5>
+                            <h6  v-if="langSelectValue==='en'" class="mb-1">A notify of apporve</h6>
                             </div>
-                            <p class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='ch'" class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='jp'" class="mb-1">残り {{ pendingApproveNum }} 審査してない</p>
+                            <p v-if="langSelectValue==='en'" class="mb-1">You have {{ pendingApproveNum }} need to apporve</p>
                         </RouterLink>
                     </div>
                 </div>

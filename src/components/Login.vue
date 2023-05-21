@@ -271,7 +271,7 @@ export default {
                 </div>
                 <!-- 登入按鈕 -->
                 <div class="btnGroup">
-                    <RouterLink to="/signup" tag="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
+                    <RouterLink to="/signup" scope-slot="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
                     <button type="button" class="loginBtn" to="/employeeHome" tag="button" @click="login">{{ loginBtnStr
                     }}</button>
 
