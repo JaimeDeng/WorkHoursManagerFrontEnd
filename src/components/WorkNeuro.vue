@@ -69,27 +69,6 @@ methods:{
         })
         .catch(err => console.log(err))
     },
-    changeLanguage(){
-        if(this.langValue === 'en'){
-            this.addTimeSheet = 'Add new timesheet';
-            this.changePwd = 'Change password';
-            this.checkTimesheet = 'Check/Edit my timesheets';
-            this.approve = 'Review timesheets';
-            this.administrator = 'Administrator page';
-        }else if(this.langValue === 'ch'){
-            this.addTimeSheet = '新增工作時數表';
-            this.changePwd = '變更密碼';
-            this.checkTimesheet = '查詢/編輯工時表';
-            this.approve = '審核工時表';
-            this.administrator = '系統管理員功能';
-        }else if(this.langValue === 'jp'){
-            this.addTimeSheet = '勤務表追加';
-            this.changePwd = 'パスワード変更';
-            this.checkTimesheet = '勤務表一覧/編集';
-            this.approve = '勤務表承認';
-            this.administrator = 'システム管理者ページ';
-        }
-    },
     getCaseInfoByCaseId(Id){
         fetch("http://localhost:3000/getCaseInfoById" ,{
             method:"put",
@@ -283,7 +262,6 @@ created(){
     if(this.langValue === null){
         this.langValue = 'ch';
     }
-    this.changeLanguage();
     this.levelCheck();
     this.fetchPRInfo();
     this.fetchWorkDayInfo();
@@ -368,6 +346,7 @@ watch: {
                         <option v-for="(model , index) in this.modelList" :key="index" :value="model">{{ model }}</option>
                     </select>
                 </div>
+                <router-link tag="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
                 <div class="displayFrame">
                     <h4 v-if="caseInfoNotEnough && this.modelSelect !== 'default'">目前尚無趨勢</h4>
                     <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-person"></i> 您的效率與過往相比</h5>
@@ -486,6 +465,32 @@ watch: {
                     option{
                         transition: 0.3s;
                     }
+                }
+            }
+            .setGoal{
+                position: absolute;
+                bottom: 10%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(to right, rgba(133, 151, 164, 0.7), rgba(164, 147, 198, 0.7));
+                width: 15%;
+                height: 4.5vh;
+                border: none;
+                color: white;
+                font-weight: 600;
+                border-radius: 5px;
+                padding: 4px;
+                font-size: 1.8vh;
+                text-decoration: none;
+                transition: 0.4s;
+
+                &:hover {
+                    background-color: rgb(218, 218, 218);
+                }
+
+                &:active {
+                    transform: scale(0.95);
                 }
             }
 
