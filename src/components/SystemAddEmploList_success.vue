@@ -1,7 +1,6 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import GetAllEmployeeInfo from '../service/SystemAddEmploList_API'
-// import GetNewInfo from './SystemAddEmploList.vue'
 export default {
     name:'Employees',
     components: {
