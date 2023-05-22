@@ -14,11 +14,8 @@ import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
-<<<<<<< HEAD
 import WorkNeuro from "../components/WorkNeuro.vue"
-=======
 import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
->>>>>>> origin/develop-chihli
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
