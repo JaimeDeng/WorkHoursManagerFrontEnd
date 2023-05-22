@@ -71,7 +71,7 @@ export default (await import('vue')).defineComponent({
             emailInput: '',
             positionInput: '',
             supervisorInput: '',
-            phoneInput:"",
+            phoneInput: "",
             modelIsInvalid: false,
             caseNoIsInvalid: false,
             getMessage: "",
@@ -194,19 +194,26 @@ export default (await import('vue')).defineComponent({
                 .catch(err => console.log(err))
         },
         commitReq() {
-           
+
             if (this.nameInput.toString() === this.getResp.name && this.genderValue.toString() === this.getResp.gender
                 && this.emailInput.toString() === this.getResp.email && this.departmentValue.toString() === this.getResp.department
                 && this.positionInput.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
                 this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone) {
-                this.editMessage = "資料尚未進行任何修改";
+                if (this.langValue === 'ch') {
+                    this.editMessage = "資料尚未進行任何修改";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "No modifications have been made to the data yet.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "データはまだ変更されていません。";
+                }
+
                 this.errorPopup(this.editMessage);
                 return;
             }
             //如果是default轉成null給後端才能正確做判斷
             let genderV = this.genderValue;
             if (genderV === "default") {
-                genderV = null; 
+                genderV = null;
             }
             let dPM = this.departmentValue;
             if (dPM === "default") {
@@ -221,11 +228,11 @@ export default (await import('vue')).defineComponent({
                 name: this.nameInput,
                 gender: this.genderValue,
                 department: this.departmentValue,
-                position:this.positionInput,
+                position: this.positionInput,
                 level: this.levelValue,
-                email:  this.emailInput,
-                phone:  this.phoneInput,
-                supervisor:  this.supervisorInput
+                email: this.emailInput,
+                phone: this.phoneInput,
+                supervisor: this.supervisorInput
             };
             console.log(reqbody);
             fetch("http://localhost:3000/editEmployeeInfo", {
@@ -251,12 +258,15 @@ export default (await import('vue')).defineComponent({
         confirmRemove() {
             if (this.langValue === 'ch') {
                 this.checkPopupData.title = "警告";
+                this.checkPopupData.content = "您即將刪除此人員資訊 , 刪除後無法復原";
             } else if (this.langValue === 'en') {
-                this.checkPopupData.title = "注意";
-            } else if (this.langValue === 'jp') {
                 this.checkPopupData.title = "Warning";
+                this.checkPopupData.content = "You are about to delete this personnel information, and it cannot be recovered once deleted.";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "注意";
+                this.checkPopupData.content = "削除後は元に戻すことはできません。"
             }
-            this.checkPopupData.content = "您即將刪除此人員資訊 , 刪除後無法復原";
+
             this.showCheckPopup = true;
             setTimeout(() => {
                 let checkPopup = this.$refs.checkPopup;
@@ -278,7 +288,7 @@ export default (await import('vue')).defineComponent({
             this.showCheckPopup = false;
             let reqbody = {
                 employeeId: this.sysEditEmployeeInfo,
-               
+
             };
             console.log(reqbody);
             fetch("http://localhost:3000/deleteEmployeeInfo", {
@@ -293,11 +303,24 @@ export default (await import('vue')).defineComponent({
                     this.deleteResp = data;
                     console.log(this.deleteResp);
                     if (data.success === true) {
-                        this.deleteMessage = this.deleteResp.message;
-                        this.successPopup(this.deleteMessage);
+                        if (this.langValue === 'ch') {
+                            this.successPopup("刪除成功");
+                        } else if (this.langValue === 'en') {
+                            this.successPopup("Deletion completed.");
+                        } else if (this.langValue === 'jp') {
+                            this.successPopup("削除成功");
+                        }
+
                     } else {
                         this.deleteMessage = this.deleteResp.message;
-                        this.errorPopup(this.deleteMessage);
+                        if (this.langValue === 'ch') {
+                            this.errorPopup("刪除失敗");
+                        } else if (this.langValue === 'en') {
+                            this.errorPopup("Delete failed.");
+                        } else if (this.langValue === 'jp') {
+                            this.errorPopup("削除が失敗しました。");
+                        }
+
                     }
                 })
                 .catch(err => console.log(err))

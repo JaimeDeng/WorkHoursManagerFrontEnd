@@ -136,14 +136,14 @@ export default {
 
                                 if (this.keepLogin === true) {
                                     //有勾選keepLogin長存
-                                    localStorage.setItem("employeeId", this.employeeId)
-                                    localStorage.setItem("accountId", data.accountId)
-                                    localStorage.setItem("employeeName", data.employeeId.name)
+                                    localStorage.setItem("employeeId", data.accounts[i].employeeId.employeeId)
+                                    localStorage.setItem("accountId", data.accounts[i].accountId)
+                                    localStorage.setItem("employeeName", data.accounts[i].employeeId.name)
                                     this.$router.push('/employeeHome')
                                 } else {
                                     //沒有勾選keepLogin短存
-                                    sessionStorage.setItem("employeeId", data.accounts[i].accountId)
-                                    sessionStorage.setItem("accountId", data.accounts[i].employeeId.employeeId)
+                                    sessionStorage.setItem("employeeId",data.accounts[i].employeeId.employeeId )
+                                    sessionStorage.setItem("accountId", data.accounts[i].accountId)
                                     sessionStorage.setItem("employeeName", data.accounts[i].employeeId.name)
                                     this.$router.push('/employeeHome');
                                 }
