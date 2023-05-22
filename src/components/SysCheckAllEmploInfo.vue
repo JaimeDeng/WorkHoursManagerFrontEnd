@@ -31,17 +31,20 @@ export default {
             searchDate: '',
             langValue: 'ch',
             title: '',
-            search: '',
-            reviewStatus: '',
-            reviewStatusPH: '',
-            reviewStatusOpt1: '',
-            reviewStatusOpt2: '',
-            timeFrame: '',
-            timeFramePH: '',
-            timeFrameOpt1: '',
-            timeFrameOpt2: '',
-            timeFrameOpt3: '',
+            infoText:'',
+            commitBtn:'',
+            bacKToEmploInfo:'',
+            checkBtn:'',
             backBtn: '',
+            nameText:'',
+            genderText:'',
+            emailText:'',
+            departmentText:'',
+            positionText:'',
+            levelText:'',
+            supervisorIdText:'',
+            emploIdText:'',
+            phone:'',
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
@@ -55,43 +58,52 @@ export default {
         changeLanguage() {
             if (this.langValue === 'ch') {
                 this.title = '員工資訊一覽';
-                this.search = '以日期搜尋';
-                this.reviewStatus = '審核狀態';
-                this.reviewStatusPH = '選擇審核狀態';
-                this.reviewStatusOpt1 = '已審核';
-                this.reviewStatusOpt2 = '未審核';
-                this.timeFrame = '時間範圍';
-                this.timeFramePH = '請選擇時間範圍';
-                this.timeFrameOpt1 = '7日';
-                this.timeFrameOpt2 = '14日';
-                this.timeFrameOpt3 = '30日';
+                this.infoText='的資訊';
+                this. commitBtn='編輯';
+                this.bacKToEmploInfo='返回員工資訊表';
+                this.checkBtn='查看';
+                this.nameText='姓名',
+                this.genderText='性別',
+                this.emailText='信箱',
+                this.departmentText='部門',
+                this.positionText='職稱',
+                this.levelText='職等',
+                this.supervisorIdText='主管ID',
+                this.phone='電話',
+                this.emploIdText='員工ID',
                 this.backBtn = '返回';
             } else if (this.langValue === 'en') {
-                this.title = 'Timesheet List';
-                this.search = 'Search by date';
-                this.reviewStatus = 'Approval status';
-                this.reviewStatusPH = 'Select approval status';
-                this.reviewStatusOpt1 = 'Approved';
-                this.reviewStatusOpt2 = 'Pending approval';
-                this.timeFrame = 'Time frame';
-                this.timeFramePH = 'Select time frame';
-                this.timeFrameOpt1 = '7days';
-                this.timeFrameOpt2 = '14days';
-                this.timeFrameOpt3 = '30days';
+                this.title = 'Employee Infomation List';
+                this.infoText='‘s information';
+                this. commitBtn='commit';
+                this.bacKToEmploInfo='Back to Employee Infomation List';
+                this.checkBtn='Check';
+                this.nameText='Name',
+                this.genderText='Gender',
+                this.emailText='Email',
+                this.departmentText='Department',
+                this.positionText='Position',
+                this.levelText='Level',
+                this.supervisorIdText='SupervisorID',
+                this.phone='Phone',
+                this.emploIdText='EmployeeID',
                 this.backBtn = 'Back';
             } else if (this.langValue === 'jp') {
-                this.title = '工時表一覽';
-                this.search = '以日期搜尋';
-                this.reviewStatus = '審核狀態';
-                this.reviewStatusPH = '選擇審核狀態';
-                this.reviewStatusOpt1 = '已審核';
-                this.reviewStatusOpt2 = '未審核';
-                this.timeFrame = '時間範圍';
-                this.timeFramePH = '請選擇時間範圍';
-                this.timeFrameOpt1 = '7日';
-                this.timeFrameOpt2 = '14日';
-                this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回';
+                this.title = '人員情報一覽';
+                this.infoText='の情報';
+                this. commitBtn='編集';
+                this.bacKToEmploInfo='人員情報へ戻る';
+                this.checkBtn='詳細を見る';
+                this.nameText='名前',
+                this.genderText='性別',
+                this.emailText='メール',
+                this.departmentText='部署',
+                this.positionText='職名',
+                this.levelText='職級',
+                this.supervisorIdText='主管ID',
+                this.phone='電話番号',
+                this.emploIdText='社員番号',
+                this.backBtn = '戻る';
             }
         },
         fetchWorkDayInfo() {
@@ -928,49 +940,39 @@ export default {
             <div v-if="listRenderOver" class="left">
                 <div class="title_search">
                     <h4 class="fw-bold title">{{ title }}</h4>
-                    <!-- <div class="searchFrame">
-                        <label for="serch">{{ search }}</label>
-                        <div class="dateFrame">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input :disabled="this.timeFrameSelect !== 'default'" @input="searchByDate" v-model="searchDate"
-                                id="serch" type="date">
-                        </div>
-                    </div> -->
 
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}的資訊</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{infoText}}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div :style="{ backgroundColor: 'rgba(220, 220, 220, 0.4)' }" class="workHoursInfoCard"
                                 v-if="workHoursInfoData !== null">
                                 <h4> {{ workHoursInfoData.employeeId }}</h4>
                                 <div class="infoArea">
                                     <div>
-                                        <p>姓名: {{ workHoursInfoData.name }}</p>
-                                        <p>性別: {{ workHoursInfoData.gender }}</p>
-                                        <p>信箱: {{ workHoursInfoData.email }}</p>
-                                        <p>部門: {{ workHoursInfoData.department }}</p>
+                                        <p>{{nameText}}: {{ workHoursInfoData.name }}</p>
+                                        <p>{{genderText}}: {{ workHoursInfoData.gender }}</p>
+                                        <p>{{emailText}}: {{ workHoursInfoData.email }}</p>
+                                        <p>{{departmentText}}: {{ workHoursInfoData.department }}</p>
                                     </div>
                                     <div>
-                                        <p>職稱: {{ workHoursInfoData.position }}</p>
-                                        <p>職等: {{ workHoursInfoData.level }}</p>
-                                        <p>主管ID: {{ workHoursInfoData.supervisor }}</p>
-                                        <p>電話: {{ workHoursInfoData.phone }}</p>
+                                        <p>{{positionText}}: {{ workHoursInfoData.position }}</p>
+                                        <p>{{levelText}}: {{ workHoursInfoData.level }}</p>
+                                        <p>{{supervisorIdText}}: {{ workHoursInfoData.supervisor }}</p>
+                                        <p>{{phone}}: {{ workHoursInfoData.phone }}</p>
                                     </div>
 
 
                                 </div>
 
                                 <button v-if="hasntBeenApproved" :value="workHoursInfoData.employeeId"
-                                    @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                    @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">{{ commitBtn}}</button>
                             </div>
-                            <!-- <div v-if="selectedDateInfoList.length > 1" class="tips"><i
-                                    :style="{ transform: isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }"
-                                    class="fa-solid fa-hand"></i>可拖曳觀看</div> -->
+                           
                         </div>
                     </div>
-                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">{{ bacKToEmploInfo }}</button>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
                 <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
@@ -986,8 +988,8 @@ export default {
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    <p class="pId">員工ID:{{ empInfo.employeeId }}</p>
-                                    <p class="pName">姓名:{{ empInfo.name }}</p>
+                                    <p class="pId">{{emploIdText}}:{{ empInfo.employeeId }}</p>
+                                    <p class="pName">{{nameText}}:{{ empInfo.name }}</p>
                                     <div class="approvedStrFrame"
                                         :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }">
                                     </div>
@@ -998,16 +1000,16 @@ export default {
                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <!-- 手風琴內容區 -->
-                                    <p>姓名: {{ empInfo.name }}</p>
-                                    <p>性別: {{ empInfo.gender }}</p>
-                                    <p>信箱: {{ empInfo.email }}</p>
-                                    <p>部門: {{ empInfo.department }}</p>
-                                    <p>職稱: {{ empInfo.position }}</p>
-                                    <p>職等: {{ empInfo.level }}</p>
-                                    <p>主管ID: {{ empInfo.supervisor }}</p>
-                                    <p>電話: {{ empInfo.phone }}</p>
+                                    <p>{{nameText}}: {{ empInfo.name }}</p>
+                                    <p>{{genderText}}: {{ empInfo.gender }}</p>
+                                    <p>{{emailText}}: {{ empInfo.email }}</p>
+                                    <p>{{departmentText}}: {{ empInfo.department }}</p>
+                                    <p>{{positionText}}: {{ empInfo.position }}</p>
+                                    <p>{{levelText}}: {{ empInfo.level }}</p>
+                                    <p>{{supervisorIdText}}: {{ empInfo.supervisor }}</p>
+                                    <p>{{phone}}: {{ empInfo.phone }}</p>
                                     <button @click="workHoursInfo($event)" :value="empInfo.employeeId" class="viewBtn"
-                                        type="button">查看</button>
+                                        type="button">{{ checkBtn }}</button>
                                 </div>
                             </div>
                         </div>
