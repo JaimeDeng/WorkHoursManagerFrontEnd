@@ -16,6 +16,7 @@ import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.v
 import ManaApprove from "../components/ManaApprove.vue"
 import WorkNeuro from "../components/WorkNeuro.vue"
 import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
+import PerformanceGoalSetting from "../components/PerformanceGoalSetting.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -34,6 +35,12 @@ const router = createRouter({
       path: '/emploAddWorkInfo',
       name: 'EmploAddWorkInfo',  
       component: EmploAddWorkInfo
+
+    },
+    { //根目錄(登入頁面)
+      path: '/',
+      name: 'LoginPage',  
+      component: Login
 
     },
     { //登入頁面
@@ -97,7 +104,7 @@ const router = createRouter({
       name: ' ManaApprove',
       component: ManaApprove
     },
-    {
+    { //WorkNeuro頁面
       path:'/WorkNeuro',
       name: 'WorkNeuro',
       component: WorkNeuro
@@ -106,6 +113,15 @@ const router = createRouter({
       path:'/sysCheckAllEmploInfo',
       name: 'SysCheckAllEmploInfo',
       component: SysCheckAllEmploInfo
+    },
+    { //PR設定頁面
+      path:'/PerformanceGoalSetting',
+      name: 'PerformanceGoalSetting',
+      component: PerformanceGoalSetting
+    },
+    {
+      path: '/:catchAll(.*)', // 使用自定義參數和正則表達式
+      redirect: '/'  // 將所有未匹配的路由重定向到根路徑
     }
   ]
 })
