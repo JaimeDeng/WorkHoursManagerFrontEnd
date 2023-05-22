@@ -1,5 +1,6 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue'
 export default {
 components: {
     RouterLink,
