@@ -16,7 +16,11 @@ data(){
             BAD : 2
         },
         avarage:0,
+        averageWithTeam:0,
         latest:0,
+        goal:0,
+        //效率參考資訊
+        prList:[],
         //日工時表
         workDayInfoList:[],
         latestDate:'',
@@ -169,6 +173,21 @@ methods:{
             this.workDayInfoList = workDayInfoList;
             this.latestDate = workDayInfoList[0].date;
         })
+        .catch(err => console.log(err))
+    },
+    fetchPRInfo() {
+
+        fetch("http://localhost:3000/getAllPerformanceReferences", {
+        method: "get",
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        }).then(res => res.json())
+        .then((data) => {
+            console.log(data);
+            this.prList = data;
+        })
+        .catch(err => console.log(err))
     },
     renderAvarageDurarionDiv(avarage) {
         this.avarage = avarage;
@@ -196,6 +215,33 @@ methods:{
                 latestDurarionDiv.style.width = `${latest * 0.5}%`;
             }
         }, 100)
+    },
+    renderAvarageDurarionWithTeamDiv(avarage) {
+        this.avarageWithTeam = avarage;
+        setTimeout(()=>{
+            let avarageDurationWithTeamDiv = document.getElementById("avarageDurationWithTeam");
+            console.log(avarage)
+            avarageDurationWithTeamDiv.style.width = `${avarage * 2}%`;
+        }, 100)
+    },
+    renderGoalDurarionDiv(selectedModel) {
+        // this.latest = latest;
+        // setTimeout(()=>{
+        //     let latestDurarionDiv = document.getElementById("latestDuration");
+        //     console.log(latest)
+        //     if(latest <= 50){
+        //         latestDurarionDiv.style.width = `${latest * 2}%`;
+        //     }
+        //     if(latest > 50 && latest <= 60){
+        //         latestDurarionDiv.style.width = `${latest * 1.5}%`;
+        //     }
+        //     if(latest > 60 && latest <= 80){
+        //         latestDurarionDiv.style.width = `${latest * 1}%`;
+        //     }
+        //     if(latest > 80){
+        //         latestDurarionDiv.style.width = `${latest * 0.5}%`;
+        //     }
+        // }, 100)
     },
     renderRate() {
         console.log(this.latest)
@@ -239,6 +285,7 @@ created(){
     }
     this.changeLanguage();
     this.levelCheck();
+    this.fetchPRInfo();
     this.fetchWorkDayInfo();
     this.getCaseInfoByEmployeeId();
 },
@@ -281,14 +328,21 @@ watch: {
                 this.caseInfoNotEnough = false;
                 //計算過往的平均時間
                 let totalDuration = 0;
+                let totalDurationWithTeam = 0;
                 this.caseInfoByModel[selectedModel].forEach((modelInfo , index) => {
                     if(index > 1){
                         totalDuration += modelInfo.duration;
                     }
+                    if(index > 0){
+                        totalDurationWithTeam += modelInfo.duration;
+                    }
                 })
                 let thisModelAvarageDuration = totalDuration / (this.caseInfoByModel[selectedModel].length - 2);
+                let thisModelAvarageDurationWithTeam = totalDurationWithTeam / (this.caseInfoByModel[selectedModel].length - 1);
                 this.renderAvarageDurarionDiv(thisModelAvarageDuration);
                 this.renderLatestDurarionDiv(this.caseInfoByModel[selectedModel][1].duration);
+                this.renderAvarageDurarionWithTeamDiv(thisModelAvarageDurationWithTeam);
+                this.renderGoalDurarionDiv(selectedModel);
                 this.renderRate();
                 console.log(thisModelAvarageDuration)
             }
@@ -316,7 +370,7 @@ watch: {
                 </div>
                 <div class="displayFrame">
                     <h4 v-if="caseInfoNotEnough && this.modelSelect !== 'default'">目前尚無趨勢</h4>
-                    <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'">您的效率與過往相比</h5>
+                    <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-person"></i> 您的效率與過往相比</h5>
 
                     <div class="latestFrame">
                         <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDuration" id="latestDuration"></div>
@@ -333,22 +387,22 @@ watch: {
                      || this.rating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
                     class="rating">{{ ratingStr }}</p>
 
-                    <!-- <h5 class="teamEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'">您的效率與團隊目標相比</h5>
+                    <h5 class="teamEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-people-group"></i> 您的效率與團隊目標相比</h5>
 
-                    <div class="latestFrameWithTeam">
-                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDurationWithTeam" id="latestDuration"></div>
+                    <div class="avarageDurationWithTeamFrame">
+                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDurationWithTeam" id="avarageDurationWithTeam"></div>
                     </div>
 
-                    <div class="teamAvarageFrame">
-                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="teamAvarageDuration" id="teamAvarageDuration"></div>
+                    <div class="goalDurationFrame">
+                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="goalDuration" id="goalDuration"></div>
                     </div>
 
-                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDetailWithTeam">最新完工耗時: {{ latest }}H 
-                        <p class="avarageDetail">目標完工耗時: {{ teamAvarage }}H</p></p>
+                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDetailSelf">平均完工耗時(含最新): {{ avarageWithTeam }}H 
+                        <p class="avarageDetailWithTeam">目標完工耗時: {{ goal }}H</p></p>
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" 
                     :style="{color : this.teamRating === this.ratingStatus.BAD? 'rgb(45, 6, 6)' : ''
                      || this.teamRating === this.ratingStatus.GOOD? 'rgb(7, 30, 49)' : ''}" 
-                    class="rating">{{ teamRatingStr }}</p> -->
+                    class="rating">{{ teamRatingStr }}</p>
                 </div>
             </div>
         </div>
@@ -436,11 +490,12 @@ watch: {
             }
 
             .displayFrame{
-                position: relative;
+                position: absolute;
+                right: 0;
+                bottom: 5%;
                 display: flex;
                 width: 80%;
-                margin-left: auto;
-                height: 100%;
+                height: 105%;
                 border-radius: 2vh;
                 border: 0.1vh solid rgb(54, 50, 73);
                 background-color: rgba(83, 83, 83, 0.3);
@@ -476,12 +531,14 @@ watch: {
                 .rating{
                     position: absolute;
                     top:17%;
-                    left: 40%;
+                    left: 10%;
                     transform: translateY(-50%);
                     font-weight: 600;
                     font-size: 2.4vh;
                     color: rgb(239, 239, 239);
                 }
+
+                //上部個人圖表
                 .latestFrame{
                     position: absolute;
                     top:30%;
@@ -493,7 +550,7 @@ watch: {
                         position: absolute;
                         height: 5vh;
                         width: 0;
-                        border-radius: 0px 1vh 1vh 0px;
+                        border-radius: 0px 0.7vh 0.7vh 0px;
                         background: linear-gradient(to left, rgba(97, 137, 168, 1), rgb(115, 86, 213));
                         transition: 1s ease-in-out;
 
@@ -518,7 +575,7 @@ watch: {
                     .avarageDuration{
                         position: absolute;
                         height: 7vh;
-                        border-right: 0.18vw solid rgba(18, 18, 18, 0.7);
+                        border-right: 0.18vw solid rgba(18, 18, 18, 0.9);
                         width: 0;
                         background-color: transparent;
                         transition: 0.4s;
@@ -547,7 +604,7 @@ watch: {
                 }
                 
                 .latestDetail{
-                    background: linear-gradient(to right, rgba(133, 151, 164, 0.3), rgba(164, 147, 198, 0.3));
+                    background: linear-gradient(to right, rgba(133, 151, 164, 0.7), rgba(164, 147, 198, 0.7));
                     border: 1px solid white;
                     border-radius: 1vh;
                     padding: 0 1vw;
@@ -556,19 +613,106 @@ watch: {
                     left: 30%;
                     transform: translateY(-50%);
                     font-weight: 600;
-                    color: white;
+                    color: rgb(30, 27, 27);
                     font-size: 2vh;
                     .avarageDetail{
                         margin-left: 4vw;
                         display: inline;
                         font-weight: 600;
-                        color: rgb(0, 0, 0);
+                        color: rgb(255, 191, 62);
+                        font-size: 2vh;
+                    }
+                }
+
+                //下部團隊圖表
+                .avarageDurationWithTeamFrame{
+                    position: absolute;
+                    top:75%;
+                    transform: translateY(-50%);
+                    left:10%;
+                    height: 5vh;
+                    width: 80%;
+                    .avarageDurationWithTeam{
+                        position: absolute;
+                        height: 5vh;
+                        width: 0;
+                        border-radius: 0px 0.7vh 0.7vh 0px;
+                        background: linear-gradient(to left, rgb(177, 152, 101), rgb(231, 116, 116));
+                        transition: 1s ease-in-out;
+
+                        &::after{
+                            content: '平均完工耗時';
+                            margin-left: 3%;
+                            color: white;
+                            font-weight: 600;
+                            font-size: 1.5vh;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+
+                .goalDurationFrame{
+                    position: absolute;
+                    top:75%;
+                    transform: translateY(-50%);
+                    left:10%;
+                    height: 7vh;
+                    width: 80%;
+                    .goalDuration{
+                        position: absolute;
+                        height: 7vh;
+                        border-right: 0.18vw solid rgba(82, 2, 2, 0.9);
+                        width: 0;
+                        background-color: transparent;
+                        transition: 0.4s;
+
+                        &::after{
+                            content: '團隊目標';
+                            white-space: nowrap;
+                            color: #d6d6d6;
+                            position: absolute;
+                            font-weight: 600;
+                            font-size: 1.8vh;
+                            top: -40%;
+                            right: -3.2rem;
+                        }
+
+                        &::before{
+                            content: '';
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            height: 1%;
+                            width: 100%;
+                            background-color: rgba(167, 165, 148, 0.5);
+                        }
+                    }              
+                }
+
+                .avarageDetailSelf{
+                    background: linear-gradient(to right, rgba(133, 151, 164, 0.7), rgba(164, 156, 189, 0.7));
+                    border: 1px solid white;
+                    border-radius: 1vh;
+                    padding: 0 1vw;
+                    position: absolute;
+                    bottom:5%;
+                    left: 30%;
+                    transform: translateY(-50%);
+                    font-weight: 600;
+                    color: rgb(255, 191, 62);
+                    font-size: 2vh;
+                    .avarageDetailWithTeam{
+                        margin-left: 3vw;
+                        display: inline;
+                        font-weight: 600;
+                        color: rgb(20, 50, 78);
                         font-size: 2vh;
                     }
                 }
 
             }
         }
+        
 
         .btnback {
             background: rgb(26, 55, 77);
