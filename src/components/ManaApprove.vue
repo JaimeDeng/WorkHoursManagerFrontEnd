@@ -23,8 +23,7 @@ export default {
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/manaCheckDaily">返回</RouterLink>
-                
+                <button type="button">返回</button>
                 <button type="button">確定審核</button>
 
 
