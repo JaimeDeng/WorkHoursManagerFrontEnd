@@ -48,7 +48,6 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
-                console.log(data);
                 if(data.level === "系統管理員"){
                     this.isSupervisor = true;
                     this.isAdministrator = true;
@@ -75,7 +74,6 @@ export default {
                 //只有在星期一到星期五下午五點過後才會檢查
                 if(this.nowHours >= 16 && this.day > 0 && this.day < 6){
                     this.hasTodaysWorkInfo = false;
-                    console.log(data);
                     if(data.success === false){
                         this.hasTodaysWorkInfo = false;
                     }else{
@@ -117,13 +115,10 @@ export default {
                 if(this.hasTodaysWorkInfo === false){
                     this.notificationNum += 1;
                 }
-                console.log(this.hasTodaysWorkInfo);
-                console.log(this.notificationNum);
             },100)
         },
         //監聽切換語言
         changeLang(){
-            console.log("切換語言")
             let langValue = document.getElementById("lang").value;
             sessionStorage.setItem('langValue' , langValue);
             this.$emit("change");
@@ -160,7 +155,6 @@ export default {
                 }
             }).then(res => res.json())
             .then((data)=>{
-                console.log(data);
                 //將日工時表以日期最新日期開始排序 (原本順序是先輸入的越前面)
                 let container = null;
                 for(let i = data.pendingApprovalWorkDayInfoList.length - 1 ; i > 0 ; i --){
@@ -183,7 +177,6 @@ export default {
                         this.subordinatesWorkDayInfo.push(workDayInfo);
                     }
                 })
-                console.log(this.subordinatesWorkDayInfo);
                 this.checkSubordinatesWorkDayInfo();
             })
             .catch(err => console.log(err))
@@ -203,7 +196,6 @@ export default {
     created() {
         //獲取目前時間及日期
         const now = new Date();
-        console.log(now.getHours());
         let dateString = now.toLocaleDateString();  //抓現在日期的字串 格式為: yyyy/M or MM/dd
         //修改日期字串格式
         dateString = dateString.replace(/\//g , "-");
@@ -288,7 +280,7 @@ export default {
             <div class="left">
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <RouterLink to="/login" class="link">
-                    <h3>WHM.</h3>
+                    <h3 class="logoTitle">WorkHoursManager<SUP>TM</SUP></h3>
                 </RouterLink>
 
 
@@ -304,7 +296,7 @@ export default {
                     <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
                     <button v-if="!hasntAccount" @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
-                        <div :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
+                        <div v-show="this.notificationNum !== 0" :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
@@ -351,6 +343,15 @@ export default {
 
             .link {
                 text-decoration: none;
+
+                .logoTitle{
+                    font-family: "book antiqua";
+                    font-size: 2.5vh;
+                }
+                SUP{
+                    font-family: "book antiqua";
+                    font-size: 1.2vh;
+                }
             }
 
             i {

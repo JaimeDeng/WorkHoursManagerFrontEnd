@@ -124,10 +124,10 @@ export default {
                     &:hover {
                         color: white;
                         box-shadow: inset 0 -3vh 50px 0.1vh rgba(27, 37, 57, 0.7);
-                        background-color: rgb(64, 104, 130);
+                        background-color: rgb(64, 84, 130);
                     }
 
-                    &::after {
+                    &::after{
                         content: "";
                         z-index: -1;
                         position: absolute;
@@ -139,7 +139,7 @@ export default {
                         transition: 0.5s;
                     }
 
-                    &::before {
+                    &::before{
                         content: "";
                         z-index: -1;
                         position: absolute;
@@ -147,15 +147,16 @@ export default {
                         border-radius: 100%;
                         height: 70vh;
                         width: 60vw;
-                        background-color: rgba(130, 204, 223, 0.5);
+                        box-shadow: 0px 0px 50px 10px rgba(148, 149, 214, 0.5) inset;
+                        background-color: rgba(67, 105, 146, 0.7);
                         transition: 0.5s;
                     }
 
-                    &:hover::after {
-                        transform: translateY(53%);
+                    &:hover::after{
+                        transform: translateY(52%);
                     }
 
-                    &:hover::before {
+                    &:hover::before{
                         transform: translateY(-44%);
                     }
 

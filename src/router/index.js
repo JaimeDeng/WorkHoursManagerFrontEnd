@@ -14,6 +14,7 @@ import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
+import WorkNeuro from "../components/WorkNeuro.vue"
 import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -95,6 +96,11 @@ const router = createRouter({
       path:'/manaApprove',
       name: ' ManaApprove',
       component: ManaApprove
+    },
+    {
+      path:'/WorkNeuro',
+      name: 'WorkNeuro',
+      component: WorkNeuro
     },
     { //系統管理員，查看所有人員資訊
       path:'/sysCheckAllEmploInfo',

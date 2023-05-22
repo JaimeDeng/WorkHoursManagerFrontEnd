@@ -476,14 +476,14 @@ components: {
                     <!-- 員工ID輸入 -->
                     <label for="employeeId">{{employeeIdStr}}*</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('employeeId')" ref="employeeId" v-model="id" 
                     id="employeeId" :placeholder="employeeIdPHStr" type="text"
                     >
                     <!-- 姓名輸入 -->
                     <label for="name">{{ nameStr }}*</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('name')" ref="name" v-model="name" 
                     id="setName" :placeholder="namePHStr" type="text"
                     >
@@ -501,7 +501,7 @@ components: {
                     <!-- Email輸入 -->
                     <label for="">{{ emailStr }}*</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                     @input="checkInputLegth('email')" ref="email" v-model="email" 
                     id="setEmail" :placeholder="emailPHStr" type="text"
                     >                  
@@ -529,7 +529,7 @@ components: {
                     <!-- 職稱輸入 -->
                     <label for="">{{ positionStr }}*</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('position')" ref="position" v-model="position" 
                     id="setPosition" :placeholder="positionPHStr" type="text"
                     >
@@ -550,7 +550,7 @@ components: {
                     <!-- 電話輸入 -->
                     <label for="">{{ phoneStr }}*</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
                     id="setPhone" :placeholder="phonePHStr" type="text"
                     >
@@ -638,7 +638,7 @@ components: {
                     transition: 0.4s;
 
                     &:focus{
-                        background-color: rgb(227, 244, 255);
+                        background-color: rgb(228, 241, 255);
                     }
                 }
             }

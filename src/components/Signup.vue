@@ -347,7 +347,7 @@ mounted() {
                 <div class="employeeIdInputFrame">
                     <i class="fa-solid fa-user"></i>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 1 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('employeeId')" ref="employeeId" v-model="id" 
                     id="employeeId" :placeholder="employeeIdPHStr" type="text"
                     >
@@ -357,7 +357,7 @@ mounted() {
                 <div class="accountInputFrame">
                     <i class="fa-solid fa-user"></i>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="10" @input="checkInputLegth('account')" ref="account" v-model="account" 
                     id="setAccount" :placeholder="accountPHStr" type="text">
                 </div>
@@ -366,7 +366,7 @@ mounted() {
                 <div class="pwdInputFrame">         
                     <i class="fa-sharp fa-solid fa-key"></i>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('password')" ref="password" v-model="password" 
                     id="setPassword" :placeholder="pwdPHStr" type="password"
                     >
@@ -376,7 +376,7 @@ mounted() {
                 <div class="rePwdInputFrame">         
                     <i class="fa-sharp fa-solid fa-key"></i>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('rePassword')" ref="rePassword" v-model="rePassword" 
                     id="repeatPassword" :placeholder="rePwdPHStr" type="password">
                 </div>
@@ -475,7 +475,7 @@ mounted() {
 
                     &:focus {
                         outline: none;
-                        background-color: rgb(227, 244, 255);
+                        background-color: rgb(228, 241, 255);
                     }
                 }
             }

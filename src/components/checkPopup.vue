@@ -117,7 +117,7 @@ export default {
             }
 
             .confirm{
-                background: rgb(128, 38, 38);
+                background: rgb(106, 25, 25);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
@@ -127,7 +127,7 @@ export default {
                 transition: 0.4s;
 
                 &:hover {
-                    background-color: rgb(91, 18, 18);
+                    background-color: rgb(143, 71, 71);
                 }
 
                 &:active {

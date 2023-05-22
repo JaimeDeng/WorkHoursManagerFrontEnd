@@ -412,12 +412,12 @@ mounted() {
                 <div class="info">
                     <label for="model">{{ model }}</label>
                     <input
-                     :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }" 
+                     :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(238, 198, 198)' : '' }" 
                     @input="checkLength('model')" v-model="modelInput" type="text" id="model"
                     >
                     <label for="caseNo">{{ caseNo }}</label>
                     <input 
-                    :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
+                    :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(238, 198, 198)' : '' }"
                     @input="checkLength('caseNo')" v-model="caseNoInput" type="text" id="caseNo">
                     <label for="">{{ status }}</label>
                     <select v-model="statusValue">
@@ -569,7 +569,7 @@ mounted() {
                     transition: 0.4s;
 
                     &:focus{
-                        background-color: rgb(227, 244, 255);
+                        background-color: rgb(228, 241, 255);
                     }
                 }
 

@@ -458,7 +458,7 @@ export default {
 
                     &:focus {
                         outline: none;
-                        background-color: rgb(227, 244, 255);
+                        background-color: rgb(228, 241, 255);
                     }
                 }
             }
