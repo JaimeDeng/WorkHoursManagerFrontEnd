@@ -28,12 +28,8 @@ export default {
             chOption:'',
             enOption:'',
             jpOption:'',
-            loginLogout:'',
-            loginOrLogout:false,
-            lang:'',
-
-            //工時資料
-            subordinatesWorkDayInfo:[]
+            logout:'',
+            lang:''
         };
     },
 
@@ -91,6 +87,12 @@ export default {
         clickNotificationBtn(){
             this.notificationBtnIsClick = !this.notificationBtnIsClick;
         },
+        //檢查待審工時表
+        checkPendingApprove(){
+            if(this.pendingApproveNum > 0){
+                this.hasAnyPendingApprove = true;
+            }
+        },
         //添加點擊其他地方關閉通知列表的動作
         addCloseNotifyList(){
             let notificationIcon = document.getElementById("bell fa-regular fa-bell")
@@ -123,19 +125,15 @@ export default {
             sessionStorage.setItem('langValue' , langValue);
             this.$emit("change");
         },
-        accountLoginLogout(){
-            if(this.loginOrLogout === true){
-                localStorage.removeItem('accountId');
-                localStorage.removeItem('employeeId');
-                localStorage.removeItem('employeeName');
-                sessionStorage.removeItem('accountId');
-                sessionStorage.removeItem('employeeId');
-                sessionStorage.removeItem('employeeName');
-                this.$router.push('/login');
-                this.$emit("logout");
-            }else{
-                this.$router.push('/login');
-            }
+        accountLogout(){
+            localStorage.removeItem('accountId');
+            localStorage.removeItem('employeeId');
+            localStorage.removeItem('employeeName');
+            sessionStorage.removeItem('accountId');
+            sessionStorage.removeItem('employeeId');
+            sessionStorage.removeItem('employeeName');
+            this.$router.push('/login');
+            this.$emit("logout");
         },
         updateNavbar(){
             this.name = sessionStorage.getItem('employeeName');
@@ -227,6 +225,7 @@ export default {
         this.todaysWorkDayInfoCheck();
     },
     mounted() {
+        this.checkPendingApprove();
         this.addCloseNotifyList();
         this.calculateNotificationNum();
         this.langSelectValue = sessionStorage.getItem('langValue');
@@ -238,38 +237,29 @@ export default {
             this.chOption = '中文';
             this.enOption = '英文';
             this.jpOption = '日文';
-            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
-                this.loginLogout = '登出';
-                this.loginOrLogout = true;
-            }else{
-                this.loginLogout = '登入';
-                this.loginOrLogout = false;
-            }
+            this.logout = '登出';
         }else if(this.langSelectValue === 'en'){
             this.lang = 'Language'
             this.chOption = 'Chinese';
             this.enOption = 'English';
             this.jpOption = 'Japanese';
-            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
-                this.loginLogout = 'Log out';
-                this.loginOrLogout = true;
-            }else{
-                this.loginLogout = 'Log in';
-                this.loginOrLogout = false;
-            }
+            this.logout = 'Log out';
         }else if(this.langSelectValue === 'jp'){
             this.lang = '言語選択'
             this.chOption = '中国語';
             this.enOption = '英語';
             this.jpOption = '日本語';
-            if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
-                this.loginLogout = 'ログアウト';
-                this.loginOrLogout = true;
-            }else{
-                this.loginLogout = 'ログイン';
-                this.loginOrLogout = false;
+            this.logout = 'ログアウト';
+        }
+
+        this.name = sessionStorage.getItem("employeeName");
+        if(this.name === null){
+            this.name = localStorage.getItem("employeeName");
+            if(this.name === null){
+                this.name = "NONE";
             }
-        }      
+        }
+        
     },
 };
 </script>
@@ -293,21 +283,27 @@ export default {
                         <option value="en">{{ enOption }}</option>
                         <option value="jp">{{ jpOption }}</option>
                     </select>
-                    <h3>{{ name }} |<button @click="accountLoginLogout" class="btnback" type="button">{{ loginLogout }}</button></h3>
-                    <button v-if="!hasntAccount" @click="clickNotificationBtn" type="button" class="notification" id="notification">
+                    <h3>{{ name }} |<button @click="accountLogout" class="btnback" type="button">{{ logout }}</button></h3>
+                    <button @click="clickNotificationBtn" type="button" class="notification" id="notification">
                         <i id="bell fa-regular fa-bell" class="bell fa-regular fa-bell"></i>
                         <div v-show="this.notificationNum !== 0" :style="{ visibility: hasAnyPendingApprove || !hasTodaysWorkInfo ? 'visible' : 'hidden' }" class="notifyIcon">{{ notificationNum }}</div>
                     </button>
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
-                        <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
+                        <RouterLink to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">通知</h5>
+                            <h5  v-if="langSelectValue==='ch'" class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='jp'" class="mb-1">お知らせ</h5>
+                            <h6  v-if="langSelectValue==='en'" class="mb-1">A notify of apporve</h6>
                             </div>
-                            <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='ch'" class="mb-1">您有 {{ pendingApproveNum }} 筆工時表待審核</p>
+                            <p v-if="langSelectValue==='jp'" class="mb-1">残り {{ pendingApproveNum }} 審査してない</p>
+                            <p v-if="langSelectValue==='en'" class="mb-1">You have {{ pendingApproveNum }} need to apporve</p>
                         </RouterLink>
                         <div v-if="!hasAnyPendingApprove && hasTodaysWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">沒有任何通知</h5>
+                            <h5  v-if="langSelectValue==='ch'" class="mb-1">待審核通知</h5>
+                            <h5  v-if="langSelectValue==='jp'" class="mb-1">お知らせ</h5>
+                            <h6  v-if="langSelectValue==='en'" class="mb-1">A notify of apporve</h6>
                             </div>
                         </div>
                         <RouterLink v-if="!hasTodaysWorkInfo" to="/EmploAddWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
@@ -409,12 +405,12 @@ export default {
                     z-index: 0;
 
                     .fa-bell{
-                        font-size: 3vh;
+                        font-size: 2rem;
                     }
 
                     .notifyIcon{
-                        height: 2vh;
-                        width: 2vh;
+                        height: 1rem;
+                        width: 1rem;
                         background-color: rgb(165, 20, 20);
                         border-radius: 3px;
                         font-family: "Cascadia Mono";
@@ -424,8 +420,6 @@ export default {
                         z-index: 1;
                         visibility: hidden;
                         pointer-events: none;
-                        line-height: 2vh;
-                        font-size: 1.5vh;
                     }
                 }
             }

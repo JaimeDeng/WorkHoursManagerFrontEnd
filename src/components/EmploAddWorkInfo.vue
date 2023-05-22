@@ -15,11 +15,6 @@ data() {
             content: "Popup Content",
             backBtn: 'back',
         },
-        //帳號相關
-        employeeName:"",
-        employeeId:"",
-        accountId:"",
-        //文本
         addTitle:"新增工作時數表",
         model:"機型",
         caseNo:"製造號碼",
@@ -124,28 +119,15 @@ methods: {
         }
     },
     commitReq(){
-        //如果是default轉成null給後端才能正確做判斷
-        let status = this.statusValue;
-        if(status === "default"){
-            status = null;
-        }
-        let satrtTime = this.startTimeValue;
-        if(satrtTime === "default"){
-            satrtTime = null;
-        }
-        let endTime = this.endTimeValue;
-        if(endTime === "default"){
-            endTime = null;
-        }
         let reqbody = {
+            employeeId : 'E00001',
             date : this.dateValue,
-            employeeId : this.employeeId,
             model : this.modelInput,
             caseNo : this.caseNoInput,
-            startTime : satrtTime,
-            endTime : endTime,
+            startTime : this.startTimeValue,
+            endTime : this.endTimeValue,
             detail : this.detail,
-            status : status
+            status : this.statusValue
         };
         console.log(reqbody);
         fetch("http://localhost:3000/setWorkHoursInfo" ,{
@@ -237,19 +219,6 @@ methods: {
     }
 },
 mounted() {
-    //獲取帳號資訊
-    this.employeeId = sessionStorage.getItem("employeeId")
-    if(this.employeeId === null){
-        this.employeeId = localStorage.getItem("employeeId");
-    }
-    this.employeeName = sessionStorage.getItem("employeeName")
-    if(this.employeeName === null){
-        this.employeeName = localStorage.getItem("employeeName");
-    }
-    this.accountId = sessionStorage.getItem("accountId")
-    if(this.accountId === null){
-        this.accountId = localStorage.getItem("accountId");
-    }
     //檢查及修改介面語言
     this.langValue = sessionStorage.getItem('langValue');
     if(this.langValue === null){
@@ -333,7 +302,7 @@ mounted() {
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
+                <RouterLink scope-slot="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
                 
                 <button @click="commitReq" type="button">{{ commit }}</button>
             </div>
@@ -352,15 +321,12 @@ mounted() {
     align-items: center;
     position: relative;
     z-index: -1;
-    overflow: hidden;
 
     .popup{
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition-property: bottom;
-        transition-duration: 0.3s;
-        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        transition: 0.2s;
         z-index: 2;
     }
     .mask{
@@ -446,31 +412,6 @@ mounted() {
             margin: 2vh 0;
             height: 20%;
             width: 50%;
-
-            //修改瀏覽器的scrollbar樣式
-            ::-webkit-scrollbar {
-                width: 0.5vw;
-            }
-
-            ::-webkit-scrollbar-button {
-                background: transparent;
-                height: 3%; //上下buffer的高度
-                border-radius: 4px;
-            }
-
-            ::-webkit-scrollbar-track-piece {
-                background: transparent;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                border-radius: 4px;
-                background-color: rgba(78, 78, 78, 0.4);
-                border: none;
-            }
-
-            ::-webkit-scrollbar-track {
-                box-shadow: transparent;
-            }
             .detail{
                 padding: 0.5vh 0.3vw;
                 font-size: 1.5vh;

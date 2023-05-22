@@ -14,7 +14,6 @@
     "bootstrap": "^5.2.3",
     "sass": "^1.62.1",
     "vue": "^3.2.47",
-    "vue-dragscroll": "^4.0.5",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

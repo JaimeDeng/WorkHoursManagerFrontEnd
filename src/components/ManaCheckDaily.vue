@@ -2038,9 +2038,8 @@ components: {
         <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
 
         <div class="check">
-
             <!-- 左側範圍 -->
-            <div v-if="listRenderOver" class="left">
+            <div class="left">
                 <div class="title_search">
                     <h4 class="fw-bold title">{{ title }}</h4>
 
@@ -2127,46 +2126,64 @@ components: {
                             <!--手風琴標題-->
                             <h2 class="accordion-header" id="flush-headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                    日期:{{ workDayInfo.date }} 員工:{{ workDayInfo.employeeId }}
-                                    <p
-                                        :class="{ 'hasntApproved': !workDayInfo.approved, 'hasApproved': workDayInfo.approved }">
-                                        {{ workDayInfo.approvedStr }}</p>
-                                    <div class="approvedStrFrame"
-                                        :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }">
-                                    </div>
+                                    data-bs-target="#flush-collapseThree" aria-expanded="false"
+                                    aria-controls="flush-collapseThree">
+                                    員工ID:000929 時間:2023/05/07 待審核
                                 </button>
                             </h2>
-                            <!--手風琴內容-->
-                            <div :id="'flush-collapse' + index" class="accordion-collapse collapse"
-                                aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                            <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <!-- 手風琴內容區 -->
-                                    <p>員工ID: {{ workDayInfo.employeeId }}</p>
-                                    <p :class="{ 'notEnough': workDayInfo.workingHoursIsNotEnough }">登錄時數: {{
-                                        workDayInfo.workingHours }}</p>
-                                    <p>出勤狀態: {{ workDayInfo.status }}</p>
-                                    <p :class="{ 'hasntApproved': !workDayInfo.approved }">審核狀態: {{ workDayInfo.approvedStr
-                                    }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeIdAndApprove" class="viewBtn"
-                                        type="button">查看</button>
+                                    <p>工作詳情: Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iusto magnam
+                                        explicabo doloremque. Qui soluta ipsa, corrupti consectetur magni doloremque
+                                        obcaecati! </p>
+                                    <p>姓名:</p>
+                                    <p>人員當日狀態:</p>
+                                    <p>審核進度:待審核</p>
+                                    <p>審核人員ID:</p>
+                                    <button type="button">進行審核</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
                 </div>
-                <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
-            <!--spinner在list還沒渲染好時顯示-->
-            <div v-else class="spinner-border text-light" role="status"></div>
+            <!-- 右側範圍 -->
+            <div class="right">
+                <div class="title">篩選範圍</div>
+                <div class="area1">
+                    <!-- 審核狀態 -->
+                    <label for="">審核狀態</label>
+                    <select>
+                        <option selected>請選擇審核狀態</option>
+                        <option value="1">已審核</option>
+                        <option value="2">待審核</option>
+                    </select>
+                    <!-- 人員部門 -->
+                    <label for="">人員部門</label>
+                    <select>
+                        <option selected>請選擇部門</option>
+                        <option value="1">管理部</option>
+                        <option value="2">IT部</option>
+                        <option value="3">營業部</option>
+                        <option value="4">製造部</option>
+                    </select>
+                    <!-- 人員ID -->
+                    <label for="personId">人員ID</label>
+                    <input id="personId" type="text" placeholder="請輸入員工ID">
+                    <!-- 時間範圍 -->
+                    <label for="">時間範圍</label>
+                    <select>
+                        <option selected>請選擇時間範圍</option>
+                        <option value="1">7日</option>
+                        <option value="2">14日</option>
+                        <option value="3">30日</option>
+                    </select>
 
-
-
+                </div>
+                <RouterLink to="/managerHome" class="buttonlink">返回</RouterLink>
+            </div>
         </div>
 
     </div>
@@ -2199,113 +2216,67 @@ components: {
     }
 
     .check {
-        position: relative;
-        width: 80%;
-        height: 100%;
+
+        width: 70%;
+        height: 90%;
         display: flex;
         justify-content: space-evenly;
-        align-items: center;
 
-        .text-light {
-            font-size: 4rem;
-            width: 5rem;
-            height: 5rem;
-        }
-
+        //左側
         .left {
-            position: relative;
-            padding: 1vw;
+            padding: 12px;
             background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 201, 224);
+            border: 2px solid rgb(177, 208, 224);
             border-radius: 5px;
-            width: 90%;
-            height: 75vh;
-            overflow: hidden;
+            width: 50%;
 
             .title_search {
                 display: flex;
-                justify-content: space-between;
                 width: 100%;
-                height: 5vh;
+                justify-content: space-between;
                 align-items: baseline;
 
-                .title {
-                    font-size: 3vh;
+                p {
+                    font-size: 23px;
+                    font-weight: bold;
                 }
 
-                .searchFrame {
-                    position: absolute;
-                    right: 50%;
-                    width: max-content;
-                    display: inline-block;
-                    margin-right: 8%;
-
+                div {
                     label {
-                        font-size: 1.5vh;
-                        display: inline-block;
-                        margin-right: 0.5vw;
-                    }
-
-                    .dateFrame {
-                        display: inline-block;
                         position: relative;
 
                         i {
-                            font-size: 1vh;
                             position: absolute;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            left: 3%;
+                            top: -14px;
+                            left: 5px;
                         }
+                    }
 
-                        input {
-                            width: 6vw;
-                            height: 3vh;
-                            font-size: 1vh;
-                            border-radius: 30px;
-                            padding-left: 20%;
-                            border: 1px solid #000;
+                    input {
+                        border-radius: 50px;
+                        padding-left: 26px;
+                        border: 1px solid #000;
 
-                        }
                     }
                 }
 
-                .sel {
-                    display: flex;
-                    position: absolute;
-                    right: 5%;
+            }
 
-                    .ap {
-                        label {
-                            font-size: 1.5vh;
-                            display: inline-block;
-                            margin-right: 0.5vw;
-                        }
+            .sheet {
+                border-radius: 5px;
 
-                        select {
-                            font-size: 0.5vh;
-                            border-radius: 5px;
-                            width: 7vw;
-                            margin-right: 12px;
-                            height: 3vh;
-                        }
+                .accordion-button {
+                    word-spacing: 1em;
+                    i {
+                        font-size: 8px;
+                        margin-bottom: 6px;
+                        margin-right: 8px;
                     }
-
-                    .tim {
-                        label {
-                            font-size: 1.5vh;
-                            display: inline-block;
-                            margin-right: 0.5vw;
-                        }
-
-                        select {
-                            font-size: 0.5vh;
-                            border-radius: 5px;
-                            width: 7vw;
-                            margin-right: 12px;
-                            height: 3vh;
-                        }
+                    &:hover{
+                        background-color: rgb(105, 152, 171);
+                        color:white;
                     }
+                }
 
                     .dpm {
                         label {
@@ -2503,47 +2474,22 @@ components: {
                         border: 1px solid #000;
                         color: white;
                         border-radius: 5px;
-                        width: max-content;
-                        height: 3.5vh;
-                        bottom: 5%;
-                        font-size: 1.5vh;
-                        transition: 0.4s;
+                        width: 80px;
+                        margin-left: 280px;
+                        font-size: 16px;
 
                         &:hover {
                             background-color: rgb(64, 104, 130);
                         }
 
                         &:active {
-                            scale: 0.95;
+                            transform: scale(0.95);
                         }
                     }
-
-                    .approve{
-                        margin-left: auto;
-                        margin-right: auto;
-                        padding-left: 1vw;
-                        padding-right: 1vw;
-                        background: rgb(26, 55, 77);
-                        border: 1px solid #000;
-                        color: white;
-                        border-radius: 5px;
-                        width: max-content;
-                        height: 3.5vh;
-                        bottom: 5%;
-                        font-size: 1.5vh;
-                        transition: 0.4s;
-
-                        &:hover {
-                            background-color: rgb(64, 104, 130);
-                        }
-
-                        &:active {
-                            scale: 0.95;
-                        }
-                    }
-                    
                 }
             }
+
+        }
 
             .deco1{
                 position: absolute;
@@ -2578,147 +2524,41 @@ components: {
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9, 0.7, 0.2, 1);
 
-                //修改瀏覽器的scrollbar樣式
-                ::-webkit-scrollbar {
-                    width: 0.6vw;
-                }
+            .title {
+                font-size: 23px;
+                font-weight: bold;
 
-                ::-webkit-scrollbar-button {
-                    background: transparent;
-                    height: 0; //上下buffer的高度
-                    border-radius: 4px;
-                }
-
-                ::-webkit-scrollbar-track-piece {
-                    background: transparent;
-                }
-
-                ::-webkit-scrollbar-thumb {
-                    border-radius: 4px;
-                    background-color: rgba(71, 71, 71, 0.6);
-                    border: 1px solid rgb(140, 140, 150);
-                }
-
-                ::-webkit-scrollbar-track {
-                    box-shadow: transparent;
-                }
-
-                .emptyTitle {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    left: 50%;
-                    transform: translateX(-50%);
-                }
-
-                .accordion-flush {
-                    height: 100%;
-                    transition: 0.5s;
-                    white-space: nowrap;
-                    z-index: 0;
-
-                    .accordion-button {
-                        word-spacing: 2em;
-                        position: relative;
-                        z-index: 0;
-
-                        i {
-                            font-size: 8px;
-                            margin-bottom: 6px;
-                            margin-right: 8px;
-                        }
-
-                        &:hover {
-                            background-color: rgb(105, 152, 171);
-                            color: white;
-                        }
-
-                        .hasntApproved {
-                            position: absolute;
-                            right: 10%;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            font-weight: 600;
-                            color: rgb(199, 32, 32);
-                        }
-
-                        .hasApproved {
-                            position: absolute;
-                            right: 10%;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            font-weight: 600;
-                            color: rgb(71, 106, 167);
-                        }
-
-                        .approvedStrFrame {
-                            position: absolute;
-                            right: 0;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            width: 0.5vw;
-                            height: 100%;
-                            z-index: -1;
-                        }
-
-                    }
-
-                    .accordion-body {
-                        position: relative;
-
-                        .notEnough {
-                            font-weight: 600;
-                            color: rgb(199, 32, 32);
-                        }
-
-                        .hasntApproved {
-                            font-weight: 600;
-                            color: rgb(199, 32, 32);
-                        }
-
-                        .viewBtn {
-                            position: absolute;
-                            background: rgb(26, 55, 77);
-                            border: 1px solid #000;
-                            color: white;
-                            border-radius: 5px;
-                            width: 5vw;
-                            height: 3.5vh;
-                            bottom: 5%;
-                            right: 1%;
-                            font-size: 2vh;
-                            transition: 0.4s;
-
-                            &:hover {
-                                background-color: rgb(64, 104, 130);
-                            }
-
-                            &:active {
-                                transform: scale(0.95);
-                            }
-                        }
-                    }
-
-                }
             }
 
-            .back {
-                position: absolute;
+            .area1 {
                 display: flex;
-                justify-content: center;
-                align-items: center;
-                bottom: 2%;
-                left: 1%;
+                flex-direction: column;
+                padding: 18px;
+
+                label {
+                    font-size: 15px;
+                }
+
+                select,
+                input {
+                    height: 35px;
+                    margin-bottom: 8px;
+                    border-radius: 5px;
+                    border: none;
+
+                }
+
+            }
+
+            .buttonlink {
                 background: rgb(26, 55, 77);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
-                width: max-content;
-                height: 3vh;
-                font-size: 2vh;
-                padding: 1vh 1vw;
-                transition: 0.4s;
-
+                padding: 4px;
+                margin: auto;
+                font-size: 16px;
+                text-decoration: none;
                 &:hover {
                     background-color: rgb(64, 104, 130);
                 }
@@ -2728,9 +2568,8 @@ components: {
                 }
             }
         }
-
-
     }
 
 
-}</style>
+
+</style>

@@ -129,7 +129,7 @@ export default {
                 console.log(securePwd);
                 console.log(a);
 
-                fetch("http://localhost:3000/changePassword", {
+                fetch("http://localhost:3000/changPassword", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -264,7 +264,7 @@ export default {
                 this.oldPsdStr = 'Password'
                 this.oldPsdPHStr = 'Please set your old password'
             } else if (this.langValue === 'ch') {
-                this.pwdStr = '設置新密碼';
+                this.pwdStr = '設置密碼';
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
                 this.rePwdPHStr = '請再次輸入密碼';
@@ -337,9 +337,26 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>變更密碼</h2>
-
-            <div class="area1">
+            
+            <div class="title mt-2">
+                <h3 v-if="langValue==='ch'">
+                    <strong>
+                        變更密碼
+                    </strong>    
+                </h3>
+                <h3 v-if="langValue==='jp'">
+                    <strong>
+                        パスワード變更
+                    </strong>                 
+                </h3>
+                <h3 v-if="langValue==='en'">
+                    <strong>
+                        Change Password
+                    </strong>
+                </h3>
+            </div>
+           
+            <div class="area1 mb-4">
 
                 <!-- 舊密碼 -->
                 <div>
@@ -385,7 +402,7 @@ export default {
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome" tag="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
+                <RouterLink to="/employeeHome" scope-slot="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
 
                 <button type="button" class="btnChangPsd" @click="changePsd">{{ change }}</button>
 
@@ -403,15 +420,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
 
     .popup {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition-property: bottom;
-        transition-duration: 0.3s;
-        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        transition: 0.2s;
         z-index: 2;
     }
 
