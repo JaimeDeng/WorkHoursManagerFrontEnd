@@ -45,34 +45,7 @@ export default{
 </script>
 
 <template>
-    <navFooter />
-    <!-- <EmployeeHome /> -->
-        <!-- 一般員工 -->
-        <!-- <LoginView /> -->
-        <!-- <EmployeeHomeView /> -->
-    
-        <!-- <RouterLink to="/test">測試 </RouterLink> -->
-        
-        <!-- <EmploAddWorkInfoView /> -->
-        <!-- <EmploAddWorkInfoView_success /> -->
-        <!-- <EmploCheckDailyTimeView /> -->
-        <!-- <EmploEditDailyTimeView /> -->
-        <!-- <EmploChangePsdView /> -->
-        <!-- <EmploChangePsdView_success /> -->
-       
-
-        <!-- 主管 -->
-        <!-- <ManagerHomeView /> -->
-        <!-- <ManaCheckDailyView /> -->
-        <!-- <ManaApproveView /> -->
-
-        <!-- 系統管理 -->
-        <!-- <SystemHomeView /> -->
-        <!-- <SystemAddEmploListView /> -->
-        <!-- <SystemAddEmploListView_success /> -->
-        <!-- <StstemEditInfoView /> -->
-        <!-- <StstemEditInfoView_success /> -->
-        
+    <navFooter /> 
    
 </template>
 
