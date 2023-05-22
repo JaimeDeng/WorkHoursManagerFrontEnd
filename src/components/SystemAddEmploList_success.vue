@@ -23,8 +23,8 @@ export default {
         this.getAllEmployeeInfo()
     }
 }
-
 </script>
+
 <template>
     <div class="main">
         <div class="add">
