@@ -97,8 +97,8 @@ export default {
                 border-radius: 5px;
                 width: 8vw;
                 height: 5vh;
+                // font-weight: bold;
                 font-size: 2vh;
-                transition: 0.4s;
 
                 &:hover {
                     background-color: rgb(64, 104, 130);

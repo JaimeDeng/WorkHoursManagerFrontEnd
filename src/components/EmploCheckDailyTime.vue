@@ -1,6 +1,5 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
-import EditEmployeeWorkHoursInfo from './EditEmployeeWorkHoursInfo.vue' //紅蚯蚓不用理他
 export default {
 components: {
     RouterLink,
@@ -1016,7 +1015,6 @@ mounted(){
                                     aria-controls="flush-collapseOne">
                                     日期:{{ workDayInfo.date }}
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
-                                    <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
                             </h2>
                              <!--手風琴內容-->
@@ -1084,7 +1082,7 @@ mounted(){
             position: relative;
             padding: 1vw;
             background-color: rgba(255, 255, 255, 0.724);
-            border: 2px solid rgb(177, 201, 224);
+            border: 2px solid rgb(177, 208, 224);
             border-radius: 5px;
             width: 90%;
             height: 75vh;
@@ -1124,7 +1122,7 @@ mounted(){
                             width: 6vw;
                             height: 3vh;
                             font-size: 1vh;
-                            border-radius: 30px;
+                            border-radius: 50px;
                             padding-left: 20%;
                             border: 1px solid #000;
 
@@ -1168,25 +1166,19 @@ mounted(){
             }
 
             .workHoursInfoFrame{
-                border: 1px solid rgb(130, 136, 144);
-                background-color: rgba(152, 154, 157, 0.5);
-                padding: 1vh 1vw;
-                backdrop-filter: blur(10px);
+                background-color: white;
                 display: flex;
                 flex-direction: column;
                 position: absolute;
                 left: -150%;
                 border-radius: 10px;
                 width: 95%;
-                height: 83%;
+                height: 80%;
                 transition-property: left;
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
 
                 .infoFrame{
-                    position: relative;
-                    display: flex;
-                    flex-direction: column;
                     height: 90%;
                     width: 100%;
                     border-radius: 10px 10px 0 0;
@@ -1400,31 +1392,6 @@ mounted(){
                 transition-duration: 0.4s;
                 transition-timing-function: cubic-bezier(0.9,0.7,0.2,1);
 
-                //修改瀏覽器的scrollbar樣式
-                ::-webkit-scrollbar {
-                    width: 0.6vw;
-                }
-
-                ::-webkit-scrollbar-button {
-                    background: transparent;
-                    height: 0; //上下buffer的高度
-                    border-radius: 4px;
-                }
-
-                ::-webkit-scrollbar-track-piece {
-                    background: transparent;
-                }
-
-                ::-webkit-scrollbar-thumb {
-                    border-radius: 4px;
-                    background-color: rgba(71, 71, 71, 0.6);
-                    border: 1px solid rgb(140, 140, 150);
-                }
-
-                ::-webkit-scrollbar-track {
-                    box-shadow: transparent;
-                }
-
                 .emptyTitle{
                     position: absolute;
                     top: 50%;
@@ -1456,7 +1423,7 @@ mounted(){
 
                     .hasntApproved{
                         position: absolute;
-                        right: 10%;
+                        right: 8vw;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
@@ -1464,20 +1431,11 @@ mounted(){
                     }
                     .hasApproved{
                         position: absolute;
-                        right: 10%;
+                        right: 8vw;
                         top: 50%;
                         transform: translateY(-50%);
                         font-weight: 600;
                         color: rgb(71, 106, 167);
-                    }
-                    .approvedStrFrame{
-                        position: absolute;
-                        right: 0;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        width: 0.5vw;
-                        height: 100%;
-                        z-index: -1;
                     }
 
                 }
@@ -1521,9 +1479,6 @@ mounted(){
 
             .back {
                 position: absolute;
-                display: flex;
-                justify-content: center;
-                align-items: center;
                 bottom: 2%;
                 left: 1%;
                 background: rgb(26, 55, 77);
@@ -1532,8 +1487,7 @@ mounted(){
                 border-radius: 5px;
                 width: max-content;
                 height: 3vh;
-                font-size: 2vh;
-                padding: 1vh 1vw;
+                font-size: 1.5vh;
                 transition: 0.4s;
 
                 &:hover {

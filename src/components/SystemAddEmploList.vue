@@ -23,7 +23,7 @@ components: {
             email : "",
             department : "default",
             position : "",
-            level : "default",
+            level : "",
             supervisor : "",
             phone : "",
             message : "none",
@@ -48,15 +48,6 @@ components: {
             phonePHStr:'',
             addBtnStr : '',
             returnBtnStr : '',
-            //職等選項
-            levelOptions:[
-                {label : "一般" , value : "一般"},
-                {label : "高級" , value : "高級"},
-                {label : "課長" , value : "課長"},
-                {label : "副理" , value : "副理"},
-                {label : "經理" , value : "經理"},
-                {label : "總經理" , value : "總經理"},
-                {label : "系統管理員" , value : "系統管理員"}],
         }
     },
     methods:{
@@ -243,24 +234,15 @@ components: {
                 return;
             }
         }
-        if(this.level==="default"){
-            this.message = "請選擇職等";
-            error = true;
-            if(error){
-                this.errorPopup();
-                return;
+        if(this.level.length === 0){
+            if(this.langValue === 'ch'){
+                this.message = "請輸入職等";
             }
-        }
-        if(this.level==="default"){
-            this.message = "Please select the level";
-            error = true;
-            if(error){
-                this.errorPopup();
-                return;
+            else if(this.langValue === 'en'){
+                this.message = "You haven't filled in level field yet";
+            }else if(this.langValue === 'jp'){
+                this.message = "職級欄を入力してください";
             }
-        }
-        if(this.level==="default"){
-            this.message = "職級を選択してください";
             error = true;
             if(error){
                 this.errorPopup();
@@ -342,7 +324,7 @@ components: {
             this.email="";
             this.department="default";
             this.position="";
-            this.level="default";
+            this.level="";
             this.supervisor="";
             this.phone="";
         }
@@ -465,9 +447,9 @@ components: {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="add">
-            <h4 v-if="langValue==='ch'">新增人員資訊</h4>
-            <h4 v-if="langValue==='jp'">人員情報追加</h4>
-            <h4 v-if="langValue==='en'">Create an employee information</h4>
+            <h4 v-if="langValue==='ch'">新增人員名單</h4>
+            <h4 v-if="langValue==='jp'">人員追加リスト</h4>
+            <h4 v-if="langValue==='en'">Add a list of employee</h4>
             <!-- 填寫區 -->
             <div class="area1">
                 <!-- 左側填寫區 -->
@@ -494,8 +476,8 @@ components: {
                         <option v-if="langValue === 'ch'" value="default" selected >請選擇性別</option>
                         <option v-else-if="langValue === 'en'" value="default" selected >Please choose your gender</option>
                         <option v-else-if="langValue === 'jp'" value="default" selected >性別を選択してください</option>
-                        <option value="男">Male</option>
-                        <option value="女">Female</option>
+                        <option value="男">M</option>
+                        <option value="女">F</option>                     
                     </select>
 
                     <!-- Email輸入 -->
@@ -527,19 +509,20 @@ components: {
                     </select>
 
                     <!-- 職稱輸入 -->
-                    <label for="">{{ positionStr }}*</label>
+                    <label for="">{{ phoneStr }}*</label>
                     <input 
                     :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="20" @input="checkInputLegth('position')" ref="position" v-model="position" 
-                    id="setPosition" :placeholder="positionPHStr" type="text"
+                    id="setPosition" :placeholder="phonePHStr" type="text"
                     >
 
                     <!-- 職等輸入 -->
                     <label for="">{{ levelStr }}*</label>
-                    <select  ref="level" v-model="level" id="setLevel">
-                        <option value="default" selected>請選擇職等</option>
-                        <option v-for="(option , index) in levelOptions" :value="option.value" :key="index">{{option.label}}</option>
-                    </select>
+                    <input 
+                    :style="{ backgroundColor: isInputInvalid === 5 ? 'rgb(255, 205, 205)' : '' }"
+                    maxlength="20" @input="checkInputLegth('level')" ref="level" v-model="level" 
+                    id="setLevel" :placeholder="levelPHStr" type="text"
+                    >
 
                     <!-- 主管ID輸入 -->
                     <label for="">{{ supervisorStr }}</label>
@@ -576,7 +559,6 @@ components: {
     justify-content: center;
     align-items: center;
     z-index: -1;
-    overflow: hidden;
 
     .add {
         background-color: rgba(255, 255, 255, 0.724);
@@ -696,9 +678,7 @@ components: {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition-property: bottom;
-        transition-duration: 0.3s;
-        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        transition: 0.2s;
         z-index: 2;
     }
     .mask{
