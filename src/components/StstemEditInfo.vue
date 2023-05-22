@@ -304,16 +304,13 @@ export default (await import('vue')).defineComponent({
                     console.log(this.deleteResp);
                     if (data.success === true) {
                         if (this.langValue === 'ch') {
-                            this.popupData.title = "成功";
                             this.successPopup("刪除成功");
                         } else if (this.langValue === 'en') {
-                            this.popupData.title = "Success";
                             this.successPopup("Deletion completed.");
                         } else if (this.langValue === 'jp') {
-                            this.popupData.title = "成功";
                             this.successPopup("削除成功");
                         }
-                       
+
                     } else {
                         this.deleteMessage = this.deleteResp.message;
                         if (this.langValue === 'ch') {
