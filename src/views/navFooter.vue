@@ -43,6 +43,7 @@ export default {
             this.langValue = 'ch';
         }
         this.changeLanguage();
+        this.$router.push("/login");
     }
 }
 </script>
