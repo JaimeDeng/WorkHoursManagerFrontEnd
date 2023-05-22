@@ -194,18 +194,19 @@ export default (await import('vue')).defineComponent({
                 .catch(err => console.log(err))
         },
         commitReq() {
+           
             if (this.nameInput.toString() === this.getResp.name && this.genderValue.toString() === this.getResp.gender
                 && this.emailInput.toString() === this.getResp.email && this.departmentValue.toString() === this.getResp.department
                 && this.positionInput.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
-                this.supervisorInput.toString() === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone) {
+                this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone) {
                 this.editMessage = "資料尚未進行任何修改";
                 this.errorPopup(this.editMessage);
                 return;
             }
             //如果是default轉成null給後端才能正確做判斷
-            let status = this.genderValue;
-            if (status === "default") {
-                status = null;
+            let genderV = this.genderValue;
+            if (genderV === "default") {
+                genderV = null; 
             }
             let dPM = this.departmentValue;
             if (dPM === "default") {
