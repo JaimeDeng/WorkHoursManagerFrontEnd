@@ -1,5 +1,6 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
+import  EditEmployeeWorkHoursInfo  from './EditEmployeeWorkHoursInfo.vue'
 export default {
 components: {
     RouterLink,
@@ -981,7 +982,7 @@ mounted(){
                     <div class="infoFrame" id="infoFrame">
                         <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
-                            <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
+                            <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList" :key="index">
                                 <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
                                 <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
                                 <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>

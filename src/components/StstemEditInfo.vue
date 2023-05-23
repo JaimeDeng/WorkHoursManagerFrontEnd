@@ -510,7 +510,7 @@ export default (await import('vue')).defineComponent({
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink tag="button" to="/sysCheckAllEmploInfo" class="back">{{ back }}</RouterLink>
+                <RouterLink scoped-slot="button" to="/sysCheckAllEmploInfo" class="back">{{ back }}</RouterLink>
 
                 <button @click="commitReq" type="button">{{ commit }}</button>
             </div>

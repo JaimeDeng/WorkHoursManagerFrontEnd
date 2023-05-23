@@ -377,7 +377,7 @@ watch: {
                 <button v-if="this.modelSelect !== 'default'" @click="commitReq" class="commit" id="commit">設定</button>
             </div>
 
-            <router-link tag="button" class="btnback" to="/WorkNeuro">返回WorkNeuro主頁</router-link>
+            <router-link scoped-slot="button" class="btnback" to="/WorkNeuro">返回WorkNeuro主頁</router-link>
         </div>
         <!--spinner在list還沒渲染好時顯示-->
         <div v-else class="spinner-border text-light" role="status"></div>

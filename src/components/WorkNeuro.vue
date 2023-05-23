@@ -393,7 +393,7 @@ watch: {
                         <option v-for="(model , index) in this.modelList" :key="index" :value="model">{{ model }}</option>
                     </select>
                 </div>
-                <router-link v-if="isAdministrator" tag="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
+                <router-link v-if="isAdministrator" scoped-slot="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
                 <div class="displayFrame">
                     <h4 v-if="caseInfoNotEnough && this.modelSelect !== 'default'">目前尚無趨勢</h4>
                     <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-person"></i> 您的效率與過往相比</h5>
@@ -406,8 +406,8 @@ watch: {
                         <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDuration" id="avarageDuration"></div>
                     </div>
 
-                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDetail">最新完工耗時: {{ latest }}H 
-                        <p class="avarageDetail">平均完工耗時: {{ avarage }}H</p></p>
+                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDetail">最新完工耗時: {{ latest }}H </p>
+                        <p class="avarageDetail">平均完工耗時: {{ avarage }}H</p>
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" 
                     :style="{color : this.rating === this.ratingStatus.BAD? 'rgb(182, 70, 70)' : ''
                      || this.rating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
@@ -423,9 +423,9 @@ watch: {
                         <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal !== 0" class="goalDuration" id="goalDuration"></div>
                     </div>
 
-                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDetailSelf">平均完工耗時(含最新): {{ avarageWithTeam }}H 
+                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDetailSelf">平均完工耗時(含最新): {{ avarageWithTeam }}H </p>
                         <p v-if="this.goal !== 0" class="avarageDetailWithTeam">目標完工耗時: {{ goal }}H</p>
-                        <p v-else class="avarageDetailWithTeam">此機型尚無設定目標</p></p>
+                        <p v-else class="avarageDetailWithTeam">此機型尚無設定目標</p>
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal !== 0" 
                     :style="{color : this.teamRating === this.ratingStatus.BAD? 'rgb(182, 70, 70)' : ''
                      || this.teamRating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
