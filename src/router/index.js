@@ -17,6 +17,8 @@ import ManaApprove from "../components/ManaApprove.vue"
 import WorkNeuro from "../components/WorkNeuro.vue"
 import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
 import PerformanceGoalSetting from "../components/PerformanceGoalSetting.vue"
+import SysAllWorkDayInfo from "../components/SysAllWorkDayInfo.vue"
+import SysEditEmployeeWorkHoursInfo from "../components/SysEditEmployeeWorkHoursInfo.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -122,6 +124,16 @@ const router = createRouter({
     {
       path: '/:catchAll(.*)', // 使用自定義參數和正則表達式
       redirect: '/'  // 將所有未匹配的路由重定向到根路徑
+    },
+    { //系統管理員查看所有工時表
+      path:'/sysAllWorkDayInfo',
+      name: 'SysAllWorkDayInfo',
+      component: SysAllWorkDayInfo
+    },
+    { //系統管理員修改工時表
+      path:'/sysEditEmployeeWorkHoursInfo/:sysEditWorkHoursInfoId', //後面必須加上 :變數名 才能在此路徑讀取參數
+      name: 'SysEditEmployeeWorkHoursInfo',
+      component:SysEditEmployeeWorkHoursInfo
     }
   ]
 })

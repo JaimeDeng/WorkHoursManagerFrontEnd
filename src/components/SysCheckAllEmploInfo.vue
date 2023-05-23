@@ -81,7 +81,7 @@ export default {
                 this.title = 'Employee Infomation List';
                 this.infoText = '‘s information';
                 this.commitBtn = 'commit';
-                this.bacKToEmploInfo = 'Back to Employee Infomation List';
+                this.bacKToEmploInfo = 'Back to all';
                 this.checkBtn = 'Check';
                 this.nameText = 'Name',
                     this.genderText = 'Gender',
@@ -98,7 +98,7 @@ export default {
                 this.title = '人員情報一覽';
                 this.infoText = 'の情報';
                 this.commitBtn = '編集';
-                this.bacKToEmploInfo = '人員情報へ戻る';
+                this.bacKToEmploInfo = '人員情報一覽';
                 this.checkBtn = '詳細を見る';
                 this.nameText = '名前',
                     this.genderText = '性別',
@@ -1485,13 +1485,13 @@ export default {
 
                         .pId {
                             position: absolute;
-                            top: 50%;
+                            top: 30%;
                         }
 
                         .pName {
                             position: absolute;
-                            left: 30%;
-                            top: 50%;
+                            left: 16%;
+                            top: 30%;
                         }
 
                         i {

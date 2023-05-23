@@ -51,7 +51,7 @@ export default {
                 <div class="area1">
                     <RouterLink to="/systemAddEmploList" class="buttonlink">{{addEmploList}}</RouterLink>
                     <RouterLink to="/sysCheckAllEmploInfo" class="buttonlink">{{editemploInfo}}</RouterLink>
-                    <RouterLink to="" class="buttonlink">{{checkAllTimeSheet}}</RouterLink>
+                    <RouterLink to="/sysAllWorkDayInfo" class="buttonlink">{{checkAllTimeSheet}}</RouterLink>
                 </div>
 
 
