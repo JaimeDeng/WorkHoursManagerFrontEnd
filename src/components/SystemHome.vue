@@ -45,7 +45,7 @@ export default {
 <template>
     <div class="main">
         <div class="all">
-            <h4>管理員,Good Morning !</h4>
+            <h4>管理員,Welcome !</h4>
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="area1">
@@ -175,12 +175,13 @@ export default {
 
     .btnback {
         background: rgb(26, 55, 77);
-        border: 1.5px solid #000;
+        border: 1px solid #000;
         color: white;
         border-radius: 5px;
-        padding: 4px;
-        font-size: 18px;
+        padding: 0.5vh 1vw;
+        font-size: 2vh;
         margin-top: 50px;
+        transition: 0.4s;
         text-decoration: none;
 
         &:hover {

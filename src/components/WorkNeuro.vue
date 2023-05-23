@@ -9,7 +9,9 @@ data(){
         modelSelect:'default',
         caseInfoNotEnough: false,
         ratingStr:'',
+        teamRatingStr:'',
         rating:null,
+        teamRating:null,
         ratingStatus : {
             GENERAL : 0,
             GOOD : 1,
@@ -18,9 +20,9 @@ data(){
         avarage:0,
         averageWithTeam:0,
         latest:0,
-        goal:0,
+        goal:0.0,
         //效率參考資訊
-        prList:[],
+        PR:[],
         //日工時表
         workDayInfoList:[],
         latestDate:'',
@@ -154,17 +156,22 @@ methods:{
         })
         .catch(err => console.log(err))
     },
-    fetchPRInfo() {
-
-        fetch("http://localhost:3000/getAllPerformanceReferences", {
-        method: "get",
+    fetchPRInfoByModel() {
+        this.goal = 0;
+        fetch("http://localhost:3000/getPerformanceReferenceByModel", {
+        method: "put",
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         },
+        body: JSON.stringify({model : this.modelSelect})
         }).then(res => res.json())
         .then((data) => {
             console.log(data);
-            this.prList = data;
+            this.PR = data;
+            let ratingStr = data.rating.substring(0 , data.rating.length-1);
+            this.goal = parseFloat(ratingStr);
+            console.log(this.goal)
+            this.renderTeamRate();
         })
         .catch(err => console.log(err))
     },
@@ -173,7 +180,18 @@ methods:{
         setTimeout(()=>{
             let avarageDurarionDiv = document.getElementById("avarageDuration");
             console.log(avarage)
-            avarageDurarionDiv.style.width = `${avarage * 2}%`;
+            if(avarage <= 50){
+                avarageDurarionDiv.style.width = `${avarage * 2}%`;
+            }
+            if(avarage > 50 && avarage <= 60){
+                avarageDurarionDiv.style.width = `${avarage * 1.5}%`;
+            }
+            if(avarage > 60 && avarage <= 80){
+                avarageDurarionDiv.style.width = `${avarage * 1}%`;
+            }
+            if(avarage > 80){
+                avarageDurarionDiv.style.width = `${avarage * 0.5}%`;
+            }
         }, 100)
     },
     renderLatestDurarionDiv(latest) {
@@ -200,43 +218,71 @@ methods:{
         setTimeout(()=>{
             let avarageDurationWithTeamDiv = document.getElementById("avarageDurationWithTeam");
             console.log(avarage)
-            avarageDurationWithTeamDiv.style.width = `${avarage * 2}%`;
+            if(avarage <= 50){
+                avarageDurationWithTeamDiv.style.width = `${avarage * 2}%`;
+            }
+            if(avarage > 50 && avarage <= 60){
+                avarageDurationWithTeamDiv.style.width = `${avarage * 1.5}%`;
+            }
+            if(avarage > 60 && avarage <= 80){
+                avarageDurationWithTeamDiv.style.width = `${avarage * 1}%`;
+            }
+            if(avarage > 80){
+                avarageDurationWithTeamDiv.style.width = `${avarage * 0.5}%`;
+            }
         }, 100)
     },
-    renderGoalDurarionDiv(selectedModel) {
-        // this.latest = latest;
-        // setTimeout(()=>{
-        //     let latestDurarionDiv = document.getElementById("latestDuration");
-        //     console.log(latest)
-        //     if(latest <= 50){
-        //         latestDurarionDiv.style.width = `${latest * 2}%`;
-        //     }
-        //     if(latest > 50 && latest <= 60){
-        //         latestDurarionDiv.style.width = `${latest * 1.5}%`;
-        //     }
-        //     if(latest > 60 && latest <= 80){
-        //         latestDurarionDiv.style.width = `${latest * 1}%`;
-        //     }
-        //     if(latest > 80){
-        //         latestDurarionDiv.style.width = `${latest * 0.5}%`;
-        //     }
-        // }, 100)
+    renderGoalDurarionDiv() {
+        setTimeout(()=>{
+            if(this.goal !== 0){
+                let goalDurarionDiv = document.getElementById("goalDuration");
+                if(this.goal <= 50){
+                    goalDurarionDiv.style.width = `${this.goal * 2}%`;
+                }
+                if(this.goal > 50 && this.goal <= 60){
+                    goalDurarionDiv.style.width = `${this.goal * 1.5}%`;
+                }
+                if(this.goal > 60 && this.goal <= 80){
+                    goalDurarionDiv.style.width = `${this.goal * 1}%`;
+                }
+                if(this.goal > 80){
+                    goalDurarionDiv.style.width = `${this.goal * 0.5}%`;
+                }
+            }
+        }, 100)
     },
     renderRate() {
         console.log(this.latest)
         console.log(this.avarage)
-        if(this.latest <= this.avarage + this.avarage * 0.05 
-        && this.latest >= this.avarage - this.avarage * 0.05){
+        if(this.latest <= this.avarage + this.avarage * 0.1 
+        && this.latest >= this.avarage - this.avarage * 0.1){
             this.rating = this.ratingStatus.GENERAL;
             this.ratingStr = '您的個人效率維持一致'
         }
-        if(this.latest < this.avarage - this.avarage * 0.05){
+        if(this.latest < this.avarage - this.avarage * 0.1){
             this.rating = this.ratingStatus.GOOD;
-            this.ratingStr = '您的個人效率有提升趨勢'
+            this.ratingStr = '您的個人效率有提升趨勢↗'
         }
-        if(this.latest > this.avarage + this.avarage * 0.05){
+        if(this.latest > this.avarage + this.avarage * 0.1){
             this.rating = this.ratingStatus.BAD;
-            this.ratingStr = '您的個人效率有下降趨勢'
+            this.ratingStr = '您的個人效率有下降趨勢↘'
+        }
+    },
+    renderTeamRate() {
+        console.log(this.avarageWithTeam)
+        console.log(this.goal)
+        if(this.avarageWithTeam <= this.goal + this.goal * 0.1 
+        && this.avarageWithTeam >= this.goal - this.goal * 0.1){
+            this.teamRating = this.ratingStatus.GENERAL;
+            this.teamRatingStr = '您的效率良好,維持在團隊目標範圍內';
+        }
+        if(this.avarageWithTeam < this.goal - this.goal * 0.1){
+            this.teamRating = this.ratingStatus.GOOD;
+            this.teamRatingStr = '您的效率極佳,超越團隊目標!';
+        }
+        if(this.avarageWithTeam > this.goal + this.goal * 0.1){
+            this.teamRating = this.ratingStatus.BAD;
+            this.teamRatingStr = '您的效率尚未達團隊目標,繼續加油!';
         }
     }
 },
@@ -263,7 +309,6 @@ created(){
         this.langValue = 'ch';
     }
     this.levelCheck();
-    this.fetchPRInfo();
     this.fetchWorkDayInfo();
     this.getCaseInfoByEmployeeId();
 },
@@ -279,6 +324,9 @@ watch: {
             this.ratingStr = '';
         }
 
+        if(this.modelSelect !== 'default'){
+            this.fetchPRInfoByModel();
+        }
         //將此機型的caseInfo照日期順序排好
         let container = null;
         if(this.caseInfoByModel !== null){
@@ -320,9 +368,8 @@ watch: {
                 this.renderAvarageDurarionDiv(thisModelAvarageDuration);
                 this.renderLatestDurarionDiv(this.caseInfoByModel[selectedModel][1].duration);
                 this.renderAvarageDurarionWithTeamDiv(thisModelAvarageDurationWithTeam);
-                this.renderGoalDurarionDiv(selectedModel);
+                this.renderGoalDurarionDiv();
                 this.renderRate();
-                console.log(thisModelAvarageDuration)
             }
             
         }
@@ -340,13 +387,13 @@ watch: {
             </div>
             <div class="contentFrame">
                 <div class="selectFrame">
-                    <label for="orm-select">觀看效率趨勢</label>
-                    <select v-model="modelSelect" class="form-select" id="orm-select" size="3" aria-label="size 3 select example">
+                    <label for="form-select">觀看效率趨勢</label>
+                    <select v-model="modelSelect" class="form-select" id="form-select" size="3" aria-label="size 3 select example">
                         <option value="default" selected>選擇機型</option>
                         <option v-for="(model , index) in this.modelList" :key="index" :value="model">{{ model }}</option>
                     </select>
                 </div>
-                <router-link tag="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
+                <router-link v-if="isAdministrator" tag="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
                 <div class="displayFrame">
                     <h4 v-if="caseInfoNotEnough && this.modelSelect !== 'default'">目前尚無趨勢</h4>
                     <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-person"></i> 您的效率與過往相比</h5>
@@ -362,7 +409,7 @@ watch: {
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="latestDetail">最新完工耗時: {{ latest }}H 
                         <p class="avarageDetail">平均完工耗時: {{ avarage }}H</p></p>
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" 
-                    :style="{color : this.rating === this.ratingStatus.BAD? 'rgb(162, 40, 40)' : ''
+                    :style="{color : this.rating === this.ratingStatus.BAD? 'rgb(182, 70, 70)' : ''
                      || this.rating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
                     class="rating">{{ ratingStr }}</p>
 
@@ -373,15 +420,16 @@ watch: {
                     </div>
 
                     <div class="goalDurationFrame">
-                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="goalDuration" id="goalDuration"></div>
+                        <div v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal !== 0" class="goalDuration" id="goalDuration"></div>
                     </div>
 
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" class="avarageDetailSelf">平均完工耗時(含最新): {{ avarageWithTeam }}H 
-                        <p class="avarageDetailWithTeam">目標完工耗時: {{ goal }}H</p></p>
-                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default'" 
-                    :style="{color : this.teamRating === this.ratingStatus.BAD? 'rgb(45, 6, 6)' : ''
-                     || this.teamRating === this.ratingStatus.GOOD? 'rgb(7, 30, 49)' : ''}" 
-                    class="rating">{{ teamRatingStr }}</p>
+                        <p v-if="this.goal !== 0" class="avarageDetailWithTeam">目標完工耗時: {{ goal }}H</p>
+                        <p v-else class="avarageDetailWithTeam">此機型尚無設定目標</p></p>
+                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal !== 0" 
+                    :style="{color : this.teamRating === this.ratingStatus.BAD? 'rgb(182, 70, 70)' : ''
+                     || this.teamRating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
+                    class="teamRating">{{ teamRatingStr }}</p>
                 </div>
             </div>
         </div>
@@ -630,6 +678,16 @@ watch: {
                 }
 
                 //下部團隊圖表
+
+                .teamRating{
+                    position: absolute;
+                    top:59%;
+                    left: 10%;
+                    transform: translateY(-50%);
+                    font-weight: 600;
+                    font-size: 2.4vh;
+                    color: rgb(239, 239, 239);
+                }
                 .avarageDurationWithTeamFrame{
                     position: absolute;
                     top:75%;
