@@ -41,6 +41,8 @@ export default{
         EmployeeHome,
         navFooter
     },
+    mounted(){
+    }
 }
 </script>
 

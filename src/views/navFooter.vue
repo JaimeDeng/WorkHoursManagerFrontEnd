@@ -12,7 +12,8 @@ export default {
         return {
             langValue : '',
             accountName : '',
-            navBarKey : 0
+            navBarKey : 0,
+            windowIn : false
         };
     },
     methods: {

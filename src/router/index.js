@@ -12,6 +12,11 @@ import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
 import StstemEditInfo from "../components/StstemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
+import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
+import ManaApprove from "../components/ManaApprove.vue"
+import WorkNeuro from "../components/WorkNeuro.vue"
+import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
+import PerformanceGoalSetting from "../components/PerformanceGoalSetting.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -30,6 +35,12 @@ const router = createRouter({
       path: '/emploAddWorkInfo',
       name: 'EmploAddWorkInfo',  
       component: EmploAddWorkInfo
+
+    },
+    { //根目錄(登入頁面)
+      path: '/',
+      name: 'LoginPage',  
+      component: Login
 
     },
     { //登入頁面
@@ -82,6 +93,35 @@ const router = createRouter({
       path:'/systemAddEmploList_success',
       name: 'SystemAddEmploList_success',
       component:SystemAddEmploList_success
+    },
+    { //修改工時表
+      path:'/EditEmployeeWorkHoursInfo/:editWorkHoursInfoId', //後面必須加上 :變數名 才能在此路徑讀取參數
+      name: 'EditEmployeeWorkHoursInfo',
+      component:EditEmployeeWorkHoursInfo
+    },
+    { //主管進入審核畫面
+      path:'/manaApprove',
+      name: ' ManaApprove',
+      component: ManaApprove
+    },
+    { //WorkNeuro頁面
+      path:'/WorkNeuro',
+      name: 'WorkNeuro',
+      component: WorkNeuro
+    },
+    { //系統管理員，查看所有人員資訊
+      path:'/sysCheckAllEmploInfo',
+      name: 'SysCheckAllEmploInfo',
+      component: SysCheckAllEmploInfo
+    },
+    { //PR設定頁面
+      path:'/PerformanceGoalSetting',
+      name: 'PerformanceGoalSetting',
+      component: PerformanceGoalSetting
+    },
+    {
+      path: '/:catchAll(.*)', // 使用自定義參數和正則表達式
+      redirect: '/'  // 將所有未匹配的路由重定向到根路徑
     }
   ]
 })
