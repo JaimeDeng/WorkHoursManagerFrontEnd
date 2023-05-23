@@ -430,7 +430,7 @@ watch: {
                     :style="{color : this.teamRating === this.ratingStatus.BAD? 'rgb(182, 70, 70)' : ''
                      || this.teamRating === this.ratingStatus.GOOD? 'rgb(207, 200, 150)' : ''}" 
                     class="teamRating">{{ teamRatingStr }}</p>
-                    <p v-else class="teamRating">此機型尚無設定目標</p>
+                    <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal === 0" class="teamRating">此機型尚無設定目標</p>
                 </div>
             </div>
         </div>
