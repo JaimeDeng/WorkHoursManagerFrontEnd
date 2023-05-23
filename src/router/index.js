@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import test from '../views/test.vue'
+// import test from '../views/test.vue'
 import EmployeeHome from "../components/EmployeeHome.vue"
 import EmploAddWorkInfo from "../components/EmploAddWorkInfo.vue"
 import Login from "../components/Login.vue"
@@ -10,7 +10,7 @@ import ManagerHome from "../components/ManagerHome.vue"
 import ManaCheckDaily from "../components/ManaCheckDaily.vue"
 import SystemHome from "../components/SystemHome.vue"
 import SystemAddEmploList from "../components/SystemAddEmploList.vue"
-import StstemEditInfo from "../components/StstemEditInfo.vue"
+import SystemEditInfo from "../components/SystemEditInfo.vue"
 import SystemAddEmploList_success from "../components/SystemAddEmploList_success.vue"
 import EditEmployeeWorkHoursInfo from "../components/EditEmployeeWorkHoursInfo.vue"
 import ManaApprove from "../components/ManaApprove.vue"
@@ -85,9 +85,9 @@ const router = createRouter({
       component:SystemAddEmploList
     },
     { //修改人員資訊
-      path:'/ststemEditInfo',
-      name: 'StstemEditInfo',
-      component:StstemEditInfo
+      path:'/systemEditInfo',
+      name: 'SystemEditInfo',
+      component:SystemEditInfo
     },
     { //修改人員資訊成功
       path:'/systemAddEmploList_success',

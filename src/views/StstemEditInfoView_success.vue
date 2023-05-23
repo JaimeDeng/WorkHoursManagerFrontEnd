@@ -1,7 +1,7 @@
 <script>
 import Navbar from "../components/Navbar.vue"
 import FooterView from "../components/FooterView.vue"
-import SystemEditInfo_success from "../components/StstemEditInfo_success.vue"
+import SystemEditInfo_success from "../components/SystemEditInfo_success.vue"
 export default {
     components: {
         Navbar, FooterView, SystemEditInfo_success
