@@ -365,7 +365,7 @@ export default {
                         <i class="fa-sharp fa-solid fa-key"></i>
                         <input id="oldPsd" :placeholder="oldPsdPHStr" :type="showOldPwd ? 'text' : 'password'"
                             v-model="origiPwdInput" ref="oldPassword"
-                            :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(255, 205, 205)' : '' }" maxlength="20"
+                            :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(238, 198, 198)' : '' }" maxlength="20"
                             @input="checkInputLegth('oldPassword')">
                         <i @click="showOldPwdOrNot"
                             :class="showOldPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
@@ -378,7 +378,7 @@ export default {
                     <div class="newPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
                         <input id="emid" :placeholder="pwdPHStr" :type="showPwd ? 'text' : 'password'" v-model="newPsd"
-                            ref="password" :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(255, 205, 205)' : '' }"
+                            ref="password" :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                             maxlength="20" @input="checkInputLegth('password')">
                         <i @click="showPwdOrNot"
                             :class="showPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
@@ -392,7 +392,7 @@ export default {
                     <div class="againNewPsd">
                         <i class="fa-sharp fa-solid fa-key"></i>
                         <input id="password" :placeholder="rePwdPHStr" type="password" v-model="againNewPsd"
-                            ref="rePassword" :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(255, 205, 205)' : '' }"
+                            ref="rePassword" :style="{ backgroundColor: isInputInvalid === 4 ? 'rgb(238, 198, 198)' : '' }"
                             maxlength="20" @input="checkInputLegth('rePassword')">
                     </div>
                 </div>
@@ -473,15 +473,20 @@ export default {
                     cursor: pointer;
                     width: 100%;
                     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
-                    padding-left: 1.8vw;
-                    padding-right: 1.8vw;
-                    height: 40px;
+                    background-color: rgba(255, 255, 255, 0.9);
+                    padding-left: 28px;
+                    height: 4.5vh;
                     border-radius: 5px;
-                    border: 1.5px solid #000;
+                    font-size: 1.5vh;
+                    border-top: none;
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: 2px solid #514d4d;
                     transition: 0.5s;
 
                     &:focus {
-                        background-color: rgb(227, 244, 255);
+                        outline: none;
+                        background-color: rgb(228, 241, 255);
                     }
                 }
 
