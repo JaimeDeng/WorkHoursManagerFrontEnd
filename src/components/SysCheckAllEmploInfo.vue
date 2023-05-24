@@ -31,79 +31,86 @@ export default {
             searchDate: '',
             langValue: 'ch',
             title: '',
-            infoText:'',
-            commitBtn:'',
-            bacKToEmploInfo:'',
-            checkBtn:'',
+            infoText: '',
+            commitBtn: '',
+            bacKToEmploInfo: '',
+            checkBtn: '',
             backBtn: '',
-            nameText:'',
-            genderText:'',
-            emailText:'',
-            departmentText:'',
-            positionText:'',
-            levelText:'',
-            supervisorIdText:'',
-            emploIdText:'',
-            phone:'',
+            nameText: '',
+            genderText: '',
+            emailText: '',
+            departmentText: '',
+            positionText: '',
+            levelText: '',
+            supervisorIdText: '',
+            emploIdText: '',
+            phone: '',
+            nameIdPHStr: '',
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
             //元件動畫
             isAnimating: false,
             //傳遞變數
-            sysEditEmployeeInfo: ''
+            sysEditEmployeeInfo: '',
+            //搜尋
+            searchNameId: '',
+            filteredEmploInfo: [],
         }
     },
     methods: {
         changeLanguage() {
             if (this.langValue === 'ch') {
                 this.title = '員工資訊一覽';
-                this.infoText='的資訊';
-                this. commitBtn='編輯';
-                this.bacKToEmploInfo='返回員工資訊表';
-                this.checkBtn='查看';
-                this.nameText='姓名',
-                this.genderText='性別',
-                this.emailText='信箱',
-                this.departmentText='部門',
-                this.positionText='職稱',
-                this.levelText='職等',
-                this.supervisorIdText='主管ID',
-                this.phone='電話',
-                this.emploIdText='員工ID',
-                this.backBtn = '返回';
+                this.infoText = '的資訊';
+                this.commitBtn = '編輯';
+                this.bacKToEmploInfo = '返回員工資訊表';
+                this.checkBtn = '查看';
+                this.nameText = '姓名',
+                    this.genderText = '性別',
+                    this.emailText = '信箱',
+                    this.departmentText = '部門',
+                    this.positionText = '職稱',
+                    this.levelText = '職等',
+                    this.supervisorIdText = '主管ID',
+                    this.phone = '電話',
+                    this.emploIdText = '員工ID',
+                    this.backBtn = '返回';
+                this.nameIdPHStr = '請輸入姓名或是員工ID進行搜尋';
             } else if (this.langValue === 'en') {
                 this.title = 'Employee Infomation List';
-                this.infoText='‘s information';
-                this. commitBtn='commit';
-                this.bacKToEmploInfo='Back to Employee Infomation List';
-                this.checkBtn='Check';
-                this.nameText='Name',
-                this.genderText='Gender',
-                this.emailText='Email',
-                this.departmentText='Department',
-                this.positionText='Position',
-                this.levelText='Level',
-                this.supervisorIdText='SupervisorID',
-                this.phone='Phone',
-                this.emploIdText='EmployeeID',
-                this.backBtn = 'Back';
+                this.infoText = '‘s information';
+                this.commitBtn = 'commit';
+                this.bacKToEmploInfo = 'Back to all';
+                this.checkBtn = 'Check';
+                this.nameText = 'Name',
+                    this.genderText = 'Gender',
+                    this.emailText = 'Email',
+                    this.departmentText = 'Department',
+                    this.positionText = 'Position',
+                    this.levelText = 'Level',
+                    this.supervisorIdText = 'SupervisorID',
+                    this.phone = 'Phone',
+                    this.emploIdText = 'EmployeeID',
+                    this.backBtn = 'Back';
+                this.nameIdPHStr = 'Search by name or employeeId';
             } else if (this.langValue === 'jp') {
                 this.title = '人員情報一覽';
-                this.infoText='の情報';
-                this. commitBtn='編集';
-                this.bacKToEmploInfo='人員情報へ戻る';
-                this.checkBtn='詳細を見る';
-                this.nameText='名前',
-                this.genderText='性別',
-                this.emailText='メール',
-                this.departmentText='部署',
-                this.positionText='職名',
-                this.levelText='職級',
-                this.supervisorIdText='主管ID',
-                this.phone='電話番号',
-                this.emploIdText='社員番号',
-                this.backBtn = '戻る';
+                this.infoText = 'の情報';
+                this.commitBtn = '編集';
+                this.bacKToEmploInfo = '人員情報一覽';
+                this.checkBtn = '詳細を見る';
+                this.nameText = '名前',
+                    this.genderText = '性別',
+                    this.emailText = 'メール',
+                    this.departmentText = '部署',
+                    this.positionText = '職名',
+                    this.levelText = '職級',
+                    this.supervisorIdText = '主管ID',
+                    this.phone = '電話番号',
+                    this.emploIdText = '社員番号',
+                    this.backBtn = '戻る';
+                this.nameIdPHStr = '名前または社員番号で検索';
             }
         },
         fetchWorkDayInfo() {
@@ -117,7 +124,9 @@ export default {
                 .then((data) => {
 
                     this.workDayInfo = data.employeeInfoList;
-                    console.log(this.workDayInfo[1]);
+                    //搜尋
+                     this.byNameId();
+                    console.log(this.workDayInfo);
                     if (this.workDayInfo.length !== 0) {
                         this.hasAnyWorkDayInfo = true;
                     }
@@ -131,6 +140,7 @@ export default {
                     } else {
                         this.message = data.message;
                     }
+                   
                 })
                 .catch(err => console.log(err))
         },
@@ -853,6 +863,23 @@ export default {
             setTimeout(() => {
                 this.$router.push({ name: 'StstemEditInfo', params: { sysEditEmployeeInfo } });
             }, 0)
+        },
+        byNameId() {
+            this.filteredEmploInfo = []
+            if (this.searchNameId === "") {
+                this.workDayInfo.forEach(item => {
+                    this.filteredEmploInfo.push(item)
+                })
+            };
+            this.workDayInfo.forEach(item => {
+
+                if (this.searchNameId === item.name || this.searchNameId === item.employeeId) {
+                    console.log(item);
+                    this.filteredEmploInfo.push(item)
+                    console.log(this.filteredEmploInfo);
+                }
+            });
+
         }
     },
     watch: {
@@ -911,7 +938,8 @@ export default {
 
         //獲取工時表資訊
         this.fetchWorkDayInfo();
-        console.log(this.workDayInfoList);
+        console.log(this.workDayInfo);
+
     },
     mounted() {
 
@@ -928,6 +956,8 @@ export default {
 
         //開始產生元件動畫
         this.startAnimation();
+
+      
     }
 }
 </script>
@@ -940,39 +970,49 @@ export default {
             <div v-if="listRenderOver" class="left">
                 <div class="title_search">
                     <h4 class="fw-bold title">{{ title }}</h4>
-
+                    <!-- 搜尋 姓名 員工ID -->
+                    <div class="searchFrame">
+                        <label for="serch">{{ search }}</label>
+                        <div class="dateFrame">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input :disabled="this.timeFrameSelect !== 'default'" @input="byNameId" v-model="searchNameId"
+                                id="serch" type="text" :placeholder="nameIdPHStr">
+                        </div>
+                    </div>
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{infoText}}</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{ infoText }}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div :style="{ backgroundColor: 'rgba(220, 220, 220, 0.4)' }" class="workHoursInfoCard"
                                 v-if="workHoursInfoData !== null">
                                 <h4> {{ workHoursInfoData.employeeId }}</h4>
                                 <div class="infoArea">
                                     <div>
-                                        <p>{{nameText}}: {{ workHoursInfoData.name }}</p>
-                                        <p>{{genderText}}: {{ workHoursInfoData.gender }}</p>
-                                        <p>{{emailText}}: {{ workHoursInfoData.email }}</p>
-                                        <p>{{departmentText}}: {{ workHoursInfoData.department }}</p>
+                                        <p>{{ nameText }}: {{ workHoursInfoData.name }}</p>
+                                        <p>{{ genderText }}: {{ workHoursInfoData.gender }}</p>
+                                        <p>{{ emailText }}: {{ workHoursInfoData.email }}</p>
+                                        <p>{{ departmentText }}: {{ workHoursInfoData.department }}</p>
                                     </div>
                                     <div>
-                                        <p>{{positionText}}: {{ workHoursInfoData.position }}</p>
-                                        <p>{{levelText}}: {{ workHoursInfoData.level }}</p>
-                                        <p>{{supervisorIdText}}: {{ workHoursInfoData.supervisor }}</p>
-                                        <p>{{phone}}: {{ workHoursInfoData.phone }}</p>
+                                        <p>{{ positionText }}: {{ workHoursInfoData.position }}</p>
+                                        <p>{{ levelText }}: {{ workHoursInfoData.level }}</p>
+                                        <p>{{ supervisorIdText }}: {{ workHoursInfoData.supervisor }}</p>
+                                        <p>{{ phone }}: {{ workHoursInfoData.phone }}</p>
                                     </div>
 
 
                                 </div>
 
                                 <button v-if="hasntBeenApproved" :value="workHoursInfoData.employeeId"
-                                    @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">{{ commitBtn}}</button>
+                                    @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">{{
+                                        commitBtn }}</button>
                             </div>
-                           
+
                         </div>
                     </div>
-                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">{{ bacKToEmploInfo }}</button>
+                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">{{ bacKToEmploInfo
+                    }}</button>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
                 <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
@@ -981,15 +1021,15 @@ export default {
                     <div v-if="hasAnyWorkDayInfo" class="accordion accordion-flush" id="accordionFlushExample"
                         style="overflow: auto;">
                         <!--手風琴格位-->
-                        <div v-for="(empInfo, index) in workDayInfo" :value="workDayInfo.worInfoId" :key="index"
+                        <div v-for="(empInfo, index) in filteredEmploInfo" :value="workDayInfo.worInfoId" :key="index"
                             class="accordion-item">
                             <!--手風琴標題-->
                             <h2 class="accordion-header" id="flush-headingOne">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    <p class="pId">{{emploIdText}}:{{ empInfo.employeeId }}</p>
-                                    <p class="pName">{{nameText}}:{{ empInfo.name }}</p>
+                                    <p class="pId">{{ emploIdText }}:{{ empInfo.employeeId }}</p>
+                                    <p class="pName">{{ nameText }}:{{ empInfo.name }}</p>
                                     <div class="approvedStrFrame"
                                         :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }">
                                     </div>
@@ -1000,14 +1040,14 @@ export default {
                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <!-- 手風琴內容區 -->
-                                    <p>{{nameText}}: {{ empInfo.name }}</p>
-                                    <p>{{genderText}}: {{ empInfo.gender }}</p>
-                                    <p>{{emailText}}: {{ empInfo.email }}</p>
-                                    <p>{{departmentText}}: {{ empInfo.department }}</p>
-                                    <p>{{positionText}}: {{ empInfo.position }}</p>
-                                    <p>{{levelText}}: {{ empInfo.level }}</p>
-                                    <p>{{supervisorIdText}}: {{ empInfo.supervisor }}</p>
-                                    <p>{{phone}}: {{ empInfo.phone }}</p>
+                                    <p>{{ nameText }}: {{ empInfo.name }}</p>
+                                    <p>{{ genderText }}: {{ empInfo.gender }}</p>
+                                    <p>{{ emailText }}: {{ empInfo.email }}</p>
+                                    <p>{{ departmentText }}: {{ empInfo.department }}</p>
+                                    <p>{{ positionText }}: {{ empInfo.position }}</p>
+                                    <p>{{ levelText }}: {{ empInfo.level }}</p>
+                                    <p>{{ supervisorIdText }}: {{ empInfo.supervisor }}</p>
+                                    <p>{{ phone }}: {{ empInfo.phone }}</p>
                                     <button @click="workHoursInfo($event)" :value="empInfo.employeeId" class="viewBtn"
                                         type="button">{{ checkBtn }}</button>
                                 </div>
@@ -1085,7 +1125,7 @@ export default {
 
                 .searchFrame {
                     position: absolute;
-                    right: 50%;
+                    right: 5%;
                     width: max-content;
                     display: inline-block;
 
@@ -1108,11 +1148,11 @@ export default {
                         }
 
                         input {
-                            width: 6vw;
-                            height: 3vh;
+                            width: 14vw;
+                            height: 4vh;
                             font-size: 1vh;
                             border-radius: 30px;
-                            padding-left: 20%;
+                            padding-left: 15%;
                             border: 1px solid #000;
 
                         }
@@ -1445,13 +1485,13 @@ export default {
 
                         .pId {
                             position: absolute;
-                            top: 50%;
+                            top: 30%;
                         }
 
                         .pName {
                             position: absolute;
-                            left: 30%;
-                            top: 50%;
+                            left: 16%;
+                            top: 30%;
                         }
 
                         i {
