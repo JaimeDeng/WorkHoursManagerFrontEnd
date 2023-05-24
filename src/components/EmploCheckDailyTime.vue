@@ -28,6 +28,7 @@ data(){
         hasntBeenApproved: true,
         message:'',
         //介面文字
+        employeeIdStr:'',
         searchDate:'',
         langValue:'ch',
         title:'',
@@ -36,12 +37,25 @@ data(){
         reviewStatusPH:'',
         reviewStatusOpt1:'',
         reviewStatusOpt2:'',
+        attendanceStatus:'',
+        logtime:'',
         timeFrame:'',
         timeFramePH:'',
         timeFrameOpt1:'',
         timeFrameOpt2:'',
         timeFrameOpt3:'',
+        checkStr:'',
         backBtn:'',
+        reviewStr:'',
+        notReviewStr:'',
+        listStr:'',
+        startTimeStr:'',
+        endTimeStr:'',
+        modelStr:'',
+        caseNoStr:'',
+        detailStr:'',
+        btnStr:'',
+        dateStr:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -56,42 +70,84 @@ methods:{
         if(this.langValue === 'ch'){
             this.title = '工時表一覽';
             this.search = '以日期搜尋';
+            this.employeeIdStr = '員工ID';
             this.reviewStatus = '審核狀態';
             this.reviewStatusPH = '選擇審核狀態';
             this.reviewStatusOpt1 = '已審核';
             this.reviewStatusOpt2 = '未審核';
+            this.reviewStr = '已審核';
+            this.notReviewStr = '未審核';
+            this.attendanceStatus = '出勤狀態';
+            this.logtime = '登錄時數';
             this.timeFrame = '時間範圍';
             this.timeFramePH = '請選擇時間範圍';
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
+            this.checkStr = '查看';
             this.backBtn = '返回首頁';
+            this.listStr = '表單共';
+            this.startTimeStr = '開始時間';
+            this.endTimeStr = '結束時間';
+            this.modelStr = '機型';
+            this.caseNoStr = '案件號';
+            this.detailStr = '工作內容';
+            this.btnStr = '返回日工時表';
+            this.dateStr = '日期';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
+            this.employeeIdStr = 'Employee ID';
             this.reviewStatus = 'Approval status';
+            this.attendanceStatus = 'Attendance status';
             this.reviewStatusPH = 'Select approval status';
             this.reviewStatusOpt1 = 'Approved';
             this.reviewStatusOpt2 = 'Pending approval';
+            this.reviewStr = 'Approved';
+            this.notReviewStr = 'Not approved';
+            this.logtime = 'Log time';
             this.timeFrame = 'Time frame';
             this.timeFramePH = 'Select time frame';
             this.timeFrameOpt1 = '7days';
             this.timeFrameOpt2 = '14days';
             this.timeFrameOpt3 = '30days';
+            this.checkStr = 'Check';
             this.backBtn = 'Back to homepage';
+            this.listStr = 'Total';
+            this.startTimeStr = 'Start time';
+            this.endTimeStr = 'End time';
+            this.modelStr = 'Model';
+            this.caseNoStr = 'Case number';
+            this.detailStr = 'Job description';
+            this.btnStr ='Return to Timesheet';
+            this.dateStr = 'Date';
         }else if(this.langValue === 'jp'){
-            this.title = '工時表一覽';
-            this.search = '以日期搜尋';
-            this.reviewStatus = '審核狀態';
-            this.reviewStatusPH = '選擇審核狀態';
-            this.reviewStatusOpt1 = '已審核';
-            this.reviewStatusOpt2 = '未審核';
-            this.timeFrame = '時間範圍';
-            this.timeFramePH = '請選擇時間範圍';
+            this.title = '勤務表一覽';
+            this.search = '日付で検索する';
+            this.employeeIdStr = '人員ID';
+            this.reviewStatus = '審査状態';
+            this.reviewStatusPH = '審査状態選択';
+            this.reviewStatusOpt1 = '審査終了';
+            this.reviewStatusOpt2 = '未審査';
+            this.reviewStr = '審査終了';
+            this.notReviewStr = '未審査';
+            this.attendanceStatus = '勤務状態';
+            this.logtime = '登録時間';
+            this.timeFrame = '時間範囲';
+            this.timeFramePH = '時間範囲選択';
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
-            this.backBtn = '返回首頁';
+            this.checkStr = '詳細を見る';
+            this.backBtn = 'ホームページへ戻る';
+            this.listStr = 'トータル';
+            this.startTimeStr = '開始時間';
+            this.endTimeStr = '終了時間';
+            this.modelStr = '型番';
+            this.caseNoStr = '案件番号';
+            this.detailStr = '仕事內容';
+            this.btnStr = '勤務表に戻る';
+            this.dateStr = '日付';
         }
     },
     fetchWorkDayInfo(){
@@ -150,9 +206,9 @@ methods:{
         this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
             let approvedStr = "";
             if(workDayInfo.approved === true){
-                approvedStr = "已審核";
+                approvedStr = this.reviewStr;
             }else{
-                approvedStr = "未審核";
+                approvedStr = this.notReviewStr;
             }
             let workingHoursIsNotEnough = false;
             if(workDayInfo.workingHours < 8){
@@ -179,7 +235,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -209,7 +265,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -239,7 +295,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;              
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -269,7 +325,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -301,7 +357,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -331,7 +387,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -361,7 +417,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -391,7 +447,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -423,9 +479,9 @@ methods:{
             if(workDayInfo.date === date){
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
-                    approvedStr = "已審核";
+                    approvedStr = this.reviewStr;
                 }else{
-                    approvedStr = "未審核";
+                    approvedStr = this.notReviewStr;
                 }
                 let workingHoursIsNotEnough = false;
                 if(workDayInfo.workingHours < 8){
@@ -462,9 +518,9 @@ methods:{
                 if(dayDiff <= 7){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -491,7 +547,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -518,7 +574,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -555,9 +611,9 @@ methods:{
                 if(dayDiff <= 14){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -584,7 +640,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -611,7 +667,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -648,9 +704,9 @@ methods:{
                 if(dayDiff <= 30){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -677,7 +733,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -704,7 +760,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -980,27 +1036,31 @@ mounted(){
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }} {{ title }}</h4>           
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
+                            
                             <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
-                                <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
+                                <h4 class="infoNum">{{ listStr }}:{{ selectedDateInfoList.length }} </h4>
                                 <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
-                                <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>
+                                <p style="color: #1a4e78" >{{ startTimeStr }}: {{ workHoursInfo.startTime }}</p>
+
                                 <i class="fa-solid fa-arrow-down" style="color: #245c54;"></i>
-                                <p style="color: #1a4e78">結束時間: {{ workHoursInfo.endTime }}</p>
-                                <p>機型: {{ workHoursInfo.model }}</p>
-                                <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
+
+                                <p style="color: #1a4e78" >{{ endTimeStr }}: {{ workHoursInfo.endTime }}</p>
+                                <p>{{ modelStr }}: {{ workHoursInfo.model }}</p>
+                                <p>{{ caseNoStr }}: {{ workHoursInfo.caseNo }}</p>
+
                                 <div class="detailTextFrame">
-                                    <h5>工作內容</h5>
+                                    <h5>{{ detailStr }}</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
                                 <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
-                                <div v-if="!hasntBeenApproved" class="hasBeenApproved"><i class="fa-solid fa-check"></i>已審核</div>
+                                <div v-if="!hasntBeenApproved && this.langValue=='ch'" class="hasBeenApproved"><i class="fa-solid fa-check"></i>{{ reviewStr }}</div>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
                         </div>
                     </div>
-                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
+                    <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList" v-if="this.langValue='ch'">{{ btnStr }}</button>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
                 <div class="deco2" id="deco2" v-if="showWorkHoursInfo"></div>
@@ -1014,7 +1074,7 @@ mounted(){
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    日期:{{ workDayInfo.date }}
+                                    {{ dateStr }}:{{ workDayInfo.date }}
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
                                     <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
@@ -1024,25 +1084,56 @@ mounted(){
                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <!-- 手風琴內容區 -->
-                                    <p>員工ID: {{ workDayInfo.employeeId }}</p>
-                                    <p :class="{'notEnough' : workDayInfo.workingHoursIsNotEnough}">登錄時數: {{ workDayInfo.workingHours }}</p>
-                                    <p>出勤狀態: {{ workDayInfo.status }}</p>
-                                    <p :class="{'hasntApproved' : !workDayInfo.approved}">審核狀態: {{ workDayInfo.approvedStr }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn" type="button">查看</button>
+
+                                    <!-- 員工ID -->
+                                    <p v-if="this.langValue='ch'">{{ employeeIdStr }}: {{ workDayInfo.employeeId }}</p>
+
+                                    <!-- 登錄時數 -->
+                                    <p :class="{'notEnough' : workDayInfo.workingHoursIsNotEnough}">{{ logtime }}: {{ workDayInfo.workingHours }} hr(s)</p>
+
+                                    <!-- 出勤狀態 -->
+                                    <p >{{ attendanceStatus }}: {{ workDayInfo.status }}</p>
+
+                                    <!-- 審核狀態 -->
+                                    <p :class="{'hasntApproved' : !workDayInfo.approved }">{{reviewStatus}}: {{ workDayInfo.approvedStr }}</p>
+
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn" type="button" >{{ checkStr }}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h3 v-if="!hasAnyWorkDayInfo 
+                    && !hasntThisDateInfo && !hasntThisTimeFrameInfo
+                    && !hasntThisReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">
+                    沒有任何日工時表
+                    </h3>
+                    <h4 v-if="!hasAnyWorkDayInfo 
+                    && !hasntThisDateInfo && !hasntThisTimeFrameInfo
+                    && !hasntThisReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">
+                    いかなる日の勤務表もありません
+                    </h4>
+                    <h3 v-if="!hasAnyWorkDayInfo 
+                    && !hasntThisDateInfo && !hasntThisTimeFrameInfo
+                    && !hasntThisReviewStatusInfo && this.langValue=='en'" class="emptyTitle">
+                    There is no Timesheet
+                    </h3>
+
+                    <h3 v-if="hasntThisDateInfo && this.langValue=='ch'" class="emptyTitle">沒有該日期的日工時表</h3>
+                    <h4 v-if="hasntThisDateInfo && this.langValue=='jp'" class="emptyTitle">その日の勤務表がありません</h4>
+                    <h5 v-if="hasntThisDateInfo && this.langValue=='en'" class="emptyTitle">There is no daily work schedule for that date</h5>
+
+                    <h3 v-if="hasntThisTimeFrameInfo && this.langValue=='ch'" class="emptyTitle">沒有該時間範圍內的工時表</h3>
+                    <h5 v-if="hasntThisTimeFrameInfo && this.langValue=='jp'" class="emptyTitle">その時間範囲内には勤務表がありません</h5>
+                    <h4 v-if="hasntThisTimeFrameInfo && this.langValue=='en'" class="emptyTitle">There is no work schedule <br> within that time range</h4>
+
+                    <h3 v-if="hasntThisReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h4 v-if="hasntThisReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">その審査状態の勤務表はありません</h4>
+                    <h4 v-if="hasntThisReviewStatusInfo && this.langValue=='en'" class="emptyTitle">There is no work schedule with that approved status</h4>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
             <!--spinner在list還沒渲染好時顯示-->
             <div v-else class="spinner-border text-light" role="status"></div>
-
 
 
         </div>
@@ -1427,7 +1518,7 @@ mounted(){
 
                 .emptyTitle{
                     position: absolute;
-                    top: 50%;
+                    top: 40%;
                     transform: translateY(-50%);
                     left: 50%;
                     transform: translateX(-50%);
