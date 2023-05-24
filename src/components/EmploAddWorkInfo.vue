@@ -333,7 +333,7 @@ mounted() {
 
             <!-- 底部按鈕 -->
             <div class="area2">
-                <RouterLink tag="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
+                <RouterLink scopd-slot="button" to="/employeeHome" class="back">{{ back }}</RouterLink>
                 
                 <button @click="commitReq" type="button">{{ commit }}</button>
             </div>

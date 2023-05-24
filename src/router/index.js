@@ -19,6 +19,8 @@ import SysCheckAllEmploInfo from "../components/SysCheckAllEmploInfo.vue"
 import PerformanceGoalSetting from "../components/PerformanceGoalSetting.vue"
 import SysAllWorkDayInfo from "../components/SysAllWorkDayInfo.vue"
 import SysEditEmployeeWorkHoursInfo from "../components/SysEditEmployeeWorkHoursInfo.vue"
+import ForgetPwd from "../components/ForgetPwd.vue"
+import ResetPwd from "../components/ResetPwd.vue"
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -120,6 +122,16 @@ const router = createRouter({
       path:'/PerformanceGoalSetting',
       name: 'PerformanceGoalSetting',
       component: PerformanceGoalSetting
+    },
+    {
+      path:'/forgetpwd',
+      name: 'Forgetpwd',
+      component: ForgetPwd
+    },
+    {
+      path:'/resetpwd',
+      name: 'ResetPwd',
+      component: ResetPwd
     },
     {
       path: '/:catchAll(.*)', // 使用自定義參數和正則表達式

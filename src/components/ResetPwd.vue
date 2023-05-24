@@ -19,7 +19,6 @@ export default {
             },
             newPsd: "",
             againNewPsd: "",
-            oldPassword: '',
             message: "",
             isInputInvalid: 0,
             origiPwdInput: '',
@@ -33,42 +32,23 @@ export default {
             rePwdPHStr: '',
             backToHome: '',
             change: '',
-            oldPsdStr: '',
-            oldPsdPHStr: '',
             //判斷相關
             showPwd: false,
             showOldPwd: false
         }
     },
     methods: {
-        changePsd() {
+        resetPsd() {
              //先檢查密碼格式
              let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
             let pwd = this.$refs.password.value;
             let rePassword = this.$refs.rePassword.value;
             let error = false;
 
-            //舊密碼輸入錯誤
-            if (this.origiPwdInput !== this.getOldPsd) {
-                if (this.langValue === 'ch') {
-                    this.message = "舊密碼不正確";
-                } else if (this.langValue === 'en') {
-                    this.message = "The passwords you typed don't match. Please retype the password.";
-                } else if (this.langValue === 'jp') {
-                    this.message = "現在のパスワードが一致しません。現在のパスワードを再入力してください。";
-                }
-                error = true;
-                if (error) {
-                    this.errorPopup();
-                    return;
-                }
-            }
-
-
             if (this.newPsd.length === 0) {
                 if (this.langValue === 'ch') {
                     this.message = "請輸入新密碼欄位";
-                } else if (this.langValue === 'en') {
+                } else if (this.langVaresetPsdlue === 'en') {
                     this.message = "You haven't filled in new password field yet";
                 } else if (this.langValue === 'jp') {
                     this.message = "新しいパスワード欄を入力してください";
@@ -125,9 +105,9 @@ export default {
 
                 //密碼加密為Base64再存入資料庫
                 let securePwd = btoa(this.newPsd);
-                let a = atob(securePwd);
+                let pwdCheck = atob(securePwd);
                 console.log(securePwd);
-                console.log(a);
+                console.log(pwdCheck);
 
                 fetch("http://localhost:3000/changePassword", {
                     method: "PUT",
@@ -135,7 +115,7 @@ export default {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        "accountId": sessionStorage.getItem("accountId") || localStorage.getItem("accountId"),
+                        "accountId": sessionStorage.getItem("changePwdAccount") || localStorage.getItem("changePwdAccount"),
                         "newPassword": securePwd
                     })
                 })
@@ -194,10 +174,10 @@ export default {
                 popup.$el.style.bottom = "0%";
             }, 100);
             // 删除localStorage，sessionStorage，要求重新登入
-            localStorage.removeItem('accountId');
+            localStorage.removeItem('changePwdAccount');
             localStorage.removeItem('employeeId');
             localStorage.removeItem('employeeName');
-            sessionStorage.removeItem('accountId');
+            sessionStorage.removeItem('changePwdAccount');
             sessionStorage.removeItem('employeeId');
             sessionStorage.removeItem('employeeName');
         },
@@ -243,13 +223,6 @@ export default {
                         this.isInputInvalid = 0;
                     }
                     break;
-                case 'oldPassword':
-                    if (this.origiPwdInput.length < 8) {
-                        this.isInputInvalid = 2;
-                    } else {
-                        this.isInputInvalid = 0;
-                    }
-                    break;
             }
         },
         changeLanguage() {
@@ -259,30 +232,24 @@ export default {
                 this.rePwdStr = 'Repeat password';
                 this.rePwdPHStr = 'Please input your password again';
                 this.backToHome = 'Home';
-                this.change = 'Change';
+                this.reset= 'Reset';
                 this.popupData.backBtn = 'Back'
-                this.oldPsdStr = 'Password'
-                this.oldPsdPHStr = 'Please set your old password'
             } else if (this.langValue === 'ch') {
                 this.pwdStr = '設置新密碼';
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
                 this.rePwdPHStr = '請再次輸入密碼';
                 this.backToHome = '返回首頁';
-                this.change = '變更';
+                this.reset= '重設';
                 this.popupData.backBtn = '返回';
-                this.oldPsdStr = '輸入密碼';
-                this.oldPsdPHStr = '請輸入目前密碼'
             } else if (this.langValue === 'jp') {
                 this.pwdStr = '新しいパスワード設定';
                 this.pwdPHStr = 'パスワードを設定してください';
                 this.rePwdStr = '新しいパスワード（確認）';
                 this.rePwdPHStr = 'パスワードを再入力してください';
                 this.backToHome = 'ホームへ';
-                this.change = '変更';
+                this.reset= 'リセット';
                 this.popupData.backBtn = '戻る';
-                this.oldPsdStr = 'パスワード'
-                this.oldPsdPHStr = 'パスワードを入力してください'
             }
         },
         showPwdOrNot() {
@@ -291,32 +258,6 @@ export default {
         showOldPwdOrNot() {
             this.showOldPwd = !this.showOldPwd;
         }
-    },
-    beforeCreate() {
-        //如果localStroage/sessionStorage都沒有accountId，則跳到登入頁面，要求重新登入
-        if (!localStorage.getItem('accountId') && !sessionStorage.getItem('accountId')) {
-            this.$router.push('/login')
-
-        }
-        //fetch舊密碼
-        fetch("http://localhost:3000/getAccountByEmployeeId", {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "employeeId": sessionStorage.getItem('employeeId') || localStorage.getItem('employeeId')
-                })
-            })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data.password)
-                    //解密
-                    let origiPwd = atob(data.password);
-                    console.log(origiPwd);
-                    this.getOldPsd = origiPwd;
-
-                })
     },
     mounted() {
         //檢查及切換語言
@@ -337,26 +278,26 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>變更密碼</h2>
+            <h3 v-if="langValue=='ch'"> 
+                <strong>
+                    重設密碼
+                </strong>
+            </h3>
+            <h3 v-if="langValue=='jp'">
+                <strong>
+                    パスワード リセット
+                </strong>
+            </h3>
+            <h3 v-if="langValue=='en'">
+                <strong>
+                    Reset Password
+                </strong>
+            </h3>
 
             <div class="area1">
 
-                <!-- 舊密碼 -->
-                <div>
-                    <label for="oldPsd">{{ oldPsdStr }}</label>
-                    <div class="oldPsdInput">
-                        <i class="fa-sharp fa-solid fa-key"></i>
-                        <input id="oldPsd" :placeholder="oldPsdPHStr" :type="showOldPwd ? 'text' : 'password'"
-                            v-model="origiPwdInput" ref="oldPassword"
-                            :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(238, 198, 198)' : '' }" maxlength="20"
-                            @input="checkInputLegth('oldPassword')">
-                        <i @click="showOldPwdOrNot"
-                            :class="showOldPwd ? 'fa-sharp fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-                    </div>
-                </div>
-
                 <!-- 新密碼輸入 -->
-                <div>
+                <div class="mb-5">
                     <label for="emid">{{ pwdStr }}</label>
                     <div class="newPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
@@ -370,7 +311,7 @@ export default {
 
 
                 <!-- 再次輸入新密碼 -->
-                <div>
+                <div class="mb-5">
                     <label for="password">{{ rePwdStr }}</label>
                     <div class="againNewPsd">
                         <i class="fa-sharp fa-solid fa-key"></i>
@@ -379,17 +320,12 @@ export default {
                             maxlength="20" @input="checkInputLegth('rePassword')">
                     </div>
                 </div>
-
-
             </div>
 
             <!-- 按鈕 -->
             <div class="area2">
                 <RouterLink to="/employeeHome" scoped slots="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
-
-                <button type="button" class="btnChangPsd" @click="changePsd">{{ change }}</button>
-
-
+                <button type="button" class="btnChangPsd" @click="resetPsd">{{ reset}}</button>
             </div>
         </div>
     </div>
