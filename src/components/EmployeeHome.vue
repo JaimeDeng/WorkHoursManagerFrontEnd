@@ -307,20 +307,19 @@ export default {
                     &::after{
                         content: '';
                         position: absolute;
+                        right: -100%;
                         height: 100vh;
-                        width: 0vw;
-                        background-color: rgba(121, 121, 121, 0.2);
+                        width: 4.5vw;
+                        background-color: rgba(121, 121, 121, 0.4);
                         z-index: -1;
-                        transform: rotate(260deg);
-                        opacity: 0;
+                        transform: rotate(45deg);
                         transition: 0.7s;
                     }
 
                     &:hover::after{
-                        opacity: 1;
                         width: 4.5vw;
-                        background-color: rgba(194, 194, 194, 0.2);
-                        transform: rotate(295deg);
+                        right: 200%;
+                        background-color: rgba(194, 194, 194, 0.4);
                     }
 
                     &:hover{
