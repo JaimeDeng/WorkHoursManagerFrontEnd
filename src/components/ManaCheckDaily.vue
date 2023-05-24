@@ -2248,7 +2248,7 @@ export default {
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    {{ dateText }}:{{ workDayInfo.date }} {{ emText }}:{{ workDayInfo.employeeId }}
+                                    {{ dateText }}:{{ workDayInfo.date }} {{ emIdText }}:{{ workDayInfo.employeeId }}
                                     <p
                                         :class="{ 'hasntApproved': !workDayInfo.approved, 'hasApproved': workDayInfo.approved }">
                                         {{ workDayInfo.approvedStr }}</p>
