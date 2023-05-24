@@ -3,11 +3,11 @@ import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
 import checkPopup from './checkPopup.vue'
 export default {
-components: {
-    RouterLink,
-    popup,
-    checkPopup
-},
+    components: {
+        RouterLink,
+        popup,
+        checkPopup
+    },
     data() {
         return {
             //checkPopup的props變數
@@ -64,6 +64,31 @@ components: {
             timeFrameOpt2: '',
             timeFrameOpt3: '',
             backBtn: '',
+            emText: '',
+            chooseEmText: '',
+            SheetText: '',
+            dragText: '',
+            backToAllText: '',
+            finText: '',
+            revokeText: '',
+            dateText: '',
+            emIdText: '',
+            attendText: '',
+            hourText: '',
+            approveText: '',
+            checkBtnText: '',
+            noAnySheet: '',
+            noDateSheet: '',
+            noRangeSheet: '',
+            noStatusSheet: '',
+            volumeSheetText: '',
+            volumeSheetText2: '',
+            startTimeText: '',
+            endTimeText: '',
+            typeText: '',
+            caseText: '',
+            detailText: '',
+            okApprove: '',
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
@@ -90,6 +115,31 @@ components: {
                 this.popupData.backBtn = '返回';
                 this.checkPopupData.backBtn = '返回';
                 this.checkPopupData.confirmBtn = '確認';
+                this.emText = '人員';
+                this.chooseEmText = '請選擇人員';
+                this.SheetText = '工時表一覽';
+                this.dragText = '可拖曳觀看';
+                this.backToAllText = '返回日工時表';
+                this.finText = '確認審核';
+                this.revokeText = '收回審核';
+                this.dateText = '日期';
+                this.emIdText = '員工ID';
+                this.attendText = '出勤狀態';
+                this.hourText = '登錄時數';
+                this.approveText = '審核狀態';
+                this.checkBtnText = '查看';
+                this.noAnySheet = '沒有任何日工時表';
+                this.noDateSheet = '沒有該日期的日工時表';
+                this.noRangeSheet = '沒有該天數範圍內的工時表';
+                this.noStatusSheet = '沒有該審核狀態的工時表';
+                this.volumeSheetText = '表單共有';
+                this.volumeSheetText2 = '張';
+                this.startTimeText = '開始時間';
+                this.endTimeText = '結束時間';
+                this.typeText = '機型';
+                this.caseText = '案件號碼';
+                this.detailText = '工作內容';
+                this.okApprove = '已審核';
             } else if (this.langValue === 'en') {
                 this.title = 'Timesheet List';
                 this.search = 'Search by date';
@@ -106,37 +156,87 @@ components: {
                 this.popupData.backBtn = 'Back';
                 this.checkPopupData.backBtn = 'Back';
                 this.checkPopupData.confirmBtn = 'Confirm';
+                this.emText = 'Employee';
+                this.chooseEmText = 'Please choose employee';
+                this.SheetText = 'Timesheet List';
+                this.dragText = 'Drag to view';
+                this.backToAllText = ' Back to all';
+                this.finText = 'Approve';
+                this.revokeText = 'Revoke';
+                this.dateText = 'Date';
+                this.emIdText = 'EmployeeID';
+                this.attendText = 'Attendance';
+                this.hourText = 'Record hours';
+                this.approveText = 'Approve status';
+                this.checkBtnText = 'Check';
+                this.noAnySheet = 'There is no timesheet.';
+                this.noDateSheet = 'There is no timesheet for that date.';
+                this.noRangeSheet = 'There is no timesheet within that time range.';
+                this.noStatusSheet = 'There is no timesheet whit that approved status.';
+                this.volumeSheetText = 'There are';
+                this.volumeSheetText2 = 'sheet';
+                this.startTimeText = 'Start Time';
+                this.endTimeText = 'End Time';
+                this.typeText = 'Type';
+                this.caseText = 'Case no';
+                this.detailText = 'Detail';
+                this.okApprove = 'Approved';
             } else if (this.langValue === 'jp') {
-                this.title = '工時表一覽';
-                this.search = '以日期搜尋';
-                this.reviewStatus = '審核狀態';
-                this.reviewStatusPH = '選擇審核狀態';
-                this.reviewStatusOpt1 = '已審核';
-                this.reviewStatusOpt2 = '未審核';
-                this.timeFrame = '時間範圍';
-                this.timeFramePH = '請選擇時間範圍';
+                this.title = '勤務表一覽';
+                this.search = '日付で検索';
+                this.reviewStatus = '審査状態';
+                this.reviewStatusPH = '審査状態で検索';
+                this.reviewStatusOpt1 = '審査済み';
+                this.reviewStatusOpt2 = '未審査';
+                this.timeFrame = '時間範囲';
+                this.timeFramePH = '時間範囲で検索';
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = '返回首頁';
-                this.popupData.backBtn = '返回';
-                this.checkPopupData.backBtn = '返回';
-                this.checkPopupData.confirmBtn  = '確認';
+                this.backBtn = 'ホームページへ';
+                this.popupData.backBtn = '戻る';
+                this.checkPopupData.backBtn = '戻る';
+                this.checkPopupData.confirmBtn = '確認';
+                this.emText = '人員';
+                this.chooseEmText = '人員で検索';
+                this.SheetText = '勤務表一覽';
+                this.dragText = 'ドラッグして閲覧する';
+                this.backToAllText = '勤務表一覽';
+                this.finText = '審査 ';
+                this.revokeText = '取り消す';
+                this.dateText = '日付';
+                this.emIdText = '社員番号';
+                this.attendText = '出勤状態';
+                this.hourText = '勤務時間';
+                this.approveText = '審査状態';
+                this.checkBtnText = '詳細を見る';
+                this.noAnySheet = '勤務表がありません。';
+                this.noDateSheet = 'その日の勤務表がありません。';
+                this.noRangeSheet = 'その時間範囲以内には勤務表がありません。';
+                this.noStatusSheet = 'その審査状態の勤務表がありません。';
+                this.volumeSheetText = '勤務表が';
+                this.volumeSheetText2 = '枚';
+                this.startTimeText = '開始時刻';
+                this.endTimeText = '終了時刻';
+                this.typeText = '型番';
+                this.caseText = '案件番号';
+                this.detailText = '仕事内容';
+                this.okApprove = '審査済み';
             }
         },
         fetchWorkDayInfo() {
 
             fetch("http://localhost:3000/getWorkDayInfoBySupervisorId", {
-            method: "put",
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: JSON.stringify({supervisorId : this.employeeId})
+                method: "put",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify({ supervisorId: this.employeeId })
             }).then(res => res.json())
-            .then((data) => {
-                console.log(data);
-                let subordinatesWorkDayInfoList = data.subordinatesWorkDayInfoList;
-                let container = null;
+                .then((data) => {
+                    console.log(data);
+                    let subordinatesWorkDayInfoList = data.subordinatesWorkDayInfoList;
+                    let container = null;
                     for (let i = subordinatesWorkDayInfoList.length - 1; i > 0; i--) {
                         for (let i = 0; i < subordinatesWorkDayInfoList.length - 1; i++) {
                             const nextDateStr = subordinatesWorkDayInfoList[i + 1].date;
@@ -155,13 +255,13 @@ components: {
                     this.workDayInfo = subordinatesWorkDayInfoList;
 
                     //建構下屬名單
-                    this.workDayInfo.forEach((workDayInfo)=>{
+                    this.workDayInfo.forEach((workDayInfo) => {
                         let subordinateId = workDayInfo.employeeId;
                         let subordinateName;
-                        this.getSubordinateInfo(subordinateId).then((res)=>{
+                        this.getSubordinateInfo(subordinateId).then((res) => {
                             subordinateName = res;
                             let subordinateInfo = subordinateId + " " + subordinateName;
-                            if(!this.subordinates.includes(subordinateInfo)){
+                            if (!this.subordinates.includes(subordinateInfo)) {
                                 this.subordinates.push(subordinateInfo);
                             }
                             console.log(this.subordinates);
@@ -173,7 +273,7 @@ components: {
                         this.hasAnyWorkDayInfo = true;
                         this.renderList();
                     }
-                    if(this.hasAnyWorkDayInfo === false){
+                    if (this.hasAnyWorkDayInfo === false) {
                         this.listRenderOver = true;
                     }
                     if (data.success === true) {
@@ -183,7 +283,7 @@ components: {
                     }
 
                     this.listRenderOver = true;
-            })
+                })
         },
         renderList() {
             this.workDayInfoList = [];
@@ -201,10 +301,10 @@ components: {
                     workingHoursIsNotEnough = true;
                 }
                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                        date : workDayInfo.date,
-                        employeeId :　workDayInfo.employeeId,
-                        approved : workDayInfo.approved
-                    });
+                    date: workDayInfo.date,
+                    employeeId: workDayInfo.employeeId,
+                    approved: workDayInfo.approved
+                });
                 this.workDayInfoList.push({
                     workInfoId: workDayInfo.workInfoId,
                     date: workDayInfo.date,
@@ -222,13 +322,13 @@ components: {
         },
         async getSubordinateInfo(subordinateId) {
             const response = await fetch("http://localhost:3000/getEmployeeInfoById", {
-            method: "put",
-            headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-            },
-            body: JSON.stringify({ employeeId: subordinateId })
-        });
-        
+                method: "put",
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify({ employeeId: subordinateId })
+            });
+
             const data = await response.json();
             return data.name;
         },
@@ -238,20 +338,20 @@ components: {
             const response = await fetch("http://localhost:3000/getWorkDayInfoByEmployeeId", {
                 method: "put",
                 headers: {
-                'Content-Type': 'application/json; charset=utf-8'
+                    'Content-Type': 'application/json; charset=utf-8'
                 },
                 body: JSON.stringify({ employeeId: subordinateId })
             });
-        
+
             const data = await response.json();
             return data.workDayInfoList;
         },
-        renderListBySubordinate(selectedSubornidate){
+        renderListBySubordinate(selectedSubornidate) {
             this.workDayInfoList = [];
-            this.getSubordinateWorkDayInfo().then((res)=>{
-                if(selectedSubornidate === "default"){
+            this.getSubordinateWorkDayInfo().then((res) => {
+                if (selectedSubornidate === "default") {
                     this.renderList();
-                }else{
+                } else {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     console.log(this.subordinatesWorkDayInfo)
@@ -267,9 +367,9 @@ components: {
                             workingHoursIsNotEnough = true;
                         }
                         let dateAndEmployeeIdAndApprove = JSON.stringify({
-                            date : workDayInfo.date,
-                            employeeId : workDayInfo.employeeId.employeeId,
-                            approved : workDayInfo.approved
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId.employeeId,
+                            approved: workDayInfo.approved
                         });
                         this.workDayInfoList.push({
                             workInfoId: workDayInfo.workInfoId,
@@ -290,7 +390,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
-            if(this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 //沒有指定員工
                 if (this.timeFrameSelect === "default") {
                     this.workDayInfo.forEach((workDayInfo) => {
@@ -301,9 +401,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -319,9 +419,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -337,9 +437,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -355,9 +455,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -373,9 +473,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -391,9 +491,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -409,9 +509,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -427,16 +527,16 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
-                
-            }else{
+
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     if (this.timeFrameSelect === "default") {
@@ -448,9 +548,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -466,9 +566,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -484,9 +584,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -502,9 +602,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -520,9 +620,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -538,9 +638,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -556,9 +656,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -574,9 +674,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -587,7 +687,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisReviewStatusInfo = false;
             //混合天數範圍查詢
-            if( this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 //沒有指定員工
                 if (this.timeFrameSelect === "default") {
                     this.workDayInfo.forEach((workDayInfo) => {
@@ -598,9 +698,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -616,9 +716,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -634,9 +734,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -652,9 +752,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -670,9 +770,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -688,9 +788,9 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
@@ -706,9 +806,9 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                date : workDayInfo.date,
-                                employeeId : workDayInfo.employeeId,
-                                approved : workDayInfo.approved
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
                             });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
@@ -724,15 +824,15 @@ components: {
                             hasThisReviewStatusInfo = true;
                         }
                     })
-                    if(hasThisReviewStatusInfo === false){
+                    if (hasThisReviewStatusInfo === false) {
                         this.hasntThisReviewStatusInfo = true;
-                    }else{
+                    } else {
                         this.hasntThisReviewStatusInfo = false;
                     }
                 }
-            }else{
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     if (this.timeFrameSelect === "default") {
@@ -744,9 +844,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -762,9 +862,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -780,9 +880,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -798,9 +898,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -816,9 +916,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -834,9 +934,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -852,9 +952,9 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId.employeeId,
-                                    approved : workDayInfo.approved
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
                                 });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
@@ -870,9 +970,9 @@ components: {
                                 hasThisReviewStatusInfo = true;
                             }
                         })
-                        if(hasThisReviewStatusInfo === false){
+                        if (hasThisReviewStatusInfo === false) {
                             this.hasntThisReviewStatusInfo = true;
-                        }else{
+                        } else {
                             this.hasntThisReviewStatusInfo = false;
                         }
                     }
@@ -883,7 +983,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisDateInfo = false;
             //混合天數範圍查詢
-            if(this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 this.workDayInfo.forEach((workDayInfo) => {
                     if (workDayInfo.date === date) {
                         let approvedStr = "";
@@ -897,20 +997,20 @@ components: {
                             workingHoursIsNotEnough = true;
                         }
                         let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
-                            this.workDayInfoList.push({
-                                workInfoId: workDayInfo.workInfoId,
-                                date: workDayInfo.date,
-                                employeeId: workDayInfo.employeeId,
-                                workingHours: workDayInfo.workingHours,
-                                status: workDayInfo.status,
-                                approved: workDayInfo.approved,
-                                approvedStr: approvedStr,
-                                workingHoursIsNotEnough: workingHoursIsNotEnough,
-                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId,
+                            approved: workDayInfo.approved
+                        });
+                        this.workDayInfoList.push({
+                            workInfoId: workDayInfo.workInfoId,
+                            date: workDayInfo.date,
+                            employeeId: workDayInfo.employeeId,
+                            workingHours: workDayInfo.workingHours,
+                            status: workDayInfo.status,
+                            approved: workDayInfo.approved,
+                            approvedStr: approvedStr,
+                            workingHoursIsNotEnough: workingHoursIsNotEnough,
+                            dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                         })
                         hasThisDateInfo = true;
                     }
@@ -920,9 +1020,9 @@ components: {
                 } else {
                     this.hasntThisDateInfo = false;
                 }
-            }else{
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     this.subordinatesWorkDayInfo.forEach((workDayInfo) => {
@@ -938,20 +1038,20 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
-                                this.workDayInfoList.push({
-                                    workInfoId: workDayInfo.workInfoId,
-                                    date: workDayInfo.date,
-                                    employeeId: workDayInfo.employeeId.employeeId,
-                                    workingHours: workDayInfo.workingHours,
-                                    status: workDayInfo.status,
-                                    approved: workDayInfo.approved,
-                                    approvedStr: approvedStr,
-                                    workingHoursIsNotEnough: workingHoursIsNotEnough,
-                                    dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId.employeeId,
+                                approved: workDayInfo.approved
+                            });
+                            this.workDayInfoList.push({
+                                workInfoId: workDayInfo.workInfoId,
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId.employeeId,
+                                workingHours: workDayInfo.workingHours,
+                                status: workDayInfo.status,
+                                approved: workDayInfo.approved,
+                                approvedStr: approvedStr,
+                                workingHoursIsNotEnough: workingHoursIsNotEnough,
+                                dateAndEmployeeIdAndApprove: dateAndEmployeeIdAndApprove
                             })
                             hasThisDateInfo = true;
                         }
@@ -968,7 +1068,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if(this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 //沒有指定員工
                 if (this.reviewStatusSelect === 'default') {
                     this.workDayInfo.forEach((workDayInfo) => {
@@ -987,10 +1087,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1020,10 +1120,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1052,10 +1152,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1076,9 +1176,9 @@ components: {
                 } else {
                     this.hasntThisTimeFrameInfo = false;
                 }
-            }else{
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     if (this.reviewStatusSelect === 'default') {
@@ -1098,10 +1198,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1131,10 +1231,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1163,10 +1263,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1194,7 +1294,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if(this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 //沒有指定員工
                 if (this.reviewStatusSelect === 'default') {
                     this.workDayInfo.forEach((workDayInfo) => {
@@ -1213,10 +1313,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1246,10 +1346,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1278,10 +1378,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1302,9 +1402,9 @@ components: {
                 } else {
                     this.hasntThisTimeFrameInfo = false;
                 }
-            }else{
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     if (this.reviewStatusSelect === 'default') {
@@ -1312,7 +1412,7 @@ components: {
                             let workDay = new Date(workDayInfo.date);
                             let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                             let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                            if (dayDiff <= 14 ){
+                            if (dayDiff <= 14) {
                                 let approvedStr = "";
                                 if (workDayInfo.approved === true) {
                                     approvedStr = "已審核";
@@ -1324,10 +1424,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1357,10 +1457,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1389,10 +1489,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1420,7 +1520,7 @@ components: {
             this.workDayInfoList = [];
             let hasThisTimeFrameInfo = false;
             //混合審核狀態判斷
-            if(this.subordinateSelect === "default"){
+            if (this.subordinateSelect === "default") {
                 //沒有指定員工
                 if (this.reviewStatusSelect === 'default') {
                     this.workDayInfo.forEach((workDayInfo) => {
@@ -1439,10 +1539,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1472,10 +1572,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1504,10 +1604,10 @@ components: {
                                 workingHoursIsNotEnough = true;
                             }
                             let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                    date : workDayInfo.date,
-                                    employeeId : workDayInfo.employeeId,
-                                    approved : workDayInfo.approved
-                                });
+                                date: workDayInfo.date,
+                                employeeId: workDayInfo.employeeId,
+                                approved: workDayInfo.approved
+                            });
                             this.workDayInfoList.push({
                                 workInfoId: workDayInfo.workInfoId,
                                 date: workDayInfo.date,
@@ -1528,9 +1628,9 @@ components: {
                 } else {
                     this.hasntThisTimeFrameInfo = false;
                 }
-            }else{
+            } else {
                 //有指定員工
-                this.getSubordinateWorkDayInfo().then((res)=>{
+                this.getSubordinateWorkDayInfo().then((res) => {
                     this.subordinatesWorkDayInfo = []
                     this.subordinatesWorkDayInfo = res;
                     if (this.reviewStatusSelect === 'default') {
@@ -1550,10 +1650,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1583,10 +1683,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1615,10 +1715,10 @@ components: {
                                     workingHoursIsNotEnough = true;
                                 }
                                 let dateAndEmployeeIdAndApprove = JSON.stringify({
-                                        date : workDayInfo.date,
-                                        employeeId : workDayInfo.employeeId.employeeId,
-                                        approved : workDayInfo.approved
-                                    });
+                                    date: workDayInfo.date,
+                                    employeeId: workDayInfo.employeeId.employeeId,
+                                    approved: workDayInfo.approved
+                                });
                                 this.workDayInfoList.push({
                                     workInfoId: workDayInfo.workInfoId,
                                     date: workDayInfo.date,
@@ -1644,9 +1744,9 @@ components: {
         },
         workHoursInfo(event) {
             let dateAndEmployeeIdAndApprove = JSON.parse(event.target.value);
-            if(dateAndEmployeeIdAndApprove.approved === false){
+            if (dateAndEmployeeIdAndApprove.approved === false) {
                 this.showApproveBtn = true;
-            }else{
+            } else {
                 this.showApproveBtn = false;
             }
             console.log(dateAndEmployeeIdAndApprove);
@@ -1663,19 +1763,19 @@ components: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             }).then(res => res.json())
-            .then((data) => {
-                data.workDayInfoList.forEach((workDayInfo) => {
-                    if(workDayInfo.date === dateAndEmployeeIdAndApprove.date){
-                        this.reviewingWorkDayInfoId = workDayInfo.workInfoId;
-                        if(workDayInfo.approved === true){
-                            this.hasntBeenApproved = false;
-                        }else{
-                            this.hasntBeenApproved = true;
+                .then((data) => {
+                    data.workDayInfoList.forEach((workDayInfo) => {
+                        if (workDayInfo.date === dateAndEmployeeIdAndApprove.date) {
+                            this.reviewingWorkDayInfoId = workDayInfo.workInfoId;
+                            if (workDayInfo.approved === true) {
+                                this.hasntBeenApproved = false;
+                            } else {
+                                this.hasntBeenApproved = true;
+                            }
                         }
-                    }
+                    })
                 })
-            })
-            .catch(err => console.log(err))
+                .catch(err => console.log(err))
 
             fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId", {
                 method: "put",
@@ -1772,13 +1872,16 @@ components: {
             this.reviewingWorkDayInfoApproval = false;
             this.showCheckPopup = true;
             if (this.langValue === 'ch') {
-            this.checkPopupData.title = "確認";
-            } else if (this.langValue === 'en') {
                 this.checkPopupData.title = "確認";
-            } else if (this.langValue === 'jp') {
+                this.checkPopupData.content = "確定審核該日工時表嗎?";
+            } else if (this.langValue === 'en') {
                 this.checkPopupData.title = "Confirm";
+                this.checkPopupData.content = "Are you sure about reviewing the daily timesheet?";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "確認";
+                this.checkPopupData.content = "審査を確定していますか？";
             }
-            this.checkPopupData.content = "確定審核該日工時表嗎?";
+            // this.checkPopupData.content = "確定審核該日工時表嗎?";
             this.showCheckPopup = true;
             setTimeout(() => {
                 let checkPopup = this.$refs.checkPopup;
@@ -1809,10 +1912,10 @@ components: {
             this.showCheckPopup = false;
 
             //要審核
-            if(reviewingWorkDayInfoApproval === false){
+            if (reviewingWorkDayInfoApproval === false) {
                 let reqBody = {
-                    workInfoId : this.reviewingWorkDayInfoId,
-                    approved : true
+                    workInfoId: this.reviewingWorkDayInfoId,
+                    approved: true
                 }
                 fetch("http://localhost:3000/editWorkDayInfoApproved", {
                     method: "post",
@@ -1821,19 +1924,26 @@ components: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 }).then(res => res.json())
-                .then((data) => {
-                    if(data.success === true){
-                        this.successPopup("已審核該日工時表");
-                    }else{
-                        this.errorPopup(data.message);
-                    }
-                })
-                .catch(err => console.log(err))
-            }else{
+                    .then((data) => {
+                        if (data.success === true) {
+                            if (this.langValue === 'ch') {
+                                this.successPopup("已審核該日工時表");
+                            } else if (this.langValue === 'en') {
+                                this.successPopup("The daily timesheet has been approved.");
+                            } else if (this.langValue === 'jp') {
+                                this.successPopup("審査済みです。");
+                            }
+                            // this.successPopup("已審核該日工時表");
+                        } else {
+                            this.errorPopup(data.message);
+                        }
+                    })
+                    .catch(err => console.log(err))
+            } else {
                 //要收回審核
                 let reqBody = {
-                    workInfoId : this.reviewingWorkDayInfoId,
-                    approved : false
+                    workInfoId: this.reviewingWorkDayInfoId,
+                    approved: false
                 }
                 fetch("http://localhost:3000/editWorkDayInfoApproved", {
                     method: "post",
@@ -1842,16 +1952,16 @@ components: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 }).then(res => res.json())
-                .then((data) => {
-                    if(data.success === true){
-                        this.successPopup("已收回該日工時表審核");
-                    }else{
-                        this.errorPopup(data.message);
-                    }
-                })
-                .catch(err => console.log(err))
+                    .then((data) => {
+                        if (data.success === true) {
+                            this.successPopup("已收回該日工時表審核");
+                        } else {
+                            this.errorPopup(data.message);
+                        }
+                    })
+                    .catch(err => console.log(err))
             }
-            
+
 
         },
         revokeApprove() {
@@ -1860,7 +1970,7 @@ components: {
             this.reviewingWorkDayInfoApproval = true;
             this.showCheckPopup = true;
             if (this.langValue === 'ch') {
-            this.checkPopupData.title = "確認";
+                this.checkPopupData.title = "確認";
             } else if (this.langValue === 'en') {
                 this.checkPopupData.title = "確認";
             } else if (this.langValue === 'jp') {
@@ -2032,8 +2142,8 @@ components: {
     <div class="main">
 
         <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
-        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup" 
-        @close="closeCheckPopup" @confirm="confirmApprove(this.reviewingWorkDayInfoApproval)"></checkPopup>
+        <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup"
+            @close="closeCheckPopup" @confirm="confirmApprove(this.reviewingWorkDayInfoApproval)"></checkPopup>
         <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
         <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
 
@@ -2049,7 +2159,8 @@ components: {
                         <label for="serch">{{ search }}</label>
                         <div class="dateFrame">
                             <i class="fa-solid fa-magnifying-glass"></i>
-                            <input :disabled="this.timeFrameSelect!=='default'" @input="searchByDate" v-model="searchDate" id="serch" type="date">
+                            <input :disabled="this.timeFrameSelect !== 'default'" @input="searchByDate" v-model="searchDate"
+                                id="serch" type="date">
                         </div>
                     </div>
 
@@ -2057,7 +2168,8 @@ components: {
                         <div class="ap">
                             <!-- 審核狀態 -->
                             <label for="approvedStatusSelect">{{ reviewStatus }}</label>
-                            <select :disabled="this.searchDate!==''" v-model="reviewStatusSelect" id="approvedStatusSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="reviewStatusSelect"
+                                id="approvedStatusSelect">
                                 <option value="default" selected>{{ reviewStatusPH }}</option>
                                 <option value="true">{{ reviewStatusOpt1 }}</option>
                                 <option value="false">{{ reviewStatusOpt2 }}</option>
@@ -2065,16 +2177,17 @@ components: {
                         </div>
                         <!-- 篩選:下屬名單 -->
                         <div class="dpm">
-                            <label for="subordinateSelect">人員</label>
+                            <label for="subordinateSelect">{{ emText }}</label>
                             <select v-model="subordinateSelect" id="subordinateSelect">
-                                <option value="default" selected>請選擇人員</option>
-                                <option v-for="(subordinate , index) in subordinates" :value="subordinate" :key="index">{{ subordinate }}</option>
+                                <option value="default" selected>{{ chooseEmText }}</option>
+                                <option v-for="(subordinate, index) in subordinates" :value="subordinate" :key="index">{{
+                                    subordinate }}</option>
                             </select>
                         </div>
                         <div class="tim">
                             <!-- 時間範圍 -->
                             <label for="timeFrameSelect">{{ timeFrame }}</label>
-                            <select :disabled="this.searchDate!==''" v-model="timeFrameSelect" for="timeFrameSelect">
+                            <select :disabled="this.searchDate !== ''" v-model="timeFrameSelect" for="timeFrameSelect">
                                 <option value="default" selected>{{ timeFramePH }}</option>
                                 <option value="7days">{{ timeFrameOpt1 }}</option>
                                 <option value="14days">{{ timeFrameOpt2 }}</option>
@@ -2086,33 +2199,39 @@ components: {
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}工時表一覽</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{ SheetText }}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
-                            <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo, index) in selectedDateInfoList">
-                                <h4 class="infoNum">表單共有 {{ selectedDateInfoList.length }} 張</h4>
+                            <div :style="{ backgroundColor: hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)' }"
+                                class="workHoursInfoCard" v-for="(workHoursInfo, index) in selectedDateInfoList">
+                                <h4 class="infoNum">{{ volumeSheetText }} {{ selectedDateInfoList.length }}
+                                    {{ volumeSheetText2 }}</h4>
                                 <h4 class="fw-bold"
                                     :style="{ color: workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)' }">
                                     {{ workHoursInfo.status }}</h4>
-                                <p style="color: #1a4e78">開始時間: {{ workHoursInfo.startTime }}</p>
+                                <p style="color: #1a4e78">{{ startTimeText }}: {{ workHoursInfo.startTime }}</p>
                                 <i class="fa-solid fa-arrow-down" style="color: #24445c;"></i>
-                                <p style="color: #1a4e78">結束時間: {{ workHoursInfo.endTime }}</p>
-                                <p>機型: {{ workHoursInfo.model }}</p>
-                                <p>案件號碼: {{ workHoursInfo.caseNo }}</p>
+                                <p style="color: #1a4e78">{{ endTimeText }}: {{ workHoursInfo.endTime }}</p>
+                                <p>{{ typeText }}: {{ workHoursInfo.model }}</p>
+                                <p>{{ caseText }}: {{ workHoursInfo.caseNo }}</p>
                                 <div class="detailTextFrame">
-                                    <h5>工作內容</h5>
+                                    <h5>{{ detailText }}</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <div v-if="!hasntBeenApproved" class="hasBeenApproved"><i class="fa-solid fa-check"></i>已審核</div>
+                                <div v-if="!hasntBeenApproved" class="hasBeenApproved"><i class="fa-solid fa-check"></i>{{
+                                    okApprove }}
+                                </div>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i
                                     :style="{ transform: isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }"
-                                    class="fa-solid fa-hand"></i>可拖曳觀看</div>
+                                    class="fa-solid fa-hand"></i>{{ dragText }}</div>
                         </div>
                     </div>
                     <div class="btnFrame">
-                        <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList">返回日工時表</button>
-                        <button v-if="showApproveBtn" @click="approve" class="approve" id="approve">確認審核</button>
-                        <button v-if="!showApproveBtn" @click="revokeApprove" class="approve" id="revokeApprove">收回審核</button>
+                        <button @click="backToWorkDayInfo" class="backToDayList"
+                            id="backToDayList">{{ backToAllText }}</button>
+                        <button v-if="showApproveBtn" @click="approve" class="approve" id="approve">{{ finText }}</button>
+                        <button v-if="!showApproveBtn" @click="revokeApprove" class="approve"
+                            id="revokeApprove">{{ revokeText }}</button>
                     </div>
                 </div>
                 <div class="deco1" id="deco1" v-if="showWorkHoursInfo"></div>
@@ -2129,7 +2248,7 @@ components: {
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
-                                    日期:{{ workDayInfo.date }} 員工:{{ workDayInfo.employeeId }}
+                                    {{ dateText }}:{{ workDayInfo.date }} {{ emText }}:{{ workDayInfo.employeeId }}
                                     <p
                                         :class="{ 'hasntApproved': !workDayInfo.approved, 'hasApproved': workDayInfo.approved }">
                                         {{ workDayInfo.approvedStr }}</p>
@@ -2143,22 +2262,23 @@ components: {
                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                 <div class="accordion-body">
                                     <!-- 手風琴內容區 -->
-                                    <p>員工ID: {{ workDayInfo.employeeId }}</p>
-                                    <p :class="{ 'notEnough': workDayInfo.workingHoursIsNotEnough }">登錄時數: {{
+                                    <p>{{ emIdText }}: {{ workDayInfo.employeeId }}</p>
+                                    <p :class="{ 'notEnough': workDayInfo.workingHoursIsNotEnough }">{{ hourText }}: {{
                                         workDayInfo.workingHours }}</p>
-                                    <p>出勤狀態: {{ workDayInfo.status }}</p>
-                                    <p :class="{ 'hasntApproved': !workDayInfo.approved }">審核狀態: {{ workDayInfo.approvedStr
+                                    <p>{{ attendText }}: {{ workDayInfo.status }}</p>
+                                    <p :class="{ 'hasntApproved': !workDayInfo.approved }">{{ approveText }}: {{
+                                        workDayInfo.approvedStr
                                     }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeIdAndApprove" class="viewBtn"
-                                        type="button">查看</button>
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.dateAndEmployeeIdAndApprove"
+                                        class="viewBtn" type="button">{{ checkBtnText }}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
+                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -2184,17 +2304,19 @@ components: {
     align-items: center;
     overflow: hidden;
 
-    select:disabled , input:disabled{
+    select:disabled,
+    input:disabled {
         background-color: rgb(179, 177, 171);
     }
 
-    .popup , .checkPopup{
+    .popup,
+    .checkPopup {
         position: absolute;
         bottom: -20%;
         opacity: 0;
-        transition-property: bottom , opacity;
+        transition-property: bottom, opacity;
         transition-duration: 0.3s;
-        transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+        transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
         z-index: 2;
     }
 
@@ -2467,7 +2589,7 @@ components: {
                                 overflow: auto;
                             }
 
-                            .hasBeenApproved{
+                            .hasBeenApproved {
                                 position: absolute;
                                 top: 0%;
                                 left: 0%;
@@ -2486,7 +2608,7 @@ components: {
                     }
                 }
 
-                .btnFrame{
+                .btnFrame {
                     margin: 0 auto;
                     margin-top: 1%;
                     height: auto;
@@ -2518,7 +2640,7 @@ components: {
                         }
                     }
 
-                    .approve{
+                    .approve {
                         margin-left: auto;
                         margin-right: auto;
                         padding-left: 1vw;
@@ -2541,11 +2663,11 @@ components: {
                             scale: 0.95;
                         }
                     }
-                    
+
                 }
             }
 
-            .deco1{
+            .deco1 {
                 position: absolute;
                 left: -150%;
                 transform: skew(-20deg);
@@ -2554,10 +2676,11 @@ components: {
                 background-color: rgba(67, 74, 79, 0.5);
                 transition-property: left;
                 transition-duration: 0.2s;
-                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
+                transition-timing-function: cubic-bezier(0.5, 0.2, 0.2, 0.5);
                 z-index: 1;
             }
-            .deco2{
+
+            .deco2 {
                 position: absolute;
                 left: -130%;
                 transform: skew(-20deg);
@@ -2566,7 +2689,7 @@ components: {
                 background-color: rgba(75, 61, 102, 0.6);
                 transition-property: left;
                 transition-duration: 0.6s;
-                transition-timing-function: cubic-bezier(0.5,0.2,0.2,0.5);
+                transition-timing-function: cubic-bezier(0.5, 0.2, 0.2, 0.5);
                 z-index: 1;
             }
 
