@@ -193,7 +193,7 @@ export default {
                 this.timeFrameOpt1 = '7日';
                 this.timeFrameOpt2 = '14日';
                 this.timeFrameOpt3 = '30日';
-                this.backBtn = 'ホームページへ';
+                this.backBtn = 'ホームページへ戻る';
                 this.popupData.backBtn = '戻る';
                 this.checkPopupData.backBtn = '戻る';
                 this.checkPopupData.confirmBtn = '確認';
