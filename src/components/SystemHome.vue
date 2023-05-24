@@ -174,18 +174,18 @@ export default {
     }
 
     .btnback {
-        background: rgb(26, 55, 77);
+        background-color: rgb(39, 46, 67);
         border: 1px solid #000;
         color: white;
-        border-radius: 5px;
+        border-radius: 1vh;
         padding: 0.5vh 1vw;
         font-size: 2vh;
-        margin-top: 50px;
+        margin-top: 5vh;
         transition: 0.4s;
         text-decoration: none;
 
         &:hover {
-            background-color: rgb(64, 104, 130);
+            background-color: rgb(75, 75, 101);
         }
 
         &:active {

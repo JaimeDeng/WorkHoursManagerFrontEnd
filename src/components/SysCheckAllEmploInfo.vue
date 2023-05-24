@@ -99,7 +99,7 @@ export default {
                 this.infoText = 'の情報';
                 this.commitBtn = '編集';
                 this.bacKToEmploInfo = '人員情報一覽';
-                this.checkBtn = '詳細を見る';
+                this.checkBtn = '詳細';
                 this.nameText = '名前',
                     this.genderText = '性別',
                     this.emailText = 'メール',
@@ -1030,9 +1030,7 @@ export default {
                                     aria-controls="flush-collapseOne">
                                     <p class="pId">{{ emploIdText }}:{{ empInfo.employeeId }}</p>
                                     <p class="pName">{{ nameText }}:{{ empInfo.name }}</p>
-                                    <div class="approvedStrFrame"
-                                        :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }">
-                                    </div>
+                                    <div class="approvedStrFrame"></div>
                                 </button>
                             </h2>
                             <!--手風琴內容-->
@@ -1316,7 +1314,7 @@ export default {
                             .infoArea {
                                 height: 80%;
                                 width: 90%;
-                                background-color: rgba(240, 235, 219, 0.4);
+                                background: linear-gradient(to top, rgba(169, 168, 175, 0.6) 60%, rgba(191, 187, 194, 0.6));
                                 border-radius: 10px;
                                 display: flex;
 
@@ -1330,7 +1328,8 @@ export default {
                                 }
 
                                 p {
-                                    // margin: auto;
+                                    font-weight: 600;
+                                    color:rgb(45, 45, 45);
                                     font-size: 2vh;
                                 }
                             }
@@ -1385,10 +1384,10 @@ export default {
                     margin-right: auto;
                     padding-left: 1vw;
                     padding-right: 1vw;
-                    background: rgb(26, 55, 77);
+                    background-color: rgb(39, 46, 67);
                     border: 1px solid #000;
                     color: white;
-                    border-radius: 5px;
+                    border-radius: 1vh;
                     width: max-content;
                     height: 3.5vh;
                     bottom: 5%;
@@ -1396,7 +1395,7 @@ export default {
                     transition: 0.4s;
 
                     &:hover {
-                        background-color: rgb(64, 104, 130);
+                        background-color: rgb(75, 75, 101);
                     }
 
                     &:active {
@@ -1525,6 +1524,7 @@ export default {
 
                         .approvedStrFrame {
                             position: absolute;
+                            background: linear-gradient(to top, rgba(52, 48, 113, 0.7) 60%, rgba(124, 71, 167, 0.7));
                             right: 0;
                             top: 50%;
                             transform: translateY(-50%);
@@ -1550,10 +1550,10 @@ export default {
 
                         .viewBtn {
                             position: absolute;
-                            background: rgb(26, 55, 77);
+                            background-color: rgb(39, 46, 67);
                             border: 1px solid #000;
                             color: white;
-                            border-radius: 5px;
+                            border-radius: 1vh;
                             width: 5vw;
                             height: 3.5vh;
                             bottom: 5%;
@@ -1562,7 +1562,7 @@ export default {
                             transition: 0.4s;
 
                             &:hover {
-                                background-color: rgb(64, 104, 130);
+                                background-color: rgb(75, 75, 101);
                             }
 
                             &:active {
@@ -1581,10 +1581,10 @@ export default {
                 align-items: center;
                 bottom: 2%;
                 left: 1%;
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 0.5vh;
                 width: max-content;
                 height: 3vh;
                 font-size: 2vh;
@@ -1592,7 +1592,7 @@ export default {
                 transition: 0.4s;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
