@@ -101,7 +101,6 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "Choose your level"
                 this.supervisor = "Supervisor ID";
                 this.phone = "Phone";
-
                 this.back = "Back";
                 this.commit = "Commit";
                 this.popupData.backBtn = "Back";
@@ -121,7 +120,6 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "職級を選択してください"
                 this.supervisor = "主管ID";
                 this.phone = "電話番号";
-
                 this.back = "戻る";
                 this.commit = "編集";
                 this.popupData.backBtn = "戻る";
@@ -141,7 +139,6 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "請選擇職等"
                 this.supervisor = "主管ID";
                 this.phone = "電話";
-
                 this.back = "返回";
                 this.commit = "確認";
                 this.popupData.backBtn = "返回";

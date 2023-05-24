@@ -60,6 +60,10 @@ data(){
         commitBtn:'',
         dragText:'',
         approvedText:'',
+        noAnySheet:'',
+        noDateSheet:'',
+        noRangeSheet:'',
+        noStatusSheet:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -102,6 +106,10 @@ methods:{
             this.commitBtn='編輯';
             this.dragText='可拖曳觀看';
             this.approvedText='已審核';
+            this.noAnySheet='沒有任何日工時表';
+            this.noDateSheet='沒有該日期的日工時表';
+            this.noRangeSheet='沒有該天數範圍內的工時表';
+            this.noStatusSheet='沒有該審核狀態的工時表';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
@@ -130,16 +138,20 @@ methods:{
             this.hourText='Record hours';
             this.checkBtn='Check';
             this.backToAllText=' Back to all';
-            this.commitBtn='Commit';
+            this.commitBtn='commit';
             this.dragText='Drag to view';
             this.approvedText='Approved';
+            this.noAnySheet='There is no timesheet.';
+            this.noDateSheet='There is no timesheet for that date.';
+            this.noRangeSheet='There is no timesheet within that time range.';
+            this.noStatusSheet='There is no timesheet whit that approved status.';
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索';
-            this.reviewStatus = '承認状態';
-            this.reviewStatusPH = '承認状態で検索';
-            this.reviewStatusOpt1 = '承認済み';
-            this.reviewStatusOpt2 = '未承認';
+            this.reviewStatus = '審査状態';
+            this.reviewStatusPH = '審査状態で検索';
+            this.reviewStatusOpt1 = '審査済み';
+            this.reviewStatusOpt2 = '未審査';
             this.timeFrame = '時間範囲';
             this.timeFramePH = '時間範囲で検索';
             this.timeFrameOpt1 = '7日';
@@ -157,13 +169,17 @@ methods:{
             this.dateText='日付';
             this.emploIdText='社員番号';
             this.attendText='出勤状況';
-            this.approveText='承認状態';
+            this.approveText='審査状態';
             this.hourText='勤務時間';
             this.checkBtn='詳細を見る';
             this.backToAllText='勤務表一覽';
             this.commitBtn='編集';
             this.dragText='ドラッグして閲覧する';
-            this.approvedText='承認済み';
+            this.approvedText='審査済み';
+            this.noAnySheet='勤務表がありません。';
+            this.noDateSheet='その日の勤務表がありません。';
+            this.noRangeSheet='その時間範囲以内には勤務表がありません。';
+            this.noStatusSheet='その審査状態の勤務表がありません。';
         }
     },
     fetchWorkDayInfo(){
@@ -1107,10 +1123,10 @@ mounted(){
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
+                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/systemHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
