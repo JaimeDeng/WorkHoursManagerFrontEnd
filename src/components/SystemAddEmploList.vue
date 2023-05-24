@@ -63,41 +63,41 @@ components: {
         changeLanguage(){
         if(this.langValue === 'en'){
             this.employeeIdStr = 'Employee ID';
-            this.employeeIdPHStr = 'Please input your employee ID';
+            this.employeeIdPHStr = 'Please input employee ID';
             this.nameStr='Name';
-            this.namePHStr='Please input your name';
+            this.namePHStr='Please input the name';
             this.genderStr='Gender';
             this.emailStr='Email';
-            this.emailPHStr='Please input your email';
+            this.emailPHStr='Please input the email';
             this.departmentStr='Department';
             this.positionStr='Position';
-            this.positionPHStr='Please input your position';
+            this.positionPHStr='Please input the position';
             this.levelStr='Level';
-            this.levelPHStr='Please input your level';
+            this.levelPHStr='Please select level';
             this.supervisorStr='SupervisorID'
-            this.supervisorPHStr='Please input your supervisorID';
+            this.supervisorPHStr='Please input supervisorID';
             this.phoneStr='Phone';
-            this.phonePHStr='Please input your phone(7~10)';
+            this.phonePHStr='Please input phone number(7~10)';
             this.addBtnStr='Create'
             this.returnBtnStr='Back'
             this.popupData.backBtn = 'Back'
         }else if(this.langValue === 'ch'){
             this.employeeIdStr = '員工ID';
-            this.employeeIdPHStr = '請輸入您的員工ID';
+            this.employeeIdPHStr = '請輸入員工ID';
             this.nameStr='姓名';
-            this.namePHStr='請輸入您的員工姓名';
+            this.namePHStr='請輸入員工姓名';
             this.genderStr='性別';
             this.emailStr='信箱';
-            this.emailPHStr='請輸入您的信箱';
+            this.emailPHStr='請輸入信箱';
             this.departmentStr='部門';
             this.positionStr='職稱';
-            this.positionPHStr='請輸入您的職稱';
+            this.positionPHStr='請輸入職稱';
             this.levelStr='職等';
-            this.levelPHStr='請輸入您的職等';
+            this.levelPHStr='請選擇職等';
             this.supervisorStr='主管ID'
-            this.supervisorPHStr='請輸入您的主管ID';
+            this.supervisorPHStr='請輸入主管ID';
             this.phoneStr='電話';
-            this.phonePHStr='請輸入您的電話(7-10碼)';
+            this.phonePHStr='請輸入電話(7-10碼)';
             this.addBtnStr='新增'
             this.returnBtnStr='返回'
             this.popupData.backBtn = '返回';
@@ -113,12 +113,12 @@ components: {
             this.positionStr='職名';
             this.positionPHStr='職名を入力してください';
             this.levelStr='職級';
-            this.levelPHStr='職級を入力してください';
+            this.levelPHStr='職級を選択してください';
             this.supervisorStr='主管ID'
             this.supervisorPHStr='主管IDを入力してください';
             this.phoneStr='電話番号';
             this.phonePHStr='電話番号を入力してください(7~10)';
-            this.addBtnStr='クリエイト';
+            this.addBtnStr='追加';
             this.returnBtnStr='戻る';
             this.popupData.backBtn = '戻る';
         }
@@ -537,8 +537,8 @@ components: {
                     <!-- 職等輸入 -->
                     <label for="">{{ levelStr }}*</label>
                     <select  ref="level" v-model="level" id="setLevel">
-                        <option value="default" selected>請選擇職等</option>
-                        <option v-for="(option , index) in levelOptions" :value="option.value" :key="index">{{option.label}}</option>
+                        <option value="default" selected>{{ levelPHStr }}</option>
+                        <option v-for="(option , index) in levelOptions" :value="option.value" :key="index">{{ option.label }}</option>
                     </select>
 
                     <!-- 主管ID輸入 -->
@@ -651,42 +651,44 @@ components: {
             padding: 0 8px;
             
             .btn1 {
-                background: rgb(26, 55, 77);
-                border: 1.5px solid #000;
+                background-color: rgb(39, 46, 67);
+                border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
-                padding: 4px;
-                font-size: 15px;
+                border-radius: 1vh;
+                padding: 0.5vh 0.5vw;
+                font-size: 2vh;
                 text-decoration: none;
                 text-align: center;
                 margin-left: 25vw;
-                width: 10%;
+                width: 8%;
+                transition: 0.4s;
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
-                    transform: scale(0.95);
+                    scale: 0.95;
                 }
             }
 
             .btn2 {
-                background: rgb(26, 55, 77);
-                border: 1.5px solid #000;
+                background-color: rgb(39, 46, 67);
+                border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
-                padding: 4px;
-                font-size: 15px;
+                border-radius: 1vh;
+                padding: 0.5vh 0.5vw;
+                font-size: 2vh;
                 text-decoration: none;
                 text-align: center;
                 margin-right: 25vw;
-                width: 10vw;
+                width: 8%;
+                transition: 0.4s;
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
-                    transform: scale(0.95);
+                    scale: 0.95;
                 }
             }
         }

@@ -1438,10 +1438,10 @@ mounted(){
                     margin-right: auto;
                     padding-left: 1vw;
                     padding-right: 1vw;
-                    background: rgb(26, 55, 77);
+                    background-color: rgb(39, 46, 67);
                     border: 1px solid #000;
                     color: white;
-                    border-radius: 5px;
+                    border-radius: 1vh;
                     width: max-content;
                     height: 3.5vh;
                     bottom: 5%;
@@ -1449,7 +1449,7 @@ mounted(){
                     transition: 0.4s;
 
                     &:hover {
-                        background-color: rgb(64, 104, 130);
+                        background-color: rgb(75, 75, 101);
                     }
 
                     &:active{
@@ -1585,10 +1585,10 @@ mounted(){
                     }
                     .viewBtn {
                         position: absolute;
-                        background: rgb(26, 55, 77);
+                        background-color: rgb(39, 46, 67);
                         border: 1px solid #000;
                         color: white;
-                        border-radius: 5px;
+                        border-radius: 1vh;
                         width: 5vw;
                         height: 3.5vh;
                         bottom: 5%;
@@ -1597,7 +1597,7 @@ mounted(){
                         transition: 0.4s;
 
                         &:hover {
-                            background-color: rgb(64, 104, 130);
+                            background-color: rgb(75, 75, 101);
                         }
 
                         &:active {
@@ -1616,10 +1616,10 @@ mounted(){
                 align-items: center;
                 bottom: 2%;
                 left: 1%;
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 0.5vh;
                 width: max-content;
                 height: 3vh;
                 font-size: 2vh;
@@ -1627,7 +1627,7 @@ mounted(){
                 transition: 0.4s;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
