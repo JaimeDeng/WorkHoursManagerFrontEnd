@@ -202,14 +202,14 @@ export default {
                 this.SheetText = '勤務表一覽';
                 this.dragText = 'ドラッグして閲覧する';
                 this.backToAllText = '勤務表一覽';
-                this.finText = '審査 ';
+                this.finText = '審査';
                 this.revokeText = '取り消す';
                 this.dateText = '日付';
                 this.emIdText = '社員番号';
                 this.attendText = '出勤状態';
                 this.hourText = '勤務時間';
                 this.approveText = '審査状態';
-                this.checkBtnText = '詳細を見る';
+                this.checkBtnText = '詳細';
                 this.noAnySheet = '勤務表がありません。';
                 this.noDateSheet = 'その日の勤務表がありません。';
                 this.noRangeSheet = 'その時間範囲以内には勤務表がありません。';

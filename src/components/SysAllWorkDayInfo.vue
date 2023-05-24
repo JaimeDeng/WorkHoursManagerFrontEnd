@@ -171,7 +171,7 @@ methods:{
             this.attendText='出勤状況';
             this.approveText='審査状態';
             this.hourText='勤務時間';
-            this.checkBtn='詳細を見る';
+            this.checkBtn='詳細';
             this.backToAllText='勤務表一覽';
             this.commitBtn='編集';
             this.dragText='ドラッグして閲覧する';
