@@ -49,10 +49,49 @@ data(){
         selectedModelsGoal:'尚無目標',
         newModel:'',
         //存取狀態
-        success:false
+        success:false,
+        //文本
+        selectModelStr:'',
+        backBtn:'',
+        manualAdd:'',
+        noSelect:'',
+        thisModelsGoal:'',
+        setGaol:'',
+        deleteModelStr:'',
+        set:''
     }
 },
 methods:{
+    changeLanguage(){
+        if(this.langValue === 'ch'){
+            this.selectModelStr = '選擇您要設定目標的機型'
+            this.backBtn = '返回WorkNeuro主頁';
+            this.manualAdd = '手動新增機型';
+            this.noSelect = '尚未選擇';
+            this.thisModelsGoal = '此機型目標: ';
+            this.setGaol = '設定目標時數';
+            this.deleteModelStr = '刪除此機型';
+            this.set = '設定';
+        }else if(this.langValue === 'en'){
+            this.selectModelStr = 'Select the model';
+            this.backBtn = 'Back to WorkNeuro';
+            this.manualAdd = 'Add model manually';
+            this.noSelect = 'No model selected';
+            this.thisModelsGoal = 'This model\'s goal: ';
+            this.setGaol = 'Set goal';
+            this.deleteModelStr = 'Delete this model';
+            this.set = 'Set';
+        }else if(this.langValue === 'jp'){
+            this.selectModelStr = '型番を選択してください';
+            this.backBtn = 'WorkNeuroページに戻る';
+            this.manualAdd = '型番を追加する';
+            this.noSelect = '選択していません';
+            this.thisModelsGoal = 'この型番の目標: ';
+            this.setGaol = '目標作業時間を設定';
+            this.deleteModelStr = 'この型番を削除'
+            this.set = '設定';
+        }
+    },
     closePopup() {
         this.showPopup = false;
         if(this.success === true){
@@ -326,13 +365,21 @@ created(){
     this.getCaseInfoByEmployeeId();
 },
 mounted(){
-
+    //檢查及切換語言
+    this.langValue = sessionStorage.getItem('langValue');
+    if(this.langValue === null){
+        this.langValue = 'ch';
+    }
+    console.log(this.langValue);
+    this.changeLanguage();
+    this.selectedModel = this.noSelect;
 },
 watch: {
     modelSelect(selected){
         this.goalNum = 0;
         if(selected === 'default'){
-            this.selectedModel = '尚未選擇';
+            console.log(this.noSelect)
+            this.selectedModel = this.noSelect;
         }else{
             this.selectedModel = selected;
         }
@@ -352,12 +399,12 @@ watch: {
 
         <div v-if="hasRendered" class="outerFrame">
             <div class="selectFrame">
-                <h4 class="selectTitle">選擇您要設定目標的機型</h4>
+                <h4 class="selectTitle">{{ selectModelStr }}</h4>
                 <select v-model="modelSelect" class="form-select" size="3" aria-label="size 3 select example">
-                    <option value="default" selected>選擇設定目標機型</option>
+                    <option value="default" selected>{{ selectModelStr }}</option>
                     <option v-for="(model , index) in prModelList" :value="model" :key="index">{{model}}</option>
                 </select>
-                <h4 class="addTitle">手動新增機型</h4>
+                <h4 class="addTitle">{{ manualAdd }}</h4>
                 <div class="addNewModelFrame">
                     <input v-model="newModel" class="newModel" id="newModel" type="text">
                     <button @click="addNewModel" class="addNewModel" id="addNewModel"><i class="fa-solid fa-plus"></i></button>
@@ -366,18 +413,18 @@ watch: {
 
             <div class="inputFrame">
                 <h3 :style="{color : this.modelSelect === 'default' ? 'rgb(20, 12, 12)' : ''}" class="modelTitle">{{ selectedModel }}</h3>
-                <h4 v-if="this.modelSelect !== 'default'" class="modelsGoal">此機型目標: {{ selectedModelsGoal }}</h4>
-                <label v-if="this.modelSelect !== 'default'" for="goalNum"><i class="fa-solid fa-flag-checkered"></i> 設定目標時數</label>
+                <h4 v-if="this.modelSelect !== 'default'" class="modelsGoal">{{ thisModelsGoal }}{{ selectedModelsGoal }}</h4>
+                <label v-if="this.modelSelect !== 'default'" for="goalNum"><i class="fa-solid fa-flag-checkered"></i> {{ setGaol }}</label>
                 <div v-if="this.modelSelect !== 'default'" class="goalNumFrame">
                     <input v-model="goalNum" :disabled="this.modelSelect === 'default'" class="goalNum" id="goalNum" type="number"><p class="H">H</p>
                 </div>
 
-                <button v-if="this.modelSelect !== 'default'" @click="deleteModelCheck" class="deleteModel" id="deleteModel">刪除此機型</button>
+                <button v-if="this.modelSelect !== 'default'" @click="deleteModelCheck" class="deleteModel" id="deleteModel">{{ deleteModelStr }}</button>
 
-                <button v-if="this.modelSelect !== 'default'" @click="commitReq" class="commit" id="commit">設定</button>
+                <button v-if="this.modelSelect !== 'default'" @click="commitReq" class="commit" id="commit">{{ set }}</button>
             </div>
 
-            <router-link tag="button" class="btnback" to="/WorkNeuro">返回WorkNeuro主頁</router-link>
+            <router-link tag="button" class="btnback" to="/WorkNeuro">{{ backBtn }}</router-link>
         </div>
         <!--spinner在list還沒渲染好時顯示-->
         <div v-else class="spinner-border text-light" role="status"></div>

@@ -35,6 +35,7 @@ export default {
             change: '',
             oldPsdStr: '',
             oldPsdPHStr: '',
+            title: '',
             //判斷相關
             showPwd: false,
             showOldPwd: false
@@ -254,6 +255,7 @@ export default {
         },
         changeLanguage() {
             if (this.langValue === 'en') {
+                this.title = 'Change Password';
                 this.pwdStr = 'Set new password';
                 this.pwdPHStr = 'Please set your new password';
                 this.rePwdStr = 'Repeat password';
@@ -264,6 +266,7 @@ export default {
                 this.oldPsdStr = 'Password'
                 this.oldPsdPHStr = 'Please set your old password'
             } else if (this.langValue === 'ch') {
+                this.title = '變更密碼';
                 this.pwdStr = '設置新密碼';
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
@@ -274,6 +277,7 @@ export default {
                 this.oldPsdStr = '輸入密碼';
                 this.oldPsdPHStr = '請輸入目前密碼'
             } else if (this.langValue === 'jp') {
+                this.title = 'パスワード変更';
                 this.pwdStr = '新しいパスワード設定';
                 this.pwdPHStr = 'パスワードを設定してください';
                 this.rePwdStr = '新しいパスワード（確認）';
@@ -337,7 +341,7 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>變更密碼</h2>
+            <h2>{{ title }}</h2>
 
             <div class="area1">
 

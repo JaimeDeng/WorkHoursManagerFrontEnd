@@ -313,13 +313,21 @@ created(){
     this.getCaseInfoByEmployeeId();
 },
 mounted(){
+    //檢查及切換語言
+    this.langValue = sessionStorage.getItem('langValue');
+    if(this.langValue === null){
+        this.langValue = 'ch';
+    }
+    console.log(this.langValue);
     //進入頁面deco特效
     setTimeout(()=>{
         this.deco();
     },10)
+
 },
 watch: {
     modelSelect(selectedModel){
+
         if(this.caseInfoNotEnough === true){
             this.ratingStr = '';
         }
@@ -328,50 +336,52 @@ watch: {
             this.fetchPRInfoByModel();
         }
         //將此機型的caseInfo照日期順序排好
-        let container = null;
-        if(this.caseInfoByModel !== null){
-            for (let i = this.caseInfoByModel[selectedModel].length - 1; i > 0; i--) {
-                for (let i = 0; i < this.caseInfoByModel[selectedModel].length - 1; i++) {
-                    const nextDateStr = this.caseInfoByModel[selectedModel][i + 1].date;
-                    const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
-                    const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
-                    const thisDateStr = this.caseInfoByModel[selectedModel][i].date;
-                    const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
-                    const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
-                    if (nextDate > thisDate) {
-                        container = this.caseInfoByModel[selectedModel][i + 1];
-                        this.caseInfoByModel[selectedModel][i + 1] = this.caseInfoByModel[selectedModel][i];
-                        this.caseInfoByModel[selectedModel][i] = container;
+        if(this.modelSelect !== 'default'){
+            let container = null;
+            if(this.caseInfoByModel !== null){
+                for (let i = this.caseInfoByModel[selectedModel].length - 1; i > 0; i--) {
+                    for (let i = 0; i < this.caseInfoByModel[selectedModel].length - 1; i++) {
+                        const nextDateStr = this.caseInfoByModel[selectedModel][i + 1].date;
+                        const [nextDateYear, nextDateMonth, nextDateDay] = nextDateStr.split('-');
+                        const nextDate = new Date(nextDateYear, nextDateMonth - 1, nextDateDay);
+                        const thisDateStr = this.caseInfoByModel[selectedModel][i].date;
+                        const [thisDateStrYear, thisDateStrMonth, thisDateStrDay] = thisDateStr.split('-');
+                        const thisDate = new Date(thisDateStrYear, thisDateStrMonth - 1, thisDateStrDay);
+                        if (nextDate > thisDate) {
+                            container = this.caseInfoByModel[selectedModel][i + 1];
+                            this.caseInfoByModel[selectedModel][i + 1] = this.caseInfoByModel[selectedModel][i];
+                            this.caseInfoByModel[selectedModel][i] = container;
+                        }
                     }
                 }
-            }
 
-            console.log(this.caseInfoByModel[selectedModel])
+                console.log(this.caseInfoByModel[selectedModel])
 
-            if(this.caseInfoByModel[selectedModel].length < 3){
-                this.caseInfoNotEnough = true;
-            }else{
-                this.caseInfoNotEnough = false;
-                //計算過往的平均時間
-                let totalDuration = 0;
-                let totalDurationWithTeam = 0;
-                this.caseInfoByModel[selectedModel].forEach((modelInfo , index) => {
-                    if(index > 1){
-                        totalDuration += modelInfo.duration;
-                    }
-                    if(index > 0){
-                        totalDurationWithTeam += modelInfo.duration;
-                    }
-                })
-                let thisModelAvarageDuration = totalDuration / (this.caseInfoByModel[selectedModel].length - 2);
-                let thisModelAvarageDurationWithTeam = totalDurationWithTeam / (this.caseInfoByModel[selectedModel].length - 1);
-                this.renderAvarageDurarionDiv(thisModelAvarageDuration);
-                this.renderLatestDurarionDiv(this.caseInfoByModel[selectedModel][1].duration);
-                this.renderAvarageDurarionWithTeamDiv(thisModelAvarageDurationWithTeam);
-                this.renderGoalDurarionDiv();
-                this.renderRate();
+                if(this.caseInfoByModel[selectedModel].length < 3){
+                    this.caseInfoNotEnough = true;
+                }else{
+                    this.caseInfoNotEnough = false;
+                    //計算過往的平均時間
+                    let totalDuration = 0;
+                    let totalDurationWithTeam = 0;
+                    this.caseInfoByModel[selectedModel].forEach((modelInfo , index) => {
+                        if(index > 1){
+                            totalDuration += modelInfo.duration;
+                        }
+                        if(index > 0){
+                            totalDurationWithTeam += modelInfo.duration;
+                        }
+                    })
+                    let thisModelAvarageDuration = totalDuration / (this.caseInfoByModel[selectedModel].length - 2);
+                    let thisModelAvarageDurationWithTeam = totalDurationWithTeam / (this.caseInfoByModel[selectedModel].length - 1);
+                    this.renderAvarageDurarionDiv(thisModelAvarageDuration);
+                    this.renderLatestDurarionDiv(this.caseInfoByModel[selectedModel][1].duration);
+                    this.renderAvarageDurarionWithTeamDiv(thisModelAvarageDurationWithTeam);
+                    this.renderGoalDurarionDiv();
+                    this.renderRate();
+                }
+                
             }
-            
         }
     }
 }
@@ -384,6 +394,7 @@ watch: {
             <div class="titleFrame">
                 <h3 class="title">WorkNeuro</h3>
                 <p> 您的效率分析工具 </p>
+                <router-link class="personalData" id="personalData" to="">查看您的個人數據</router-link>
             </div>
             <div class="contentFrame">
                 <div class="selectFrame">
@@ -394,7 +405,7 @@ watch: {
                     </select>
                 </div>
                 <router-link v-if="isAdministrator" tag="button" class="setGoal" to="/PerformanceGoalSetting">設定目標</router-link>
-                <div class="displayFrame">
+                <div v-if="modelSelect !== 'default'" class="displayFrame">
                     <h4 v-if="caseInfoNotEnough && this.modelSelect !== 'default'">目前尚無趨勢</h4>
                     <h5 class="selfEvaluate" v-if="!caseInfoNotEnough && this.modelSelect !== 'default'"><i class="fa-solid fa-person"></i> 您的效率與過往相比</h5>
 
@@ -432,12 +443,12 @@ watch: {
                     class="teamRating">{{ teamRatingStr }}</p>
                     <p v-if="!caseInfoNotEnough && this.modelSelect !== 'default' && this.goal === 0" class="teamRating">此機型尚無設定目標</p>
                 </div>
+                <div v-else class="displayFrame"><h4>請選擇您要觀看的機型</h4></div>
             </div>
         </div>
         <!--spinner在list還沒渲染好時顯示-->
         <div v-else class="spinner-border text-light" role="status"></div>
 
-        <!-- <RouterLink to="/login"><button class="btnback" type="button">返回登入頁</button></RouterLink> -->
     </div>
 </template>
 
@@ -488,6 +499,27 @@ watch: {
             P{
                 margin-bottom: 0;
                 color: white;
+            }
+            .personalData{
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(45deg, rgb(97, 137, 168), rgb(116, 69, 211));
+                color: white;
+                text-decoration: none;
+                border-radius: 5vh 0 5vh 0;
+                font-size: 1.5vh;
+                top: 4%;
+                right: 1%;
+                height: 3.5vh;
+                width: 10vw;
+                transition: 0.4s;
+
+                &:hover{
+                    scale: 0.98;
+                    font-size: 1.6vh;
+                }
             }
         }
 
@@ -549,7 +581,7 @@ watch: {
                 bottom: 5%;
                 display: flex;
                 width: 80%;
-                height: 105%;
+                height: 100%;
                 border-radius: 2vh;
                 border: 0.1vh solid rgb(54, 50, 73);
                 background-color: rgba(83, 83, 83, 0.3);
@@ -760,7 +792,7 @@ watch: {
                     padding: 0 1vw;
                     position: absolute;
                     bottom:5%;
-                    left: 30%;
+                    left: 28%;
                     transform: translateY(-50%);
                     font-weight: 600;
                     color: rgb(255, 191, 62);
