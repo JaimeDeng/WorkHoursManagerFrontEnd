@@ -363,8 +363,8 @@ export default {
                     </div>
                     <!-- 忘記密碼 -->
                     <div class="forgetpassword mt-2">
-                        <!-- <i class="fa-regular fa-circle-question"></i> -->
-                        <RouterLink to="/forgetpwd" >{{ forgetPsdStr }}</RouterLink>
+                        <i class="fa-regular fa-circle-question"></i>
+                        <RouterLink to="/forgetpwd" class="fgpsd" >{{ forgetPsdStr }}</RouterLink>
                         <!-- <input id="forgetpwd" type="checkbox" v-model="forgetpwd"> -->
                         <!-- <label for="forgetpwd">{{ forgetPsdStr }}</label>                 -->
                     </div>
@@ -509,8 +509,9 @@ export default {
                 align-items: center;
                 margin-bottom: 5%;
 
-                .keepInput,.forgetpassword {
+                .keepInput {
                     display: flex;
+                    text-decoration: none;
 
                     label {
                         cursor: pointer;
@@ -526,8 +527,13 @@ export default {
                 .forgetpassword {
                     cursor: pointer;
                     font-size: 2vh;
-
+                    
+                    .fgpsd{
+                        text-decoration: none;
+                        color:rgb(64, 104, 130) ;
+                    }
                     i {
+                        color:rgb(64, 104, 130) ;
                         margin-right: 5px;
                     }
                 }
