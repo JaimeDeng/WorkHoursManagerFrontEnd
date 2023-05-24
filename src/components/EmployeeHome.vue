@@ -239,7 +239,7 @@ export default {
                         border-radius: 100%;
                         height: 70vh;
                         width: 60vw;
-                        background-color: rgba(61, 62, 63, 0.5);
+                        background-color: rgba(41, 40, 43, 0.3);
                         transition: 0.5s;
                     }
 
@@ -252,7 +252,7 @@ export default {
                         height: 70vh;
                         width: 60vw;
                         box-shadow: 0px 0px 50px 10px rgba(148, 149, 214, 0.5) inset;
-                        background-color: rgba(67, 105, 146, 0.7);
+                        background-color: rgba(61, 93, 130, 0.7);
                         transition: 0.5s;
                     }
 
