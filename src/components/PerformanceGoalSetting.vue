@@ -412,7 +412,7 @@ watch: {
             </div>
 
             <div class="inputFrame">
-                <h3 :style="{color : this.modelSelect === 'default' ? 'rgb(20, 12, 12)' : ''}" class="modelTitle">{{ selectedModel }}</h3>
+                <h3 :style="{color : this.modelSelect === 'default' ? 'rgb(30, 30, 30)' : ''}" class="modelTitle">{{ selectedModel }}</h3>
                 <h4 v-if="this.modelSelect !== 'default'" class="modelsGoal">{{ thisModelsGoal }}{{ selectedModelsGoal }}</h4>
                 <label v-if="this.modelSelect !== 'default'" for="goalNum"><i class="fa-solid fa-flag-checkered"></i> {{ setGaol }}</label>
                 <div v-if="this.modelSelect !== 'default'" class="goalNumFrame">
@@ -572,11 +572,12 @@ watch: {
                 padding: 0 1vw;
                 font-size: 4vh;
                 margin-top: 20%;
+                transition: 0.4s;
             }
 
             .modelsGoal{
                 color: white;
-                background: linear-gradient(to right, rgba(133, 151, 164, 0.7), rgba(164, 147, 198, 0.7));
+                background: linear-gradient(to right, rgba(158, 169, 177, 0.7), rgba(175, 165, 195, 0.7));
                 border-radius: 1vh;
                 padding: 0 1vw;
                 margin-top: 10%;

@@ -516,21 +516,22 @@ export default {
 
             button,
             .btnChangPsd {
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
-                width: 100px;
-                height: 40px;
+                border-radius: 1vh;
+                width: 7vw;
+                height: 4.5vh;
+                transition: 0.4s;
                 text-decoration: none;
                 text-align: center;
-                font-size: 18px;
+                font-size: 2vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

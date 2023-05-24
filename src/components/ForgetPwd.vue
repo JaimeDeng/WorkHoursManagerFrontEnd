@@ -31,6 +31,9 @@ components: {
             phoneStr:'',
             phonePHStr:'',
             addBtnStr : '',
+            commitBtnStr: '',
+            //驗證成功狀態
+            verifySuccess:false
         }
     },
     methods:{
@@ -42,7 +45,7 @@ components: {
             this.accountPHStr='Please input your account';
             this.phoneStr='Phone';
             this.phonePHStr='Please input your phone(7~10)';
-            this.addBtnStr='Create'
+            this.commitBtnStr='Commit'
             this.popupData.backBtn = 'Back'
         }else if(this.langValue === 'ch'){
             this.emailStr='信箱';
@@ -51,7 +54,7 @@ components: {
             this.accountPHStr='請輸入您的帳號';
             this.phoneStr='電話';
             this.phonePHStr='請輸入您的電話(7-10碼)';
-            this.addBtnStr='新增'
+            this.commitBtnStr='確認'
             this.popupData.backBtn = '返回';
         }else if(this.langValue === 'jp'){
             this.emailStr='メール';
@@ -60,11 +63,11 @@ components: {
             this.accountPHStr='アカウントを入力してください';
             this.phoneStr='電話番号';
             this.phonePHStr='電話番号を入力してください(7~10)';
-            this.addBtnStr='クリエイト';
+            this.commitBtnStr='確認';
             this.popupData.backBtn = '戻る';
         }
     },
-        addInfo(){
+    commitInfo(){
         let error = false;
 
         let emailPattern =/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -155,27 +158,31 @@ components: {
             }
         }).then(res => res.json())
         .then((data)=>{
-            // console.log(data.accountsForVerify)
             for (let i = 0; i < data.accountsForVerify.length; i++) {
-                if (data.accountsForVerify[i].account=== this.account
-                    && data.accountsForVerify[i].email===this.email
-                    && data.accountsForVerify[i].phone===this.phone) {
-                    // alert(data.accountsForVerify[0].phone)
-                    localStorage.setItem("changePwdAccount", data.accountsForVerify[i].account)
-                    this.$router.push('/resetpwd')
-                }
-                else{
+                if (data.accountsForVerify[i].account === this.account
+                    && data.accountsForVerify[i].email === this.email
+                    && data.accountsForVerify[i].phone === this.phone) {
                     if(this.langValue === 'ch'){
-                    this.message = "資料不存在";
-                    }
-                    else if(this.langValue === 'en'){
-                        this.message = "This data is not exist";
+                        this.message = "驗證成功";
+                    }else if(this.langValue === 'en'){
+                        this.message = "Verify successful";
                     }else if(this.langValue === 'jp'){
-                        this.message = "資料が存在していません";
+                        this.message = "認証成功";
                     } 
-                    this.errorPopup();
-                }                
+                    this.verifySuccess = true;
+                    sessionStorage.setItem("changePwdAccount", data.accountsForVerify[i].account);
+                    this.successPopup();
+                    return;
+                }         
             }
+            if(this.langValue === 'ch'){
+                this.message = "資料不存在";
+            }else if(this.langValue === 'en'){
+                this.message = "This data is not exist";
+            }else if(this.langValue === 'jp'){
+                this.message = "資料が存在していません";
+            }
+            this.errorPopup();  
         })
         .catch(err => console.log(err))
     },
@@ -183,16 +190,9 @@ components: {
         this.showPopup = false;
         this.popupData.title = "";
         this.popupData.content = "";
-        if(this.employeeInfo.success){
-            this.id="";
-            this.name="";
-            this.gender="default";
-            this.email="";
-            this.department="default";
-            this.position="";
-            this.level="default";
-            this.supervisor="";
-            this.phone="";
+        if(this.verifySuccess === true){
+            this.verifySuccess = false;
+            this.$router.push('/resetpwd');
         }
     },
     successPopup(){
@@ -294,40 +294,39 @@ components: {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="add">
-            <h4 v-if="langValue==='ch'" class="me-5">身分驗證</h4>
-            <h4 v-if="langValue==='jp'" class="me-5">身分認証</h4>
-            <h4 v-if="langValue==='en'" class="me-5">Identity verification</h4>
+            <div class="title">
+                <h4 v-if="langValue==='ch'" class="">身分驗證</h4>
+                <h4 v-if="langValue==='jp'" class="">身分認証</h4>
+                <h4 v-if="langValue==='en'" class="">Identity verification</h4>
+            </div>
             <!-- 填寫區 -->
-            <div class="area1">
+            <div class="inputFrame">
                 <div class="info">
 
                     <!-- Account輸入 -->
-                    <label for="">{{ accountStr }}</label>
+                    <label for="setAccount">{{ accountStr }}</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                     @input="checkInputLegth('account')" ref="account" v-model="account" 
                     id="setAccount" :placeholder="accountPHStr" type="text"
                     > 
 
                     <!-- Email輸入 -->
-                    <label for="">{{ emailStr }}</label>
+                    <label for="setEmail">{{ emailStr }}</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                     @input="checkInputLegth('email')" ref="email" v-model="email" 
-                    id="setEmail" :placeholder="emailPHStr" type="text"
+                    id="setEmail" :placeholder="emailPHStr" type="email"
                     > 
                     <!-- 電話輸入 -->
-                    <label for="">{{ phoneStr }}</label>
+                    <label for="setPhone">{{ phoneStr }}</label>
                     <input 
-                    :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(238, 198, 198)' : '' }"
                     maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
                     id="setPhone" :placeholder="phonePHStr" type="text"
                     >                 
                 </div>
             </div>
             <!-- 底部按鈕 -->
-            <div class="area2">
-                <button type="button" class="btn2 me-5" @click="addInfo" >{{ addBtnStr }}</button>             
+            <div class="btnFrame">
+                <button type="button" class="btn" @click="commitInfo" >{{ commitBtnStr }}</button>             
             </div>
         </div>
     </div>
@@ -336,7 +335,7 @@ components: {
 
 <style lang="scss" scoped>
 .main {
-    flex-grow: 1;
+    height: 100%;
     display: flex;
     position: relative;
     flex-direction: column;
@@ -346,69 +345,89 @@ components: {
     overflow: hidden;
 
     .add {
-        background-color: rgba(255, 255, 255, 0.724);
+        position: relative;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(188, 186, 193, 0.6));
         border: 2px solid rgb(177, 208, 224);
-        border-radius: 5px;
+        border-radius: 1vh;
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
-        align-items: center;
-        width: 90vw;
-        height: 80vh;
-        h4{
-            font-size: 32px;
-            font-weight: bold;
+        width: 30vw;
+        height: 60vh;
+
+        .title{
+            white-space: nowrap;
+            width: 100%;
+            height: 20%;
+            text-align: center;
+            margin-top: 10%;
+            h4{
+                font-size: 3.5vh;
+                font-weight: bold;
+            }
         }
 
-        .area1 {
+        .inputFrame {
+            position: relative;
             display: flex;
+            flex-direction: column;
+            text-align: center;
             justify-content: center;
-            align-items: flex-start;
-            width: 80vw;
-            margin-top: 8px;
+            align-items: center;
+            width: 100%;
+            margin-top: 1%;
 
             .info {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                margin-right: 48px;
+                width: 50%;
                 label{
-                    font-size: 15px;
+                    font-size: 2vh;
                 }
-                input,
-                select {
-                    height: 30px;
-                    margin-bottom: 8px;
+                input{
+                    height: 3.5vh;
+                    margin-bottom: 1vh;
+                    padding: 0.5vh 0.5vw;
                     border-radius: 5px;
-                    border:1px solid #000;
+                    border-top: none;
+                    border-left: none;
+                    border-right: none;
+                    border-bottom: 2px solid #514d4d;
                     transition: 0.4s;
 
+                    &::placeholder{
+                        font-size: 2vh;
+                    }
+
                     &:focus{
-                        background-color: rgb(227, 244, 255);
+                        outline: none;
+                        background-color: rgb(228, 241, 255);
                     }
                 }
             }
         }
 
-        .area2 {
+        .btnFrame {
             display: flex;
             justify-content: center;
             align-content: center;
             width: 100%;
-            padding: 0 8px;
+            padding: 0 1vw;
+            margin-top: 15%;
 
-            .btn2 {
-                background: rgb(26, 55, 77);
-                border: 1.5px solid #000;
+            .btn {
+                background-color: rgb(39, 46, 67);
+                border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 1vh;
                 padding: 4px;
                 font-size: 15px;
                 text-decoration: none;
                 text-align: center;
-                width: 10vw;
+                transition: 0.4s;
+                width: 6vw;
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

@@ -423,7 +423,7 @@ mounted() {
     }
 
     .login {
-        background-color: rgba(255, 255, 255, 0.724);
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(188, 186, 193, 0.6));
         border: 2px solid rgb(177, 208, 224);
         display: flex;
         flex-direction: column;
@@ -533,17 +533,17 @@ mounted() {
             justify-content: space-evenly;
 
             button {
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 1vh;
                 width: 8vw;
                 height: 5vh;
-                // font-weight: bold;
+                transition: 0.4s;
                 font-size: 2vh;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

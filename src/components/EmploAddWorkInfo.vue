@@ -492,14 +492,14 @@ mounted() {
             margin-top: 3.3%;
 
             .back{
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 text-decoration: none;
-                border: 1.5px solid #000;
+                border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 1vh;
                 width: 5vw;
                 height: 3.5vh;
                 font-size: 0.7vw;
@@ -507,7 +507,7 @@ mounted() {
                 overflow: hidden;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
@@ -516,10 +516,10 @@ mounted() {
             }
 
             button {
-                background: rgb(26, 55, 77);
-                border: 1.5px solid #000;
+                background-color: rgb(39, 46, 67);
+                border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
+                border-radius: 1vh;
                 width: 5vw;
                 height: 3.5vh;
                 font-size: 0.7vw;
@@ -527,7 +527,7 @@ mounted() {
                 overflow: hidden;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

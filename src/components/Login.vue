@@ -270,7 +270,7 @@ export default {
         changeLanguage() {
             if (this.langValue === 'en') {
                 this.titleStr = 'Login';
-                this.employeeIdPHStr = 'Please input your employee ID or account';
+                this.employeeIdPHStr = 'Input your employee ID or account';
                 this.pwdPHStr = 'Please input your password';
                 this.commitBtnStr = 'Sign up';
                 this.loginBtnStr = 'Login'
@@ -292,7 +292,7 @@ export default {
                     this.employeeIdStr = '員工ID / 帳號'
             } else if (this.langValue === 'jp') {
                 this.titleStr = 'ログイン';
-                this.employeeIdPHStr = '社員番号またはアカウントを入力してください';
+                this.employeeIdPHStr = '社員番号またはアカウント';
                 this.pwdPHStr = 'パスワードを入力してください';
                 this.commitBtnStr = 'アカウント登録';
                 this.loginBtnStr = 'ログイン'
@@ -357,16 +357,13 @@ export default {
             <div class="area2">
                 <div class="checkbox_help">
                     <!-- 保持登入 -->
-                    <div class="keepInput">
-                        <input id="keep" type="checkbox" v-model="keepLogin">
+                    <div class="form-check form-switch keepLog">
                         <label for="keep">{{ keepLog }}</label>
+                        <input class="form-check-input" id="keep" type="checkbox" v-model="keepLogin">
                     </div>
                     <!-- 忘記密碼 -->
-                    <div class="forgetpassword mt-2">
-                        <!-- <i class="fa-regular fa-circle-question"></i> -->
-                        <RouterLink to="/forgetpwd" >{{ forgetPsdStr }}</RouterLink>
-                        <!-- <input id="forgetpwd" type="checkbox" v-model="forgetpwd"> -->
-                        <!-- <label for="forgetpwd">{{ forgetPsdStr }}</label>                 -->
+                    <div class="mt-2 forgetpassword">
+                        <RouterLink to="/forgetpwd" class="forgetPwd"><i class="fa-regular fa-circle-question"></i>{{ forgetPsdStr }}</RouterLink>
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
@@ -413,7 +410,7 @@ export default {
     }
 
     .login {
-        background-color: rgba(255, 255, 255, 0.724);
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(188, 186, 193, 0.6));
         border: 2px solid rgb(177, 208, 224);
         display: flex;
         flex-direction: column;
@@ -421,7 +418,7 @@ export default {
         justify-content: space-around;
         width: 28%;
         height: 74%;
-        border-radius: 5px;
+        border-radius: 1vh;
 
         label {
             font-size: 2vh;
@@ -439,7 +436,7 @@ export default {
             display: flex;
             flex-direction: column;
             height: 40%;
-            width: 80%;
+            width: 70%;
             justify-content: space-around;
 
             %inputFrameSetting {
@@ -509,17 +506,30 @@ export default {
                 align-items: center;
                 margin-bottom: 5%;
 
-                .keepInput,.forgetpassword {
+                .keepLog{
                     display: flex;
+                    align-items: center;
+                    margin-right: 2vw;
 
                     label {
+                        margin-right: 0.5vw;
                         cursor: pointer;
+                        color: #000;
                         font-size: 2.1vh;
                     }
 
                     input {
-                        margin-right: 8px;
-                        width: 18px;
+                        cursor: pointer;
+                        margin: 0;
+                        background-color: #5c5858;
+                        margin-left: 0vw;
+                        width: 2vw;
+                        height: 2vh;
+                        transition: 0.4s;
+
+                        &:hover{
+                            scale: 1.1;
+                        }
                     }
                 }
 
@@ -529,6 +539,17 @@ export default {
 
                     i {
                         margin-right: 5px;
+                    }
+
+                    .forgetPwd{
+                        text-decoration: none;
+                        color: rgb(0, 0, 0);
+                        transition: 0.4s;
+
+                        &:hover{
+                            color: rgb(255, 255, 255);
+
+                        }
                     }
                 }
 
@@ -542,22 +563,23 @@ export default {
 
             .signUpBtn,
             .loginBtn {
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 text-decoration: none;
+                padding: 0 0.3vw;
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
-                width: 8vw;
+                border-radius: 1vh;
+                width: 8.8vw;
                 height: 5vh;
                 transition: 0.4s;
                 font-size: 2.1vh;
 
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

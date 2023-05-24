@@ -91,7 +91,7 @@ export default {
             height: auto;
             margin-bottom: 2vh;
             .back{
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
                 border-radius: 5px;
@@ -101,7 +101,7 @@ export default {
                 transition: 0.4s;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {

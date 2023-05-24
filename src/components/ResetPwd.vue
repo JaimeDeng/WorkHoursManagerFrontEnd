@@ -115,7 +115,7 @@ export default {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        "accountId": sessionStorage.getItem("changePwdAccount") || localStorage.getItem("changePwdAccount"),
+                        "accountId": sessionStorage.getItem("changePwdAccount"),
                         "newPassword": securePwd
                     })
                 })
@@ -136,7 +136,7 @@ export default {
             }
         },
         closePopup() {
-            if (sessionStorage.getItem("accountId") === null && localStorage.getItem("accountId") === null) {
+            if (sessionStorage.getItem("changePwdAccount") === null) {
                 this.$router.push('/login');
             } else {
                 this.showPopup = false;
@@ -173,13 +173,8 @@ export default {
                 popup.$el.style.opacity = "1";
                 popup.$el.style.bottom = "0%";
             }, 100);
-            // 删除localStorage，sessionStorage，要求重新登入
-            localStorage.removeItem('changePwdAccount');
-            localStorage.removeItem('employeeId');
-            localStorage.removeItem('employeeName');
+            // 删除sessionStorage 帳號資料
             sessionStorage.removeItem('changePwdAccount');
-            sessionStorage.removeItem('employeeId');
-            sessionStorage.removeItem('employeeName');
         },
         errorPopup() {
             if (this.langValue === 'ch') {
@@ -231,7 +226,7 @@ export default {
                 this.pwdPHStr = 'Please set your new password';
                 this.rePwdStr = 'Repeat password';
                 this.rePwdPHStr = 'Please input your password again';
-                this.backToHome = 'Home';
+                this.backToHome = 'Back';
                 this.reset= 'Reset';
                 this.popupData.backBtn = 'Back'
             } else if (this.langValue === 'ch') {
@@ -239,7 +234,7 @@ export default {
                 this.pwdPHStr = '請設定密碼';
                 this.rePwdStr = '再次輸入密碼';
                 this.rePwdPHStr = '請再次輸入密碼';
-                this.backToHome = '返回首頁';
+                this.backToHome = '返回';
                 this.reset= '重設';
                 this.popupData.backBtn = '返回';
             } else if (this.langValue === 'jp') {
@@ -247,7 +242,7 @@ export default {
                 this.pwdPHStr = 'パスワードを設定してください';
                 this.rePwdStr = '新しいパスワード（確認）';
                 this.rePwdPHStr = 'パスワードを再入力してください';
-                this.backToHome = 'ホームへ';
+                this.backToHome = '戻る';
                 this.reset= 'リセット';
                 this.popupData.backBtn = '戻る';
             }
@@ -277,7 +272,7 @@ export default {
         <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
-        <div class="login">
+        <div class="resetPwd">
             <h3 v-if="langValue=='ch'"> 
                 <strong>
                     重設密碼
@@ -285,7 +280,7 @@ export default {
             </h3>
             <h3 v-if="langValue=='jp'">
                 <strong>
-                    パスワード リセット
+                    パスワード再設定
                 </strong>
             </h3>
             <h3 v-if="langValue=='en'">
@@ -324,7 +319,7 @@ export default {
 
             <!-- 按鈕 -->
             <div class="area2">
-                <RouterLink to="/employeeHome" scoped slots="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
+                <RouterLink to="/login" scoped slots="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
                 <button type="button" class="btnChangPsd" @click="resetPsd">{{ reset}}</button>
             </div>
         </div>
@@ -360,7 +355,7 @@ export default {
         z-index: 1;
     }
 
-    .login {
+    .resetPwd {
         background-color: rgba(255, 255, 255, 0.724);
         border: 2px solid rgb(177, 208, 224);
         display: flex;
@@ -368,7 +363,7 @@ export default {
         align-items: center;
         justify-content: space-around;
         width: 28%;
-        height: 80%;
+        height: 60%;
         border-radius: 5px;
 
         h2 {
@@ -382,7 +377,7 @@ export default {
             position: relative;
             display: flex;
             flex-direction: column;
-            height: 45%;
+            height: 40%;
             width: 70%;
             justify-content: space-around;
 
@@ -448,21 +443,22 @@ export default {
 
             button,
             .btnChangPsd {
-                background: rgb(26, 55, 77);
+                background-color: rgb(39, 46, 67);
                 border: 1px solid #000;
                 color: white;
-                border-radius: 5px;
-                width: 100px;
-                height: 40px;
+                border-radius: 1vh;
+                width: 7vw;
+                height: 4vh;
                 text-decoration: none;
                 text-align: center;
-                font-size: 18px;
+                font-size: 2vh;
+                transition: 0.4s;
                 display: flex;
                 justify-content: center;
                 align-items: center;
 
                 &:hover {
-                    background-color: rgb(64, 104, 130);
+                    background-color: rgb(75, 75, 101);
                 }
 
                 &:active {
