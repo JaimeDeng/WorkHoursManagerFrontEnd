@@ -18,6 +18,7 @@ export default {
             employeeId: '',
             password: '',
             keepLogin: false,
+            forgetpwd: false,
             message: "",
 
             //切換語言相關
@@ -106,6 +107,9 @@ export default {
                             sessionStorage.setItem("accountId", data.accountId)
                             sessionStorage.setItem("employeeName", data.employeeId.name)
                             this.$router.push('/employeeHome');
+                        }
+                        if(this.forgetpwd===true){
+                            
                         }
                         this.$emit('login');
                         console.log('login event emitted');
@@ -358,14 +362,16 @@ export default {
                         <label for="keep">{{ keepLog }}</label>
                     </div>
                     <!-- 忘記密碼 -->
-                    <div class="forgetpassword">
-                        <i class="fa-regular fa-circle-question"></i>
-                        {{ forgetPsdStr }}
+                    <div class="forgetpassword mt-2">
+                        <!-- <i class="fa-regular fa-circle-question"></i> -->
+                        <RouterLink to="/forgetpwd" >{{ forgetPsdStr }}</RouterLink>
+                        <!-- <input id="forgetpwd" type="checkbox" v-model="forgetpwd"> -->
+                        <!-- <label for="forgetpwd">{{ forgetPsdStr }}</label>                 -->
                     </div>
                 </div>
                 <!-- 登入按鈕 -->
                 <div class="btnGroup">
-                    <RouterLink to="/signup" tag="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
+                    <RouterLink to="/signup" scoped slots="button" class="signUpBtn">{{ commitBtnStr }}</RouterLink>
                     <button type="button" class="loginBtn" to="/employeeHome" tag="button" @click="login2">{{ loginBtnStr
                     }}</button>
 
@@ -503,7 +509,7 @@ export default {
                 align-items: center;
                 margin-bottom: 5%;
 
-                .keepInput {
+                .keepInput,.forgetpassword {
                     display: flex;
 
                     label {
