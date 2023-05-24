@@ -337,12 +337,26 @@ export default {
         <div v-if="showPopup" ref="mask" class="mask"></div>
 
         <div class="login">
-            <h2>變更密碼</h2>
+            <h3 v-if="langValue=='ch'"> 
+                <strong>
+                    變更密碼
+                </strong>
+            </h3>
+            <h3 v-if="langValue=='jp'">
+                <strong>
+                    パスワード変更
+                </strong>
+            </h3>
+            <h3 v-if="langValue=='en'">
+                <strong>
+                    Change Password
+                </strong>
+            </h3>
 
             <div class="area1">
 
                 <!-- 舊密碼 -->
-                <div>
+                <div class="mb-3">
                     <label for="oldPsd">{{ oldPsdStr }}</label>
                     <div class="oldPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
@@ -356,7 +370,7 @@ export default {
                 </div>
 
                 <!-- 新密碼輸入 -->
-                <div>
+                <div class="mb-3">
                     <label for="emid">{{ pwdStr }}</label>
                     <div class="newPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
@@ -370,7 +384,7 @@ export default {
 
 
                 <!-- 再次輸入新密碼 -->
-                <div>
+                <div class="mb-3">
                     <label for="password">{{ rePwdStr }}</label>
                     <div class="againNewPsd">
                         <i class="fa-sharp fa-solid fa-key"></i>
@@ -379,17 +393,12 @@ export default {
                             maxlength="20" @input="checkInputLegth('rePassword')">
                     </div>
                 </div>
-
-
             </div>
 
             <!-- 按鈕 -->
             <div class="area2">
                 <RouterLink to="/employeeHome" scoped slots="button" class="btnChangPsd">{{ backToHome }}</RouterLink>
-
                 <button type="button" class="btnChangPsd" @click="changePsd">{{ change }}</button>
-
-
             </div>
         </div>
     </div>
