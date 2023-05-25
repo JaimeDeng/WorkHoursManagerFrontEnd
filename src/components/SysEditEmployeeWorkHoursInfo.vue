@@ -79,8 +79,8 @@ export default (await import('vue')).defineComponent({
         changeLanguage() {
             if (this.langValue === 'en') {
                 this.addTitle = "Edit Timesheet";
-                this.model = "Type";
-                this.caseNo = "Case no";
+                this.model = "Model";
+                this.caseNo = "Case No";
                 this.status = "Attendance";
                 this.selectStatus = "Select attendence status";
                 this.satrtTime = "Start time";
@@ -99,11 +99,11 @@ export default (await import('vue')).defineComponent({
                 this.addTitle = "勤務表編集";
                 this.model = "型番";
                 this.caseNo = "案件番号";
-                this.status = "出勤状況";
+                this.status = "勤務状態";
                 this.selectStatus = "出勤状況を選択してください";
-                this.satrtTime = "開始時刻";
+                this.satrtTime = "開始時間";
                 this.selectStartTime = "開始時刻を選択してください";
-                this.endTime = "終了時刻";
+                this.endTime = "終了時間";
                 this.selectEndTime = "終了時刻を選択してください";
                 this.back = "戻る";
                 this.commit = "編集";
@@ -189,18 +189,104 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
-            //如果是default轉成null給後端才能正確做判斷
+            //工作內容
+            if(this.detail.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入工作內容";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in detail field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "仕事内容を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //model
+            if(this.modelInput.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入機型";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in model field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "型番欄を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //案件號碼
+            if(this.caseNoInput.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入案件號碼";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in case no field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "案件番号欄を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //出勤狀態
             let status = this.statusValue;
             if (status === "default") {
-                status = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇出勤狀態";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the status.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "勤務状態を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
+            //開始時間
             let satrtTime = this.startTimeValue;
             if (satrtTime === "default") {
-                satrtTime = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇開始時間";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the start time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時間を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
+            //結束時間
             let endTime = this.endTimeValue;
             if (endTime === "default") {
-                endTime = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇結束時間";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "終了時間を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+           //時間相同
+            if (this.endTimeValue === this.startTimeValue) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "開始時間不得與結束時間相同";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "The start time must not be the same as the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時間と終了時間は同じであってはなりません。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //開始時間晚於結束時間
+            if (this.endTimeValue < this.startTimeValue) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "開始時間不得在結束時間之後";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "The start time must not be after the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時刻は終了時刻よりも後にすることはできません。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
             let reqbody = {
                 workInfoId: this.sysEditWorkHoursInfoId,
@@ -302,12 +388,15 @@ export default (await import('vue')).defineComponent({
         successPopup(message) {
             if (this.langValue === 'ch') {
                 this.popupData.title = "成功";
+                this.popupData.content ="編輯完成";
             } else if (this.langValue === 'en') {
                 this.popupData.title = "Success";
+                this.popupData.content = "Editing completed";
             } else if (this.langValue === 'jp') {
-                this.popupData.title = "追加完了";
+                this.popupData.title = "成功";
+                this.popupData.content = "編集完了";
             }
-            this.popupData.content = message;
+            // this.popupData.content = message;
             this.showPopup = true;
             setTimeout(() => {
                 let popup = this.$refs.popup;

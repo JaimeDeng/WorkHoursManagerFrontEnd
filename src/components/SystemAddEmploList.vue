@@ -104,7 +104,7 @@ components: {
         }else if(this.langValue === 'jp'){
             this.employeeIdStr = '社員番号';
             this.employeeIdPHStr = '社員番号を入力してください';
-            this.nameStr='お名前';
+            this.nameStr='名前';
             this.namePHStr='お名前を入力してください';
             this.genderStr='性別';
             this.emailStr='メール';

@@ -125,18 +125,105 @@ methods: {
     },
     commitReq(){
         //如果是default轉成null給後端才能正確做判斷
-        let status = this.statusValue;
-        if(status === "default"){
-            status = null;
-        }
-        let satrtTime = this.startTimeValue;
-        if(satrtTime === "default"){
-            satrtTime = null;
-        }
-        let endTime = this.endTimeValue;
-        if(endTime === "default"){
-            endTime = null;
-        }
+         //model
+         if(this.modelInput.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入機型";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in model field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "型番欄を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //案件號碼
+            if(this.caseNoInput.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入案件號碼";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in case no field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "案件番号欄を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //出勤狀態
+            let status = this.statusValue;
+            if (status === "default") {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇出勤狀態";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the status.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "勤務状態を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //開始時間
+            let satrtTime = this.startTimeValue;
+            if (satrtTime === "default") {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇開始時間";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the start time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時間を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //結束時間
+            let endTime = this.endTimeValue;
+            if (endTime === "default") {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇結束時間";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "終了時間を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+           //時間相同
+            if (this.endTimeValue === this.startTimeValue) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "開始時間不得與結束時間相同";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "The start time must not be the same as the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時間と終了時間は同じであってはなりません。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //開始時間晚於結束時間
+            if (this.endTimeValue < this.startTimeValue) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "開始時間不得在結束時間之後";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "The start time must not be after the end time.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "開始時刻は終了時刻よりも後にすることはできません。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //工作內容
+            if(this.detail.length===0){
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入工作內容";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in detail field yet..";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "仕事内容を入力してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
         let reqbody = {
             date : this.dateValue,
             employeeId : this.employeeId,
@@ -159,11 +246,11 @@ methods: {
             this.resp = data;
             console.log(this.resp);
             if(data.success === true){
-                this.message = this.resp.message;
-                this.successPopup();
+                this.editMessage = this.resp.message;
+                this.successPopup(this.editMessage);
             }else{
-                this.message = this.resp.message;
-                this.errorPopup();
+                this.editMessage = this.resp.message;
+                this.errorPopup(this.editMessage);
             }
         })
         .catch(err => console.log(err))
@@ -209,7 +296,7 @@ methods: {
         }, 100);
         this.$emit('addWorkInfoSuccess');
     },
-    errorPopup() {
+    errorPopup(message) {
         if (this.langValue === 'ch') {
             this.popupData.title = "錯誤";
         } else if (this.langValue === 'en') {
@@ -217,7 +304,7 @@ methods: {
         } else if (this.langValue === 'jp') {
             this.popupData.title = "エラー";
         }
-        this.popupData.content = this.message;
+        this.popupData.content = message;
         this.showPopup = true;
         setTimeout(() => {
             let popup = this.$refs.popup;

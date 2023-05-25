@@ -207,18 +207,128 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
-            //如果是default轉成null給後端才能正確做判斷
+            //信箱
+            let emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (this.emailInput.length === 0) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入信箱";
+                }
+                else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in email field yet";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "メール欄を入力してください";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            if (!emailPattern.test(this.emailInput)) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "信箱格式錯誤";
+                }
+                else if (this.langValue === 'en') {
+                    this.editMessage = "Email format is not correct";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "メールの形式が正しくありません";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            //電話
+            let phonePattern = /^[0-9]{7,10}$/;
+            if(this.phoneInput.length === 0){
+            if(this.langValue === 'ch'){
+                this.editMessage = "請輸入電話";
+            }
+            else if(this.langValue === 'en'){
+                this.editMessage = "You haven't filled in phone field yet";
+            }else if(this.langValue === 'jp'){
+                this.editMessage = "電話番号欄を入力してください";
+            }       
+            this.errorPopup(this.editMessage);
+                return;
+        }
+        if(!phonePattern.test(this.phoneInput)){
+            if(this.langValue === 'ch'){
+                this.editMessage = "電話格式錯誤";
+            }
+            else if(this.langValue === 'en'){
+                this.editMessage = "Phone format is not correct";
+            }else if(this.langValue === 'jp'){
+                this.editMessage = "電話番号の形式が正しくありません";
+            }     
+            this.errorPopup(this.editMessage);
+                return;
+        }
+        //職稱
+            if (this.positionInput.length === 0) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入職稱";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in position field yet.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "職名欄を入力してください。";
+                }
+
+                this.errorPopup(this.editMessage);
+                return;
+            }
+
+            //姓名
+            if (this.nameInput.length === 0) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入姓名";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in name field yet.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "お名前欄を入力してください。";
+                }
+
+                this.errorPopup(this.editMessage);
+                return;
+            }
+
+            //性別
             let genderV = this.genderValue;
             if (genderV === "default") {
-                genderV = null;
+                // genderV = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇性別";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the gender.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "性別欄を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
+            //部門
             let dPM = this.departmentValue;
             if (dPM === "default") {
-                dPM = null;
+                // dPM = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇部門";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the department.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "部署名を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
+
+            //職等
             let levelV = this.levelValue;
             if (levelV === "default") {
-                levelV = null;
+                // levelV = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇職等";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the level.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "職級を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
             }
             let reqbody = {
                 employeeId: this.sysEditEmployeeInfo,
@@ -336,12 +446,15 @@ export default (await import('vue')).defineComponent({
         successPopup(message) {
             if (this.langValue === 'ch') {
                 this.popupData.title = "成功";
+                this.popupData.content = "編輯完成";
             } else if (this.langValue === 'en') {
                 this.popupData.title = "Success";
+                this.popupData.content = "Editing completed";
             } else if (this.langValue === 'jp') {
-                this.popupData.title = "追加完了";
+                this.popupData.title = "成功";
+                this.popupData.content = "編集完了";
             }
-            this.popupData.content = message;
+            // this.popupData.content = message;
             this.showPopup = true;
             setTimeout(() => {
                 let popup = this.$refs.popup;
