@@ -1553,6 +1553,7 @@ mounted(){
                     }
 
                     .hasntApproved{
+                        word-spacing: 0.1vw;
                         position: absolute;
                         right: 10%;
                         top: 50%;
