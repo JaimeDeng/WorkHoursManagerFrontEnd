@@ -373,9 +373,9 @@ mounted() {
     }
 
     .add {
-        background-color: rgba(255, 255, 255, 0.724);
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(188, 186, 193, 0.6));
         border: 2px solid rgb(177, 208, 224);
-        border-radius: 10px;
+        border-radius: 1vh;
         display: flex;
         position: relative;
         flex-direction: column;

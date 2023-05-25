@@ -56,6 +56,7 @@ data(){
         detailStr:'',
         btnStr:'',
         dateStr:'',
+        edit:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -94,6 +95,7 @@ methods:{
             this.detailStr = '工作內容';
             this.btnStr = '返回日工時表';
             this.dateStr = '日期';
+            this.edit = '編輯';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
@@ -104,7 +106,7 @@ methods:{
             this.reviewStatusOpt1 = 'Approved';
             this.reviewStatusOpt2 = 'Pending approval';
             this.reviewStr = 'Approved';
-            this.notReviewStr = 'Not approved';
+            this.notReviewStr = 'Pending approval';
             this.logtime = 'Log time';
             this.timeFrame = 'Time frame';
             this.timeFramePH = 'Select time frame';
@@ -121,16 +123,17 @@ methods:{
             this.detailStr = 'Job description';
             this.btnStr ='Return to Timesheet';
             this.dateStr = 'Date';
+            this.edit = 'Edit';
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索する';
-            this.employeeIdStr = '人員ID';
+            this.employeeIdStr = '社員番号';
             this.reviewStatus = '審査状態';
             this.reviewStatusPH = '審査状態選択';
-            this.reviewStatusOpt1 = '審査終了';
+            this.reviewStatusOpt1 = '審査済み';
             this.reviewStatusOpt2 = '未審査';
-            this.reviewStr = '審査終了';
-            this.notReviewStr = '未審査';
+            this.reviewStr = '承認済み';
+            this.notReviewStr = '承認待ち';
             this.attendanceStatus = '勤務状態';
             this.logtime = '登録時間';
             this.timeFrame = '時間範囲';
@@ -138,9 +141,9 @@ methods:{
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
-            this.checkStr = '詳細を見る';
+            this.checkStr = '詳細';
             this.backBtn = 'ホームページへ戻る';
-            this.listStr = 'トータル';
+            this.listStr = '合計';
             this.startTimeStr = '開始時間';
             this.endTimeStr = '終了時間';
             this.modelStr = '型番';
@@ -148,6 +151,7 @@ methods:{
             this.detailStr = '仕事內容';
             this.btnStr = '勤務表に戻る';
             this.dateStr = '日付';
+            this.edit = '編集';
         }
     },
     fetchWorkDayInfo(){
@@ -1054,7 +1058,7 @@ mounted(){
                                     <h5>{{ detailStr }}</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">{{ edit }}</button>
                                 <div v-if="!hasntBeenApproved && this.langValue=='ch'" class="hasBeenApproved"><i class="fa-solid fa-check"></i>{{ reviewStr }}</div>
                             </div>
                             <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
@@ -1174,9 +1178,9 @@ mounted(){
         .left {
             position: relative;
             padding: 1vw;
-            background-color: rgba(255, 255, 255, 0.724);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(188, 186, 193, 0.8));
             border: 2px solid rgb(177, 201, 224);
-            border-radius: 5px;
+            border-radius: 1vh;
             width: 90%;
             height: 75vh;
             overflow: hidden;
@@ -1546,6 +1550,7 @@ mounted(){
                     }
 
                     .hasntApproved{
+                        word-spacing: 0.1vw;
                         position: absolute;
                         right: 10%;
                         top: 50%;

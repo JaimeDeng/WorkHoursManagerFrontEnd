@@ -2215,9 +2215,9 @@ components: {
         .left {
             position: relative;
             padding: 1vw;
-            background-color: rgba(255, 255, 255, 0.724);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(188, 186, 193, 0.8));
             border: 2px solid rgb(177, 201, 224);
-            border-radius: 5px;
+            border-radius: 1vh;
             width: 90%;
             height: 75vh;
             overflow: hidden;

@@ -24,7 +24,7 @@ data(){
         hasntThisDateInfo:false,
         hasntThisReviewStatusInfo: false,
         hasntThisTimeFrameInfo:false,
-        listRenderOver:true,
+        listRenderOver:false,
         hasntBeenApproved: true,
         message:'',
         //介面文字
@@ -116,7 +116,7 @@ methods:{
             this.timeFrameOpt3 = '30days';
             this.backBtn = 'Back';
             this.workSheetText='Timesheet List';
-            this.volumeSheetText='There are';
+            this.volumeSheetText='Total: ';
             this.volumeSheetText2='sheet';
             this.startTimeText='Start Time';
             this.endTimeText=' End Time';
@@ -159,7 +159,7 @@ methods:{
             this.attendText='出勤状況';
             this.approveText='承認状態';
             this.hourText='勤務時間';
-            this.checkBtn='詳細を見る';
+            this.checkBtn='詳細';
             this.backToAllText='勤務表一覽';
             this.commitBtn='編集';
             this.dragText='ドラッグして閲覧する';
@@ -1157,9 +1157,9 @@ mounted(){
         .left {
             position: relative;
             padding: 1vw;
-            background-color: rgba(255, 255, 255, 0.724);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(188, 186, 193, 0.8));
             border: 2px solid rgb(177, 201, 224);
-            border-radius: 5px;
+            border-radius: 1vh;
             width: 90%;
             height: 75vh;
             overflow: hidden;

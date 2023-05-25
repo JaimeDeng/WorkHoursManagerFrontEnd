@@ -169,7 +169,8 @@ methods:{
             console.log(data);
             this.PR = data;
             let ratingStr = data.rating.substring(0 , data.rating.length-1);
-            this.goal = parseFloat(ratingStr);
+            let goalNum = parseFloat(ratingStr);
+            this.goal = parseFloat(goalNum.toFixed(1));
             console.log(this.goal)
             this.renderTeamRate();
         })
@@ -374,9 +375,9 @@ watch: {
                     })
                     let thisModelAvarageDuration = totalDuration / (this.caseInfoByModel[selectedModel].length - 2);
                     let thisModelAvarageDurationWithTeam = totalDurationWithTeam / (this.caseInfoByModel[selectedModel].length - 1);
-                    this.renderAvarageDurarionDiv(thisModelAvarageDuration);
+                    this.renderAvarageDurarionDiv(parseFloat(thisModelAvarageDuration.toFixed(1)));
                     this.renderLatestDurarionDiv(this.caseInfoByModel[selectedModel][1].duration);
-                    this.renderAvarageDurarionWithTeamDiv(thisModelAvarageDurationWithTeam);
+                    this.renderAvarageDurarionWithTeamDiv(parseFloat(thisModelAvarageDurationWithTeam.toFixed(1)));
                     this.renderGoalDurarionDiv();
                     this.renderRate();
                 }
