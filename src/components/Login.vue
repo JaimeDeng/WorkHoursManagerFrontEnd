@@ -428,7 +428,7 @@ export default {
 
         h2 {
             margin-top: 40px;
-            font-size: 38px;
+            font-size: 4vh;
             font-weight: bold;
 
         }
