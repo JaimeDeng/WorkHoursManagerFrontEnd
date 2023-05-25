@@ -208,7 +208,7 @@ export default {
                 this.youHave='You have';
                 this.howMany='timesheet pending for approval.';
                 this.noAny='No notifications.';
-                this.yetLog='You have not logged today‘s timesheet.';
+                this.yetLog='You haven\'t filled out today‘s timesheet yet.';
             } else if (this.langValue === 'jp') {
                 this.notifiText=' お知らせ';
                 this.youHave='審査待ちの勤務表が';
