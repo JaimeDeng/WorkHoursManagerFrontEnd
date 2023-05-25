@@ -437,7 +437,7 @@ export default {
         justify-content: space-around;
         width: 28%;
         height: 80%;
-        border-radius: 5px;
+        border-radius: 1vh;
 
         h2 {
             margin-top: 40px;
