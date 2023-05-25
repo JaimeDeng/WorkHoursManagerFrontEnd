@@ -101,9 +101,9 @@ export default (await import('vue')).defineComponent({
                 this.caseNo = "案件番号";
                 this.status = "勤務状態";
                 this.selectStatus = "出勤状況を選択してください";
-                this.satrtTime = "開始時刻";
+                this.satrtTime = "開始時間";
                 this.selectStartTime = "開始時刻を選択してください";
-                this.endTime = "終了時刻";
+                this.endTime = "終了時間";
                 this.selectEndTime = "終了時刻を選択してください";
                 this.back = "戻る";
                 this.commit = "編集";
@@ -302,12 +302,15 @@ export default (await import('vue')).defineComponent({
         successPopup(message) {
             if (this.langValue === 'ch') {
                 this.popupData.title = "成功";
+                this.popupData.content ="編輯完成";
             } else if (this.langValue === 'en') {
                 this.popupData.title = "Success";
+                this.popupData.content = "Editing completed";
             } else if (this.langValue === 'jp') {
-                this.popupData.title = "追加完了";
+                this.popupData.title = "成功";
+                this.popupData.content = "編集完了";
             }
-            this.popupData.content = message;
+            // this.popupData.content = message;
             this.showPopup = true;
             setTimeout(() => {
                 let popup = this.$refs.popup;
