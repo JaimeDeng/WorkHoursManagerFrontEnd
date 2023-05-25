@@ -60,6 +60,12 @@ data(){
         commitBtn:'',
         dragText:'',
         approvedText:'',
+        noAnySheet:'',
+        noDateSheet:'',
+        noRangeSheet:'',
+        noStatusSheet:'',
+        reviewStr:'',
+        notReviewStr:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -102,6 +108,12 @@ methods:{
             this.commitBtn='編輯';
             this.dragText='可拖曳觀看';
             this.approvedText='已審核';
+            this.noAnySheet='沒有任何日工時表';
+            this.noDateSheet='沒有該日期的日工時表';
+            this.noRangeSheet='沒有該天數範圍內的工時表';
+            this.noStatusSheet='沒有該審核狀態的工時表';
+            this.reviewStr = '已審核';
+            this.notReviewStr = '未審核';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
@@ -116,32 +128,38 @@ methods:{
             this.timeFrameOpt3 = '30days';
             this.backBtn = 'Back';
             this.workSheetText='Timesheet List';
-            this.volumeSheetText='Total: ';
-            this.volumeSheetText2='sheet';
+            this.volumeSheetText='There are';
+            this.volumeSheetText2='sheet(s)';
             this.startTimeText='Start Time';
             this.endTimeText=' End Time';
-            this.typeText='Type';
-            this.caseText='Case no';
+            this.typeText='Model';
+            this.caseText='Case No';
             this.detailText='Detail';
             this.dateText='Date';
             this.emploIdText='EmployeeID';
             this.attendText='Attendance';
-            this.approveText='Approve status';
+            this.approveText='Approval status';
             this.hourText='Record hours';
             this.checkBtn='Check';
-            this.backToAllText=' Back to all';
-            this.commitBtn='Commit';
+            this.backToAllText='Return to Timesheet';
+            this.commitBtn='Edit';
             this.dragText='Drag to view';
             this.approvedText='Approved';
+            this.noAnySheet='There is no timesheet.';
+            this.noDateSheet='There is no timesheet for that date.';
+            this.noRangeSheet='There is no timesheet within that time range.';
+            this.noStatusSheet='There is no timesheet whit that approved status.';
+            this.reviewStr = 'Approved';
+            this.notReviewStr = 'Pending approval';
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索';
-            this.reviewStatus = '承認状態';
-            this.reviewStatusPH = '承認状態で検索';
-            this.reviewStatusOpt1 = '承認済み';
-            this.reviewStatusOpt2 = '未承認';
+            this.reviewStatus = '審査状態';
+            this.reviewStatusPH = '審査状態選択';
+            this.reviewStatusOpt1 = '審査済み';
+            this.reviewStatusOpt2 = '未審査';
             this.timeFrame = '時間範囲';
-            this.timeFramePH = '時間範囲で検索';
+            this.timeFramePH = '時間範囲選択';
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
@@ -149,21 +167,27 @@ methods:{
             this.workSheetText='勤務表一覽';
             this.volumeSheetText='勤務表が';
             this.volumeSheetText2='枚';
-            this.startTimeText='開始時刻';
-            this.endTimeText='終了時刻';
+            this.startTimeText='開始時間';
+            this.endTimeText='終了時間';
             this.typeText='型番';
             this.caseText='案件番号';
             this.detailText='仕事内容';
             this.dateText='日付';
             this.emploIdText='社員番号';
-            this.attendText='出勤状況';
-            this.approveText='承認状態';
+            this.attendText='勤務状態';
+            this.approveText='審査状態';
             this.hourText='勤務時間';
             this.checkBtn='詳細';
-            this.backToAllText='勤務表一覽';
+            this.backToAllText='勤務表に戻る';
             this.commitBtn='編集';
             this.dragText='ドラッグして閲覧する';
-            this.approvedText='承認済み';
+            this.approvedText='審査済み';
+            this.noAnySheet='勤務表がありません。';
+            this.noDateSheet='その日の勤務表がありません。';
+            this.noRangeSheet='その時間範囲以内には勤務表がありません。';
+            this.noStatusSheet='その審査状態の勤務表がありません。';
+            this.reviewStr = '承認済み';
+            this.notReviewStr = '承認待ち';
         }
     },
     fetchWorkDayInfo(){
@@ -223,9 +247,9 @@ methods:{
         this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
             let approvedStr = "";
             if(workDayInfo.approved === true){
-                approvedStr = "已審核";
+                approvedStr =  this.reviewStr;
             }else{
-                approvedStr = "未審核";
+                approvedStr = this.notReviewStr;
             }
             let workingHoursIsNotEnough = false;
             if(workDayInfo.workingHours < 8){
@@ -252,7 +276,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -282,7 +306,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -312,7 +336,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -342,7 +366,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -374,7 +398,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -404,7 +428,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -434,7 +458,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -464,7 +488,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -496,9 +520,9 @@ methods:{
             if(workDayInfo.date === date){
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
-                    approvedStr = "已審核";
+                    approvedStr =  this.reviewStr;
                 }else{
-                    approvedStr = "未審核";
+                    approvedStr = this.notReviewStr;
                 }
                 let workingHoursIsNotEnough = false;
                 if(workDayInfo.workingHours < 8){
@@ -535,9 +559,9 @@ methods:{
                 if(dayDiff <= 7){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr =  this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -564,7 +588,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -591,7 +615,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr =  this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -628,9 +652,9 @@ methods:{
                 if(dayDiff <= 14){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr =  this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -657,7 +681,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -684,7 +708,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -721,9 +745,9 @@ methods:{
                 if(dayDiff <= 30){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -750,7 +774,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -777,7 +801,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr =  this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -1053,7 +1077,7 @@ mounted(){
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{ workSheetText }}</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }} {{ workSheetText }}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
                                 <h4 class="infoNum">{{ volumeSheetText }} {{ selectedDateInfoList.length }} {{ volumeSheetText2 }}</h4>
@@ -1107,10 +1131,10 @@ mounted(){
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
+                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/systemHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>

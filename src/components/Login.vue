@@ -36,6 +36,7 @@ export default {
         }
     },
     methods: {
+        //只以員工ID登入
         login() {
             fetch("http://localhost:3000/getAccountByEmployeeId", {
                 method: 'PUT',
@@ -117,6 +118,7 @@ export default {
                 })
 
         },
+        //以帳號及員工ID登入
         login2() {
 
 

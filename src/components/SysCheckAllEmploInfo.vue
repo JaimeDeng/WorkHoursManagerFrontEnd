@@ -46,6 +46,10 @@ export default {
             emploIdText: '',
             phone: '',
             nameIdPHStr: '',
+            noAnySheet:'',
+            noDateSheet:'',
+            noRangeSheet:'',
+            noStatusSheet:'',
             //輸入綁定
             reviewStatusSelect: 'default',
             timeFrameSelect: 'default',
@@ -77,10 +81,14 @@ export default {
                 this.emploIdText = '員工ID',
                 this.backBtn = '返回';
                 this.nameIdPHStr = '請輸入姓名或是員工ID進行搜尋';
+                this.noAnySheet='沒有任何日工時表';
+                this.noDateSheet='沒有該日期的日工時表';
+                this.noRangeSheet='沒有該天數範圍內的工時表';
+                this.noStatusSheet='沒有該審核狀態的工時表';
             } else if (this.langValue === 'en') {
-                this.title = 'Employee Infomation List';
+                this.title = 'Employee Information List';
                 this.infoText = '‘s information';
-                this.commitBtn = 'commit';
+                this.commitBtn = 'Edit';
                 this.bacKToEmploInfo = 'Back to all';
                 this.checkBtn = 'Check';
                 this.nameText = 'Name',
@@ -94,6 +102,10 @@ export default {
                 this.emploIdText = 'EmployeeID',
                 this.backBtn = 'Back';
                 this.nameIdPHStr = 'Search by name or employeeId';
+                this.noAnySheet='There is no timesheet.';
+                this.noDateSheet='There is no timesheet for that date.';
+                this.noRangeSheet='There is no timesheet within that time range.';
+                this.noStatusSheet='There is no timesheet whit that approved status.';
             } else if (this.langValue === 'jp') {
                 this.title = '人員情報一覽';
                 this.infoText = 'の情報';
@@ -111,6 +123,10 @@ export default {
                 this.emploIdText = '社員番号',
                 this.backBtn = '戻る';
                 this.nameIdPHStr = '名前または社員番号で検索';
+                this.noAnySheet='勤務表がありません。';
+                this.noDateSheet='その日の勤務表がありません。';
+                this.noRangeSheet='その時間範囲以内には勤務表がありません。';
+                this.noStatusSheet='その審査状態の勤務表がありません。';
             }
         },
         fetchWorkDayInfo() {
@@ -140,7 +156,7 @@ export default {
                     } else {
                         this.message = data.message;
                     }
-                   
+
                 })
                 .catch(err => console.log(err))
         },
@@ -397,7 +413,7 @@ export default {
         //開始產生元件動畫
         this.startAnimation();
 
-      
+
     }
 }
 </script>
@@ -492,10 +508,10 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">沒有任何日工時表</h3>
-                    <h3 v-if="hasntThisDateInfo" class="emptyTitle">沒有該日期的日工時表</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">沒有該天數範圍內的工時表</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
+                    <!-- <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3> -->
                 </div>
                 <RouterLink to="/systemHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>

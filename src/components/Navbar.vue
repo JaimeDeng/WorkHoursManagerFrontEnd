@@ -31,7 +31,12 @@ export default {
             loginLogout:'',
             loginOrLogout:false,
             lang:'',
-
+            notifiText:'',
+            youHave:'',
+            howMany:'',
+            noAny:'',
+            yetLog:'',
+            langValue: 'ch',
             //工時資料
             subordinatesWorkDayInfo:[]
         };
@@ -190,7 +195,28 @@ export default {
             if(sessionStorage.getItem('accountId') !== null || localStorage.getItem('accountId') !== null){
                 this.hasntAccount = false;
             }
-        }
+        },
+         changeLanguage() {
+            if (this.langValue === 'ch') {
+                this.notifiText='通知';
+                this.youHave='您有';
+                this.howMany='筆工時表待審核';
+                this.noAny='沒有任何通知';
+                this.yetLog='您尚未登錄今日的工時表';
+            } else if (this.langValue === 'en') {
+                this.notifiText='Notification';
+                this.youHave='You have';
+                this.howMany='timesheet pending for approval.';
+                this.noAny='No notifications.';
+                this.yetLog='You have not logged today‘s timesheet.';
+            } else if (this.langValue === 'jp') {
+                this.notifiText=' お知らせ';
+                this.youHave='審査待ちの勤務表が';
+                this.howMany='件あります。';
+                this.noAny='お知らせはありません。';
+                this.yetLog='本日の勤務表がまだ登録されていません。';
+            }
+        },
     },
 
     created() {
@@ -269,7 +295,15 @@ export default {
                 this.loginLogout = 'ログイン';
                 this.loginOrLogout = false;
             }
-        }      
+        }
+        
+         //檢查及切換語言
+         this.langValue = sessionStorage.getItem('langValue');
+        if (this.langValue === null) {
+            this.langValue = 'ch';
+        }
+        console.log(this.langValue);
+        this.changeLanguage();
     },
 };
 </script>
@@ -301,20 +335,20 @@ export default {
                     <div :style="{ visibility: notificationBtnIsClick ? 'visible' : 'hidden' , opacity: notificationBtnIsClick ? '1' : '0' }" id="list-group" class="list-group">
                         <RouterLink v-if="hasAnyPendingApprove" to="/ManaCheckDaily" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">通知</h5>
+                                <h5 class="mb-1">{{notifiText}}</h5>
                             </div>
-                            <p class="mb-1">您有 {{ this.subordinatesWorkDayInfo.length }} 筆工時表待審核</p>
+                            <p class="mb-1">{{youHave}} {{ this.subordinatesWorkDayInfo.length }} {{howMany}}</p>
                         </RouterLink>
                         <div v-if="!hasAnyPendingApprove && hasTodaysWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">沒有任何通知</h5>
+                                <h5 class="mb-1">{{noAny}}</h5>
                             </div>
                         </div>
                         <RouterLink v-if="!hasTodaysWorkInfo" to="/EmploAddWorkInfo" id="list-group-item list-group-item-action" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">通知</h5>
+                                <h5 class="mb-1">{{notifiText}}</h5>
                             </div>
-                            <p class="mb-1">您尚未登錄今日的工時表</p>
+                            <p class="mb-1">{{yetLog}}</p>
                         </RouterLink>
                     </div>
                 </div>
