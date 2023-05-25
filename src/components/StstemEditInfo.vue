@@ -294,9 +294,9 @@ export default (await import('vue')).defineComponent({
                 if (this.langValue === 'ch') {
                     this.editMessage = "請選擇性別";
                 } else if (this.langValue === 'en') {
-                    this.editMessage = "You haven't filled in gender field yet.";
+                    this.editMessage = "Please select the gender.";
                 } else if (this.langValue === 'jp') {
-                    this.editMessage = "性別欄を入力してください。";
+                    this.editMessage = "性別欄を選択してください。";
                 }
                 this.errorPopup(this.editMessage);
                 return;
@@ -308,7 +308,7 @@ export default (await import('vue')).defineComponent({
                 if (this.langValue === 'ch') {
                     this.editMessage = "請選擇部門";
                 } else if (this.langValue === 'en') {
-                    this.editMessage = "Please choose the department.";
+                    this.editMessage = "Please select the department.";
                 } else if (this.langValue === 'jp') {
                     this.editMessage = "部署名を選択してください。";
                 }
