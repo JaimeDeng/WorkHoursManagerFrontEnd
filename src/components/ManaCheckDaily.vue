@@ -178,7 +178,7 @@ export default {
                 this.noRangeSheet = 'There is no timesheet within that time range.';
                 this.noStatusSheet = 'There is no timesheet whit that approved status.';
                 this.volumeSheetText = 'There are';
-                this.volumeSheetText2 = 'sheet';
+                this.volumeSheetText2 = 'sheet(s)';
                 this.startTimeText = 'Start Time';
                 this.endTimeText = 'End Time';
                 this.typeText = 'Model';
