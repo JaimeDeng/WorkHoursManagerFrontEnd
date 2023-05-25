@@ -99,7 +99,7 @@ export default (await import('vue')).defineComponent({
                 this.addTitle = "勤務表編集";
                 this.model = "型番";
                 this.caseNo = "案件番号";
-                this.status = "出勤状況";
+                this.status = "勤務状態";
                 this.selectStatus = "出勤状況を選択してください";
                 this.satrtTime = "開始時刻";
                 this.selectStartTime = "開始時刻を選択してください";

@@ -206,7 +206,7 @@ export default {
                 this.revokeText = '取り消す';
                 this.dateText = '日付';
                 this.emIdText = '社員番号';
-                this.attendText = '出勤状態';
+                this.attendText = '勤務状態';
                 this.hourText = '勤務時間';
                 this.approveText = '審査状態';
                 this.checkBtnText = '詳細';

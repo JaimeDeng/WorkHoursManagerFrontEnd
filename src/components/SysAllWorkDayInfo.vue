@@ -168,7 +168,7 @@ methods:{
             this.detailText='仕事内容';
             this.dateText='日付';
             this.emploIdText='社員番号';
-            this.attendText='出勤状況';
+            this.attendText='勤務状態';
             this.approveText='審査状態';
             this.hourText='勤務時間';
             this.checkBtn='詳細';
