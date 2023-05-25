@@ -48,7 +48,7 @@ data() {
         detailLabel:"",
         back:"返回",
         remove:"刪除工時表",
-        commit:"新增",
+        Edit:"新增",
         detailPlaceHolder:"工作內容(限制500字以內)",
         langValue:'ch',
         caseNoInput:'',
@@ -57,6 +57,7 @@ data() {
         caseNoIsInvalid:false,
         getMessage:"",
         editMessage:"",
+        errorMsg:"",
         deleteMessage:"",
         statusOptions:[
         {label : "出勤" , value : "出勤"},
@@ -80,7 +81,7 @@ methods: {
         if(this.langValue === 'en'){
             this.addTitle = "Edit Timesheet";
             this.model = "Type";
-            this.caseNo = "Case no";
+            this.caseNo = "Case No";
             this.status = "Attendance";
             this.selectStatus = "Select attendence status";
             this.satrtTime = "Start time";
@@ -88,7 +89,9 @@ methods: {
             this.endTime = "End time";
             this.selectEndTime = "Select end time";
             this.back = "Back";
-            this.commit = "Commit";
+            this.Edit = "Edit";
+            this.editMessage = "This data is not be edited";
+            this.errorMsg = "Do you want to delete data? you will can not return it"
             this.detailLabel = "Detail"
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
             this.popupData.backBtn = "Back";
@@ -99,14 +102,16 @@ methods: {
             this.addTitle = "勤務表編集";
             this.model = "型番";
             this.caseNo = "案件番号";
-            this.status = "出勤状況";
-            this.selectStatus = "出勤状況を選択してください";
-            this.satrtTime = "開始時刻";
-            this.selectStartTime = "開始時刻を選択してください";
-            this.endTime = "終了時刻";
-            this.selectEndTime = "終了時刻を選択してください";
+            this.status = "勤務状態";
+            this.selectStatus = "勤務状態を選択してください";
+            this.satrtTime = "開始時間";
+            this.selectStartTime = "開始時間を選択してください";
+            this.endTime = "終了時間";
+            this.selectEndTime = "終了時間を選択してください";
             this.back = "戻る";
-            this.commit = "編集";
+            this.Edit = "編集";
+            this.editMessage = "データはまだ変更されていません。";
+            this.errorMsg = "削除後は元に戻すことはできません。"
             this.detailLabel = "仕事内容"
             this.detailPlaceHolder = "仕事内容(500文字以内入力してください)";
             this.popupData.backBtn = "戻る";
@@ -124,7 +129,9 @@ methods: {
             this.endTime = "結束時間";
             this.selectEndTime = "請選擇結束時間";
             this.back = "返回";
-            this.commit = "確認";
+            this.Edit = "確認";
+            this.editMessage = "資料尚未進行任何修改";
+            this.errorMsg = "您即將刪除此工時表 , 刪除後無法復原"
             this.detailLabel = "工作內容"
             this.detailPlaceHolder = "工作內容(限制500字以內)";
             this.popupData.backBtn = "返回";
@@ -179,7 +186,7 @@ methods: {
         if( this.modelInput.toString() === this.getResp.model && this.caseNoInput.toString() === this.getResp.caseNo 
             && this.startTimeValue.toString() === this.getResp.startTime && this.endTimeValue.toString() === this.getResp.endTime
             && this.detail.toString() === this.getResp.detail && this.statusValue.toString() === this.getResp.status){
-                this.editMessage = "資料尚未進行任何修改";
+                this.editMessage = this.editMessage;
                 this.errorPopup(this.editMessage);
                 return;
             }
@@ -230,12 +237,12 @@ methods: {
     confirmRemove(){
         if (this.langValue === 'ch') {
             this.checkPopupData.title = "警告";
-        } else if (this.langValue === 'en') {
-            this.checkPopupData.title = "注意";
         } else if (this.langValue === 'jp') {
+            this.checkPopupData.title = "注意";
+        } else if (this.langValue === 'en') {
             this.checkPopupData.title = "Warning";
         }
-        this.checkPopupData.content = "您即將刪除此工時表 , 刪除後無法復原";
+        this.checkPopupData.content = this.errorMsg;
         this.showCheckPopup = true;
         setTimeout(() => {
             let checkPopup = this.$refs.checkPopup;
@@ -446,10 +453,10 @@ mounted() {
             </div>
 
             <!-- 底部按鈕 -->
-            <div class="area2">
+            <div class="area2 mb-3">
                 <RouterLink tag="button" to="/EmploCheckDailyTime" class="back">{{ back }}</RouterLink>
                 
-                <button @click="commitReq" type="button">{{ commit }}</button>
+                <button @click="commitReq" type="button">{{ Edit }}</button>
             </div>
         </div>
         <div v-else class="spinner-border text-light" role="status"></div>
