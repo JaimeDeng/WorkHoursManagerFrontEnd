@@ -49,6 +49,7 @@ data(){
         reviewStr:'',
         notReviewStr:'',
         listStr:'',
+        listStr2:'',
         startTimeStr:'',
         endTimeStr:'',
         modelStr:'',
@@ -56,6 +57,8 @@ data(){
         detailStr:'',
         btnStr:'',
         dateStr:'',
+        dragStr:'',
+        editStr:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -87,6 +90,7 @@ methods:{
             this.checkStr = '查看';
             this.backBtn = '返回首頁';
             this.listStr = '表單共';
+            this.listStr2 = '張';
             this.startTimeStr = '開始時間';
             this.endTimeStr = '結束時間';
             this.modelStr = '機型';
@@ -94,18 +98,20 @@ methods:{
             this.detailStr = '工作內容';
             this.btnStr = '返回日工時表';
             this.dateStr = '日期';
+            this.dragStr = '可拖曳觀看';
+            this.editStr = '編輯';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
             this.employeeIdStr = 'Employee ID';
             this.reviewStatus = 'Approval status';
-            this.attendanceStatus = 'Attendance status';
+            this.attendanceStatus = 'Attendance';
             this.reviewStatusPH = 'Select approval status';
             this.reviewStatusOpt1 = 'Approved';
             this.reviewStatusOpt2 = 'Pending approval';
             this.reviewStr = 'Approved';
             this.notReviewStr = 'Not approved';
-            this.logtime = 'Log time';
+            this.logtime = 'Record hours';
             this.timeFrame = 'Time frame';
             this.timeFramePH = 'Select time frame';
             this.timeFrameOpt1 = '7days';
@@ -113,14 +119,17 @@ methods:{
             this.timeFrameOpt3 = '30days';
             this.checkStr = 'Check';
             this.backBtn = 'Back to homepage';
-            this.listStr = 'Total';
+            this.listStr = 'There are';
+            this.listStr2 = 'sheet(s)';
             this.startTimeStr = 'Start time';
             this.endTimeStr = 'End time';
             this.modelStr = 'Model';
-            this.caseNoStr = 'Case number';
-            this.detailStr = 'Job description';
+            this.caseNoStr = 'Case No';
+            this.detailStr = 'Detail';
             this.btnStr ='Return to Timesheet';
             this.dateStr = 'Date';
+            this.dragStr = 'Drag to view';
+            this.editStr = 'Edit';
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索する';
@@ -138,9 +147,10 @@ methods:{
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
-            this.checkStr = '詳細を見る';
+            this.checkStr = '詳細';
             this.backBtn = 'ホームページへ戻る';
-            this.listStr = 'トータル';
+            this.listStr = '勤務表が';
+            this.listStr2 = '枚';
             this.startTimeStr = '開始時間';
             this.endTimeStr = '終了時間';
             this.modelStr = '型番';
@@ -148,6 +158,8 @@ methods:{
             this.detailStr = '仕事內容';
             this.btnStr = '勤務表に戻る';
             this.dateStr = '日付';
+            this.dragStr = 'ドラックして閲覧する';
+            this.editStr = '編集';
         }
     },
     fetchWorkDayInfo(){
@@ -1040,7 +1052,7 @@ mounted(){
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             
                             <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
-                                <h4 class="infoNum">{{ listStr }}:{{ selectedDateInfoList.length }} </h4>
+                                <h4 class="infoNum">{{ listStr }}: {{ selectedDateInfoList.length }} {{ listStr2 }}</h4>
                                 <h4 class="fw-bold" :style="{color : workHoursInfo.status === '出勤' ? 'rgb(40, 147, 56)' : 'rgb(59, 115, 168)'}">{{ workHoursInfo.status }}</h4>
                                 <p style="color: #1a4e78" >{{ startTimeStr }}: {{ workHoursInfo.startTime }}</p>
 
@@ -1054,10 +1066,10 @@ mounted(){
                                     <h5>{{ detailStr }}</h5>
                                     <p>{{ workHoursInfo.detail }}</p>
                                 </div>
-                                <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">編輯</button>
+                                <button v-if="hasntBeenApproved" :value="workHoursInfo.workInfoId" @click="editWorkHoursInfo" class="editWorkHoursInfo" id="editWorkHoursInfo">{{ editStr }}</button>
                                 <div v-if="!hasntBeenApproved && this.langValue=='ch'" class="hasBeenApproved"><i class="fa-solid fa-check"></i>{{ reviewStr }}</div>
                             </div>
-                            <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>可拖曳觀看</div>
+                            <div v-if="selectedDateInfoList.length > 1" class="tips"><i :style="{ transform : isAnimating ? 'rotate(-15deg)' : 'rotate(30deg)' }" class="fa-solid fa-hand"></i>{{ dragStr }}</div>
                         </div>
                     </div>
                     <button @click="backToWorkDayInfo" class="backToDayList" id="backToDayList" v-if="this.langValue='ch'">{{ btnStr }}</button>

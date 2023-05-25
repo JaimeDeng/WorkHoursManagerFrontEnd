@@ -62,8 +62,8 @@ methods: {
     changeLanguage(){
         if(this.langValue === 'en'){
             this.addTitle = "New Timesheet";
-            this.model = "Type";
-            this.caseNo = "Case no";
+            this.model = "Model";
+            this.caseNo = "Case No";
             this.status = "Attendance";
             this.selectStatus = "Select attendence status";
             this.date = "Date";
@@ -72,19 +72,19 @@ methods: {
             this.endTime = "End time";
             this.selectEndTime = "Select end time";
             this.back = "Back";
-            this.commit = "Commit";
+            this.commit = "Create";
             this.detailPlaceHolder = "Detail (Your space is limited to 500 characters)";
             this.popupData.backBtn = "Back";
         }else if(this.langValue === 'jp'){
             this.addTitle = "勤務表追加";
             this.model = "型番";
             this.caseNo = "案件番号";
-            this.status = "出勤状況";
-            this.selectStatus = "出勤状況を選択してください";
+            this.status = "勤務状態";
+            this.selectStatus = "勤務状態を選択してください";
             this.date = "日付";
-            this.satrtTime = "開始時刻";
-            this.selectStartTime = "開始時刻を選択してください";
-            this.endTime = "終了時刻";
+            this.satrtTime = "開始時間";
+            this.selectStartTime = "開始時間を選択してください";
+            this.endTime = "終了時間";
             this.selectEndTime = "終了時刻を選択してください";
             this.back = "戻る";
             this.commit = "追加";
