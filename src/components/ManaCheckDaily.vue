@@ -180,6 +180,7 @@ export default {
                 this.noDateSheet = 'There is no timesheet for that date.';
                 this.noRangeSheet = 'There is no timesheet within that time range.';
                 this.noStatusSheet = 'There is no timesheet whit that approved status.';
+                this.noRangeAndStatusSheet = 'There is no timesheet within that time range and review status';
                 this.volumeSheetText = 'There are';
                 this.volumeSheetText2 = 'sheet(s)';
                 this.startTimeText = 'Start Time';
@@ -223,6 +224,7 @@ export default {
                 this.noDateSheet = 'その日の勤務表がありません。';
                 this.noRangeSheet = 'その時間範囲以内には勤務表がありません。';
                 this.noStatusSheet = 'その審査状態の勤務表がありません。';
+                this.noRangeAndStatusSheet = 'その承認状態と時間範囲内には勤務表がありません';
                 this.volumeSheetText = '勤務表が';
                 this.volumeSheetText2 = '枚';
                 this.startTimeText = '開始時間';
@@ -2074,7 +2076,6 @@ export default {
             this.hasntThisTimeFrameAndReviewStatusInfo = false;
             this.hasntThisTimeFrameInfo = false;
             this.hasntThisDateInfo = false;
-            this.hasntThisReviewStatusInfo = false;
             console.log(date);
             if (date === '') {
                 this.subordinateSelect = 'default';
@@ -2088,7 +2089,6 @@ export default {
             this.hasntThisTimeFrameAndReviewStatusInfo = false;
             this.hasntThisTimeFrameInfo = false;
             this.hasntThisDateInfo = false;
-            this.hasntThisReviewStatusInfo = false;
             console.log(newValue);
             if (newValue === 'default') {
                 this.renderList();
@@ -2105,7 +2105,6 @@ export default {
             this.hasntThisTimeFrameAndReviewStatusInfo = false;
             this.hasntThisTimeFrameInfo = false;
             this.hasntThisDateInfo = false;
-            this.hasntThisReviewStatusInfo = false;
             console.log(newValue);
             if (newValue === 'default') {
                 this.renderList();
@@ -2126,7 +2125,6 @@ export default {
             this.hasntThisTimeFrameAndReviewStatusInfo = false;
             this.hasntThisTimeFrameInfo = false;
             this.hasntThisDateInfo = false;
-            this.hasntThisReviewStatusInfo = false;
             this.searchDate = '';
             this.reviewStatusSelect = 'default';
             this.timeFrameSelect = 'default';
@@ -2312,8 +2310,8 @@ export default {
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
                     <h3 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
-                    <h3 v-if="hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeAndStatusSheet }}</h3>
                     <h3 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeAndStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>

@@ -24,6 +24,7 @@ data(){
         hasntThisDateInfo:false,
         hasntThisReviewStatusInfo: false,
         hasntThisTimeFrameInfo:false,
+        hasntThisTimeFrameAndReviewStatusInfo: false,
         listRenderOver:false,
         hasntBeenApproved: true,
         message:'',
@@ -112,6 +113,7 @@ methods:{
             this.noDateSheet='沒有該日期的日工時表';
             this.noRangeSheet='沒有該天數範圍內的工時表';
             this.noStatusSheet='沒有該審核狀態的工時表';
+            this.noRangeAndStatusSheet = '沒有該天數範圍及審核狀態的工時表';
             this.reviewStr = '已審核';
             this.notReviewStr = '未審核';
         }else if(this.langValue === 'en'){
@@ -149,6 +151,7 @@ methods:{
             this.noDateSheet='There is no timesheet for that date.';
             this.noRangeSheet='There is no timesheet within that time range.';
             this.noStatusSheet='There is no timesheet whit that approved status.';
+            this.noRangeAndStatusSheet = 'There is no timesheet within that time range and review status';
             this.reviewStr = 'Approved';
             this.notReviewStr = 'Pending approval';
         }else if(this.langValue === 'jp'){
@@ -185,7 +188,8 @@ methods:{
             this.noAnySheet='勤務表がありません。';
             this.noDateSheet='その日の勤務表がありません。';
             this.noRangeSheet='その時間範囲以内には勤務表がありません。';
-            this.noStatusSheet='その審査状態の勤務表がありません。';
+            this.noStatusSheet='その承認状態の勤務表がありません。';
+            this.noRangeAndStatusSheet = 'その承認状態と時間範囲内には勤務表がありません';
             this.reviewStr = '承認済み';
             this.notReviewStr = '承認待ち';
         }
@@ -239,6 +243,11 @@ methods:{
             }
         })
         .catch(err => console.log(err))
+    },
+    doubleStatus(){
+        if(this.hasntThisReviewStatusInfo === true && this.hasntThisTimeFrameInfo === true){
+            this.hasntThisTimeFrameAndReviewStatusInfo = true;
+        }
     },
     renderList(){
         this.workDayInfoList = [];
@@ -962,6 +971,9 @@ methods:{
 watch:{
     //監看searchDate的值變化 , date則是回遞該變數值
     searchDate(date){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(date);
         if(date === ''){
             this.hasntThisDateInfo = false;
@@ -969,8 +981,12 @@ watch:{
         }else{
             this.renderListByDate(date);
         }
+        this.doubleStatus();
     },
     reviewStatusSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -981,8 +997,12 @@ watch:{
         if(newValue === 'false'){
             this.renderListLimitedNotApproved();
         }
+        this.doubleStatus();
     },
     timeFrameSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -996,6 +1016,7 @@ watch:{
         if(newValue === '30days'){
             this.renderListWhitin30Days();
         }
+        this.doubleStatus();
     },
 },
 created() {
@@ -1133,8 +1154,9 @@ mounted(){
                     </div>
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeAndStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/systemHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
