@@ -49,8 +49,27 @@ export default {
             let rePassword = this.$refs.rePassword.value;
             let error = false;
 
+            //新密碼與舊密碼不可相同
+            if (this.origiPwdInput === this.newPsd) {
+                if (this.langValue === 'ch') {
+                    this.message = "新密碼不可與舊密碼相同";
+                } else if (this.langValue === 'en') {
+                    this.message = "New password can not same as the old password.";
+                } else if (this.langValue === 'jp') {
+                    this.message = "現在のパスワードは新しいパスワードと同じではいけません";
+                }
+                error = true;
+                if (error) {
+                    this.errorPopup();
+                    return;
+                }
+            }
+
+
             //舊密碼輸入錯誤
             if (this.origiPwdInput !== this.getOldPsd) {
+                console.log(this.origiPwdInput);
+                console.log(this.getOldPsd);
                 if (this.langValue === 'ch') {
                     this.message = "舊密碼不正確";
                 } else if (this.langValue === 'en') {
@@ -65,7 +84,7 @@ export default {
                 }
             }
 
-
+            //
             if (this.newPsd.length === 0) {
                 if (this.langValue === 'ch') {
                     this.message = "請輸入新密碼欄位";
