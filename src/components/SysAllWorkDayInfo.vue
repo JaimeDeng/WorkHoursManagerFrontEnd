@@ -13,6 +13,7 @@ data(){
         accountId:'',
         employeeName:'',
         //工時表資料
+        idAndDateObj:[],
         today:'',
         workDayInfo:[],
         workHoursInfoData:[],
@@ -254,6 +255,7 @@ methods:{
         this.hasntThisTimeFrameInfo = false;
         this.hasntThisReviewStatusInfo = false;
         this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
+            console.log(workDayInfo.employeeId.employeeId)
             let approvedStr = "";
             if(workDayInfo.approved === true){
                 approvedStr =  this.reviewStr;
@@ -272,7 +274,8 @@ methods:{
                 status : workDayInfo.status,
                 approved : workDayInfo.approved,
                 approvedStr : approvedStr,
-                workingHoursIsNotEnough : workingHoursIsNotEnough
+                workingHoursIsNotEnough : workingHoursIsNotEnough,
+                idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
             })
             console.log(workDayInfo.date)
         })
@@ -298,7 +301,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -328,7 +332,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -358,7 +363,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -388,7 +394,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -420,7 +427,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -450,7 +458,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -480,7 +489,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -510,7 +520,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -545,7 +556,8 @@ methods:{
                     status : workDayInfo.status,
                     approved : workDayInfo.approved,
                     approvedStr : approvedStr,
-                    workingHoursIsNotEnough : workingHoursIsNotEnough
+                    workingHoursIsNotEnough : workingHoursIsNotEnough,
+                    idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                 })
                 hasThisDateInfo = true;
             }
@@ -584,7 +596,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -611,7 +624,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -637,7 +651,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -677,7 +692,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -704,7 +720,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -730,7 +747,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -770,7 +788,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -797,7 +816,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -823,7 +843,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -837,30 +858,14 @@ methods:{
     },
     //查看此日期的workHoursInfo 同時檢查是否被審核
     workHoursInfo(event){
+        let idAndDate = event.target.value;
+        let idAndDateArr = idAndDate.split(",");
+        let id = idAndDateArr[0];
+        let date = idAndDateArr[1]
+        console.log(id)
         let reqBody = {
-            employeeId : this.employeeId
+            employeeId : id
         }
-
-        //先看此日期此張工時表是否已審核 , 決定可否編輯
-        fetch("http://localhost:3000/getWorkDayInfoByEmployeeId" ,{
-        method:"put",
-        body: JSON.stringify(reqBody),
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-        }).then(res => res.json())
-        .then((data)=>{
-            data.workDayInfoList.forEach((workDayInfo) =>{
-                if(workDayInfo.date === event.target.value){
-                    if(workDayInfo.approved === true){
-                        this.hasntBeenApproved = false;
-                    }else{
-                        this.hasntBeenApproved = true;
-                    }
-                }
-            })
-        })
-        .catch(err => console.log(err))
 
         fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
             method:"put",
@@ -870,6 +875,7 @@ methods:{
             }
         }).then(res => res.json())
         .then((data)=>{
+            console.log(data);
             //將工時表以時間最早的開始排序 (原本順序是先輸入的越前面)
             let container = null;
             for(let i = data.workHoursInfoList.length - 1 ; i > 0 ; i --){
@@ -902,7 +908,7 @@ methods:{
             console.log(this.workHoursInfoData);
             this.showWorkHoursInfo = true;
             setTimeout(()=>{
-                this.queryDate = event.target.value;
+                this.queryDate = date;
                 let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
                 let deco1 = document.getElementById("deco1");
                 let deco2 = document.getElementById("deco2");
@@ -911,7 +917,7 @@ methods:{
                 deco1.style.left = "110%";
                 deco2.style.left = "150%";
             },100);
-            this.workHoursInfoByDate(event.target.value);
+            this.workHoursInfoByDate(date);
             if(data.success === true){
                 this.message = data.message;
             }else{
@@ -1133,7 +1139,6 @@ mounted(){
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
                                     {{dateText}}:{{ workDayInfo.date }} {{emploIdText}}:{{ workDayInfo.employeeId }}
-                                    
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
                                     <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
@@ -1147,7 +1152,7 @@ mounted(){
                                     <p :class="{'notEnough' : workDayInfo.workingHoursIsNotEnough}">{{hourText}}: {{ workDayInfo.workingHours }}</p>
                                     <p>{{attendText}}: {{ workDayInfo.status }}</p>
                                     <p :class="{'hasntApproved' : !workDayInfo.approved}">{{approveText}}: {{ workDayInfo.approvedStr }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn" type="button">{{checkBtn}}</button>
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.idAndDate" class="viewBtn" type="button">{{checkBtn}}</button>
                                 </div>
                             </div>
                         </div>
