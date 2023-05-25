@@ -157,17 +157,17 @@ export default {
                 this.checkPopupData.backBtn = 'Back';
                 this.checkPopupData.confirmBtn = 'Confirm';
                 this.emText = 'Employee';
-                this.chooseEmText = 'Please choose employee';
+                this.chooseEmText = 'Select employee';
                 this.SheetText = 'Timesheet List';
                 this.dragText = 'Drag to view';
-                this.backToAllText = ' Back to all';
+                this.backToAllText = 'Return to Timesheet';
                 this.finText = 'Approve';
                 this.revokeText = 'Revoke';
                 this.dateText = 'Date';
                 this.emIdText = 'EmployeeID';
                 this.attendText = 'Attendance';
                 this.hourText = 'Record hours';
-                this.approveText = 'Approve status';
+                this.approveText = 'Approval status';
                 this.checkBtnText = 'Check';
                 this.noAnySheet = 'There is no timesheet.';
                 this.noDateSheet = 'There is no timesheet for that date.';
@@ -177,8 +177,8 @@ export default {
                 this.volumeSheetText2 = 'sheet';
                 this.startTimeText = 'Start Time';
                 this.endTimeText = 'End Time';
-                this.typeText = 'Type';
-                this.caseText = 'Case no';
+                this.typeText = 'Model';
+                this.caseText = 'Case No';
                 this.detailText = 'Detail';
                 this.okApprove = 'Approved';
             } else if (this.langValue === 'jp') {
@@ -216,8 +216,8 @@ export default {
                 this.noStatusSheet = 'その審査状態の勤務表がありません。';
                 this.volumeSheetText = '勤務表が';
                 this.volumeSheetText2 = '枚';
-                this.startTimeText = '開始時刻';
-                this.endTimeText = '終了時刻';
+                this.startTimeText = '開始時間';
+                this.endTimeText = '終了時間';
                 this.typeText = '型番';
                 this.caseText = '案件番号';
                 this.detailText = '仕事内容';
@@ -2199,7 +2199,7 @@ export default {
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{ SheetText }}</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }} {{ SheetText }}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div :style="{ backgroundColor: hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)' }"
                                 class="workHoursInfoCard" v-for="(workHoursInfo, index) in selectedDateInfoList">

@@ -125,20 +125,20 @@ methods:{
             this.backBtn = 'Back';
             this.workSheetText='Timesheet List';
             this.volumeSheetText='There are';
-            this.volumeSheetText2='sheet';
+            this.volumeSheetText2='sheet(s)';
             this.startTimeText='Start Time';
             this.endTimeText=' End Time';
-            this.typeText='Type';
-            this.caseText='Case no';
+            this.typeText='Model';
+            this.caseText='Case No';
             this.detailText='Detail';
             this.dateText='Date';
             this.emploIdText='EmployeeID';
             this.attendText='Attendance';
-            this.approveText='Approve status';
+            this.approveText='Approval status';
             this.hourText='Record hours';
             this.checkBtn='Check';
-            this.backToAllText=' Back to all';
-            this.commitBtn='commit';
+            this.backToAllText='Return to Timesheet';
+            this.commitBtn='Edit';
             this.dragText='Drag to view';
             this.approvedText='Approved';
             this.noAnySheet='There is no timesheet.';
@@ -149,11 +149,11 @@ methods:{
             this.title = '勤務表一覽';
             this.search = '日付で検索';
             this.reviewStatus = '審査状態';
-            this.reviewStatusPH = '審査状態で検索';
+            this.reviewStatusPH = '審査状態選択';
             this.reviewStatusOpt1 = '審査済み';
             this.reviewStatusOpt2 = '未審査';
             this.timeFrame = '時間範囲';
-            this.timeFramePH = '時間範囲で検索';
+            this.timeFramePH = '時間範囲選択';
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
@@ -161,8 +161,8 @@ methods:{
             this.workSheetText='勤務表一覽';
             this.volumeSheetText='勤務表が';
             this.volumeSheetText2='枚';
-            this.startTimeText='開始時刻';
-            this.endTimeText='終了時刻';
+            this.startTimeText='開始時間';
+            this.endTimeText='終了時間';
             this.typeText='型番';
             this.caseText='案件番号';
             this.detailText='仕事内容';
@@ -172,7 +172,7 @@ methods:{
             this.approveText='審査状態';
             this.hourText='勤務時間';
             this.checkBtn='詳細';
-            this.backToAllText='勤務表一覽';
+            this.backToAllText='勤務表に戻る';
             this.commitBtn='編集';
             this.dragText='ドラッグして閲覧する';
             this.approvedText='審査済み';
@@ -1069,7 +1069,7 @@ mounted(){
                 </div>
                 <div v-if="showWorkHoursInfo" id="workHoursInfoFrame" class="workHoursInfoFrame">
                     <div class="infoFrame" id="infoFrame">
-                        <h4 class="fw-bold dateTitle">{{ queryDate }}{{ workSheetText }}</h4>
+                        <h4 class="fw-bold dateTitle">{{ queryDate }} {{ workSheetText }}</h4>
                         <div class="cardFrame" id="cardFrame" v-dragscroll.x>
                             <div :style="{backgroundColor : hasntBeenApproved ? '' : 'rgba(220, 220, 220, 0.4)'}" class="workHoursInfoCard" v-for="(workHoursInfo , index) in selectedDateInfoList">
                                 <h4 class="infoNum">{{ volumeSheetText }} {{ selectedDateInfoList.length }} {{ volumeSheetText2 }}</h4>

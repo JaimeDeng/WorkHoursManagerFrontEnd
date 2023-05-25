@@ -88,7 +88,7 @@ export default {
             } else if (this.langValue === 'en') {
                 this.title = 'Employee Information List';
                 this.infoText = '‘s information';
-                this.commitBtn = 'commit';
+                this.commitBtn = 'Edit';
                 this.bacKToEmploInfo = 'Back to all';
                 this.checkBtn = 'Check';
                 this.nameText = 'Name',

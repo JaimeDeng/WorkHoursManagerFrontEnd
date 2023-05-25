@@ -79,8 +79,8 @@ export default (await import('vue')).defineComponent({
         changeLanguage() {
             if (this.langValue === 'en') {
                 this.addTitle = "Edit Timesheet";
-                this.model = "Type";
-                this.caseNo = "Case no";
+                this.model = "Model";
+                this.caseNo = "Case No";
                 this.status = "Attendance";
                 this.selectStatus = "Select attendence status";
                 this.satrtTime = "Start time";
