@@ -64,6 +64,8 @@ data(){
         noDateSheet:'',
         noRangeSheet:'',
         noStatusSheet:'',
+        reviewStr:'',
+        notReviewStr:'',
         //輸入綁定
         reviewStatusSelect:'default',
         timeFrameSelect:'default',
@@ -110,6 +112,8 @@ methods:{
             this.noDateSheet='沒有該日期的日工時表';
             this.noRangeSheet='沒有該天數範圍內的工時表';
             this.noStatusSheet='沒有該審核狀態的工時表';
+            this.reviewStr = '已審核';
+            this.notReviewStr = '未審核';
         }else if(this.langValue === 'en'){
             this.title = 'Timesheet List';
             this.search = 'Search by date';
@@ -145,6 +149,8 @@ methods:{
             this.noDateSheet='There is no timesheet for that date.';
             this.noRangeSheet='There is no timesheet within that time range.';
             this.noStatusSheet='There is no timesheet whit that approved status.';
+            this.reviewStr = 'Approved';
+            this.notReviewStr = 'Pending approval';
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索';
@@ -180,6 +186,8 @@ methods:{
             this.noDateSheet='その日の勤務表がありません。';
             this.noRangeSheet='その時間範囲以内には勤務表がありません。';
             this.noStatusSheet='その審査状態の勤務表がありません。';
+            this.reviewStr = '承認済み';
+            this.notReviewStr = '承認待ち';
         }
     },
     fetchWorkDayInfo(){
@@ -239,9 +247,9 @@ methods:{
         this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
             let approvedStr = "";
             if(workDayInfo.approved === true){
-                approvedStr = "已審核";
+                approvedStr =  this.reviewStr;
             }else{
-                approvedStr = "未審核";
+                approvedStr = this.notReviewStr;
             }
             let workingHoursIsNotEnough = false;
             if(workDayInfo.workingHours < 8){
@@ -268,7 +276,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -298,7 +306,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -328,7 +336,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -358,7 +366,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -390,7 +398,7 @@ methods:{
         if(this.timeFrameSelect === "default"){
             this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
                 if(workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -420,7 +428,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -450,7 +458,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -480,7 +488,7 @@ methods:{
                 let timeDiff = Math.abs(this.today.getTime() - workDay.getTime());
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -512,9 +520,9 @@ methods:{
             if(workDayInfo.date === date){
                 let approvedStr = "";
                 if(workDayInfo.approved === true){
-                    approvedStr = "已審核";
+                    approvedStr =  this.reviewStr;
                 }else{
-                    approvedStr = "未審核";
+                    approvedStr = this.notReviewStr;
                 }
                 let workingHoursIsNotEnough = false;
                 if(workDayInfo.workingHours < 8){
@@ -551,9 +559,9 @@ methods:{
                 if(dayDiff <= 7){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr =  this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -580,7 +588,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 7 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -607,7 +615,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 7 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr =  this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -644,9 +652,9 @@ methods:{
                 if(dayDiff <= 14){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr =  this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -673,7 +681,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 14 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -700,7 +708,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 14 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr = this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
@@ -737,9 +745,9 @@ methods:{
                 if(dayDiff <= 30){
                     let approvedStr = "";
                     if(workDayInfo.approved === true){
-                        approvedStr = "已審核";
+                        approvedStr = this.reviewStr;
                     }else{
-                        approvedStr = "未審核";
+                        approvedStr = this.notReviewStr;
                     }
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -766,7 +774,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且已審核
                 if(dayDiff <= 30 && workDayInfo.approved === true){
-                    let approvedStr = "已審核";
+                    let approvedStr = this.reviewStr;
 
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
@@ -793,7 +801,7 @@ methods:{
                 let dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
                 //7天內且未審核
                 if(dayDiff <= 30 && workDayInfo.approved === false){
-                    let approvedStr = "未審核";
+                    let approvedStr =  this.notReviewStr;
                     let workingHoursIsNotEnough = false;
                     if(workDayInfo.workingHours < 8){
                         workingHoursIsNotEnough = true;
