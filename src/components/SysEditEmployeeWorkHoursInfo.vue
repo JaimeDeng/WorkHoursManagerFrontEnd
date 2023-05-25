@@ -182,7 +182,7 @@ export default (await import('vue')).defineComponent({
                 if (this.langValue === 'ch') {
                     this.editMessage = "資料尚未進行任何修改";
                 } else if (this.langValue === 'en') {
-                    this.editMessage = "No modifications have been made to the data yet.";
+                    this.editMessage = "The data is not be edited.";
                 } else if (this.langValue === 'jp') {
                     this.editMessage = "データはまだ変更されていません。";
                 }
@@ -322,10 +322,10 @@ export default (await import('vue')).defineComponent({
         confirmRemove() {
             if (this.langValue === 'ch') {
                 this.checkPopupData.title = "警告";
-                this.checkPopupData.content = "您即將刪除此人員資訊 , 刪除後無法復原";
+                this.checkPopupData.content = "您即將刪除此資訊 , 刪除後無法復原";
             } else if (this.langValue === 'en') {
                 this.checkPopupData.title = "Warning";
-                this.checkPopupData.content = "You are about to delete this personnel information, and it cannot be recovered once deleted.";
+                this.checkPopupData.content = "Do you want to delete data? you will can not return it.";
             } else if (this.langValue === 'jp') {
                 this.checkPopupData.title = "注意";
                 this.checkPopupData.content = "削除後は元に戻すことはできません。"

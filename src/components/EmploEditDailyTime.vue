@@ -291,7 +291,7 @@
             padding: 12px;
             background-color: rgba(255, 255, 255, 0.724);
             border: 2px solid rgb(177, 208, 224);
-            border-radius: 5px;
+            border-radius: 1vh;
             width: 50%;
 
             .title_search {
@@ -327,7 +327,7 @@
             }
 
             .sheet {
-                border-radius: 5px;
+                border-radius: 1vh;
 
                 .accordion-button {
                     word-spacing: 2em;
@@ -349,15 +349,15 @@
                         justify-content: space-between;
 
                         button {
-                            background: rgb(26, 55, 77);
+                            background-color: rgb(39, 46, 67);
                             border: 1px solid #000;
                             color: white;
-                            border-radius: 5px;
+                            border-radius: 1vh;
                             width: 80px;
                             font-size: 16px;
 
                             &:hover {
-                                background-color: rgb(64, 104, 130);
+                                background-color: rgb(75, 75, 101);
                             }
 
                             &:active {
@@ -463,7 +463,7 @@
                 height: 100%;
 
                 button {
-                    background: rgb(26, 55, 77);
+                    background-color: rgb(39, 46, 67);
                     border: 1.5px solid #000;
                     color: white;
                     border-radius: 5px;
@@ -472,7 +472,7 @@
                     font-size: 15px;
 
                     &:hover {
-                        background-color: rgb(64, 104, 130);
+                        background-color: rgb(75, 75, 101);
                     }
 
                     &:active {

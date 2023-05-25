@@ -133,13 +133,13 @@ methods:{
         }else if(this.langValue === 'jp'){
             this.title = '勤務表一覽';
             this.search = '日付で検索する';
-            this.employeeIdStr = '人員ID';
+            this.employeeIdStr = '社員番号';
             this.reviewStatus = '審査状態';
             this.reviewStatusPH = '審査状態選択';
-            this.reviewStatusOpt1 = '審査終了';
+            this.reviewStatusOpt1 = '審査済み';
             this.reviewStatusOpt2 = '未審査';
-            this.reviewStr = '審査終了';
-            this.notReviewStr = '未審査';
+            this.reviewStr = '承認済み';
+            this.notReviewStr = '承認待ち';
             this.attendanceStatus = '勤務状態';
             this.logtime = '登録時間';
             this.timeFrame = '時間範囲';
@@ -147,6 +147,7 @@ methods:{
             this.timeFrameOpt1 = '7日';
             this.timeFrameOpt2 = '14日';
             this.timeFrameOpt3 = '30日';
+            this.checkStr = '詳細';
             this.checkStr = '詳細';
             this.backBtn = 'ホームページへ戻る';
             this.listStr = '勤務表が';
@@ -1186,9 +1187,9 @@ mounted(){
         .left {
             position: relative;
             padding: 1vw;
-            background-color: rgba(255, 255, 255, 0.724);
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(188, 186, 193, 0.8));
             border: 2px solid rgb(177, 201, 224);
-            border-radius: 5px;
+            border-radius: 1vh;
             width: 90%;
             height: 75vh;
             overflow: hidden;
@@ -1558,6 +1559,7 @@ mounted(){
                     }
 
                     .hasntApproved{
+                        word-spacing: 0.1vw;
                         position: absolute;
                         right: 10%;
                         top: 50%;

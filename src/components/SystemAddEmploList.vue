@@ -579,15 +579,16 @@ components: {
     overflow: hidden;
 
     .add {
-        background-color: rgba(255, 255, 255, 0.724);
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(188, 186, 193, 0.6));
         border: 2px solid rgb(177, 208, 224);
-        border-radius: 5px;
+        border-radius: 1vh;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         align-items: center;
-        width: 90vw;
-        height: 80vh;
+        position: relative;
+        width: 40vw;
+        height: 70vh;
         h4{
             font-size: 32px;
             font-weight: bold;
@@ -597,7 +598,7 @@ components: {
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            width: 80vw;
+            width: 100%;
             margin-top: 8px;
 
             .info {
@@ -647,7 +648,7 @@ components: {
         .area2 {
             display: flex;
             justify-content: space-between;
-            width: 100%;
+            width: 60%;
             padding: 0 8px;
             
             .btn1 {
@@ -659,8 +660,7 @@ components: {
                 font-size: 2vh;
                 text-decoration: none;
                 text-align: center;
-                margin-left: 25vw;
-                width: 8%;
+                width: 5vw;
                 transition: 0.4s;
                 &:hover {
                     background-color: rgb(75, 75, 101);
@@ -680,8 +680,7 @@ components: {
                 font-size: 2vh;
                 text-decoration: none;
                 text-align: center;
-                margin-right: 25vw;
-                width: 8%;
+                width: 5vw;
                 transition: 0.4s;
                 &:hover {
                     background-color: rgb(75, 75, 101);

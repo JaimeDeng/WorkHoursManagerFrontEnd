@@ -77,7 +77,7 @@ export default {
                 //下午五點時才會檢查是否有無今日工時表
                 this.hasTodaysWorkInfo = true;
                 //只有在星期一到星期五下午五點過後才會檢查
-                if(this.nowHours >= 16 && this.day > 0 && this.day < 6){
+                if(this.nowHours >= 9 && this.day > 0 && this.day < 6){
                     this.hasTodaysWorkInfo = false;
                     if(data.success === false){
                         this.hasTodaysWorkInfo = false;

@@ -85,7 +85,7 @@ export default {
     .add {
         background-color: rgba(255, 255, 255, 0.724);
         border: 2px solid rgb(177, 208, 224);
-        border-radius: 5px;
+        border-radius: 1vh;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -93,7 +93,7 @@ export default {
         width: 100vw;
         height: 100vh;
         h4{
-            font-size: 32px;
+            font-size: 3.5vh;
             font-weight: bold;
         }
 
