@@ -24,6 +24,7 @@ data(){
         hasntThisDateInfo:false,
         hasntThisReviewStatusInfo: false,
         hasntThisTimeFrameInfo:false,
+        hasntThisTimeFrameAndReviewStatusInfo: false,
         listRenderOver:false,
         hasntBeenApproved: true,
         message:'',
@@ -202,6 +203,11 @@ methods:{
             }
         })
         .catch(err => console.log(err))
+    },
+    doubleStatus(){
+        if(this.hasntThisReviewStatusInfo === true && this.hasntThisTimeFrameInfo === true){
+            this.hasntThisTimeFrameAndReviewStatusInfo = true;
+        }
     },
     renderList(){
         this.workDayInfoList = [];
@@ -925,6 +931,9 @@ methods:{
 watch:{
     //監看searchDate的值變化 , date則是回遞該變數值
     searchDate(date){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(date);
         if(date === ''){
             this.hasntThisDateInfo = false;
@@ -932,8 +941,12 @@ watch:{
         }else{
             this.renderListByDate(date);
         }
+        this.doubleStatus();
     },
     reviewStatusSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -944,8 +957,12 @@ watch:{
         if(newValue === 'false'){
             this.renderListLimitedNotApproved();
         }
+        this.doubleStatus();
     },
     timeFrameSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -959,6 +976,7 @@ watch:{
         if(newValue === '30days'){
             this.renderListWhitin30Days();
         }
+        this.doubleStatus();
     },
 },
 created() {
@@ -1124,15 +1142,20 @@ mounted(){
 
                     <h3 v-if="hasntThisDateInfo && this.langValue=='ch'" class="emptyTitle">沒有該日期的日工時表</h3>
                     <h4 v-if="hasntThisDateInfo && this.langValue=='jp'" class="emptyTitle">その日の勤務表がありません</h4>
-                    <h5 v-if="hasntThisDateInfo && this.langValue=='en'" class="emptyTitle">There is no daily work schedule for that date</h5>
+                    <h5 v-if="hasntThisDateInfo && this.langValue=='en'" class="emptyTitle">There is no timesheet for that date</h5>
 
-                    <h3 v-if="hasntThisTimeFrameInfo && this.langValue=='ch'" class="emptyTitle">沒有該時間範圍內的工時表</h3>
-                    <h5 v-if="hasntThisTimeFrameInfo && this.langValue=='jp'" class="emptyTitle">その時間範囲内には勤務表がありません</h5>
-                    <h4 v-if="hasntThisTimeFrameInfo && this.langValue=='en'" class="emptyTitle">There is no work schedule <br> within that time range</h4>
+                    <h3 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">沒有該時間範圍內的工時表</h3>
+                    <h5 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">その時間範囲内には勤務表がありません</h5>
+                    <h4 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='en'" class="emptyTitle">There is no timesheet <br> within that time range</h4>
 
-                    <h3 v-if="hasntThisReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">沒有該審核狀態的工時表</h3>
-                    <h4 v-if="hasntThisReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">その審査状態の勤務表はありません</h4>
-                    <h4 v-if="hasntThisReviewStatusInfo && this.langValue=='en'" class="emptyTitle">There is no work schedule with that approved status</h4>
+                    <h3 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">沒有該審核狀態的工時表</h3>
+                    <h4 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">その承認状態の勤務表はありません</h4>
+                    <h4 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='en'" class="emptyTitle">There is no timesheet with that review status</h4>
+                    
+                    <h3 v-if="hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='ch'" class="emptyTitle">沒有該天數範圍及審核狀態的工時表</h3>
+                    <h5 v-if="hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='jp'" class="emptyTitle">その承認状態と時間範囲内には勤務表がありません</h5>
+                    <h4 v-if="hasntThisTimeFrameAndReviewStatusInfo && this.langValue=='en'" class="emptyTitle">There is no timesheet <br> within that time range and review status</h4>
+                
                 </div>
                 <RouterLink to="/employeeHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>

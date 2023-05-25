@@ -29,6 +29,7 @@ export default (await import('vue')).defineComponent({
             //帳號相關
             employeeName: "",
             employeeId: "",
+            ownerEmployeeId: "",
             accountId: "",
             //文本
             addTitle: "編輯工作時數表",
@@ -171,6 +172,7 @@ export default (await import('vue')).defineComponent({
                     this.endTimeValue = this.getResp.endTime;
                     this.detail = this.getResp.detail;
                     this.date = this.getResp.date;
+                    this.ownerEmployeeId = this.getResp.employeeId.employeeId;
                     this.hasRendered = true;
                 })
                 .catch(err => console.log(err))
@@ -290,7 +292,7 @@ export default (await import('vue')).defineComponent({
             }
             let reqbody = {
                 workInfoId: this.sysEditWorkHoursInfoId,
-                employeeId: this.employeeId,
+                employeeId: this.ownerEmployeeId,
                 model: this.modelInput,
                 caseNo: this.caseNoInput,
                 startTime: satrtTime,

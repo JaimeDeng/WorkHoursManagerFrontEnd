@@ -13,6 +13,7 @@ data(){
         accountId:'',
         employeeName:'',
         //工時表資料
+        idAndDateObj:[],
         today:'',
         workDayInfo:[],
         workHoursInfoData:[],
@@ -24,6 +25,7 @@ data(){
         hasntThisDateInfo:false,
         hasntThisReviewStatusInfo: false,
         hasntThisTimeFrameInfo:false,
+        hasntThisTimeFrameAndReviewStatusInfo: false,
         listRenderOver:false,
         hasntBeenApproved: true,
         message:'',
@@ -112,6 +114,7 @@ methods:{
             this.noDateSheet='沒有該日期的日工時表';
             this.noRangeSheet='沒有該天數範圍內的工時表';
             this.noStatusSheet='沒有該審核狀態的工時表';
+            this.noRangeAndStatusSheet = '沒有該天數範圍及審核狀態的工時表';
             this.reviewStr = '已審核';
             this.notReviewStr = '未審核';
         }else if(this.langValue === 'en'){
@@ -149,6 +152,7 @@ methods:{
             this.noDateSheet='There is no timesheet for that date.';
             this.noRangeSheet='There is no timesheet within that time range.';
             this.noStatusSheet='There is no timesheet whit that approved status.';
+            this.noRangeAndStatusSheet = 'There is no timesheet within that time range and review status';
             this.reviewStr = 'Approved';
             this.notReviewStr = 'Pending approval';
         }else if(this.langValue === 'jp'){
@@ -185,7 +189,8 @@ methods:{
             this.noAnySheet='勤務表がありません。';
             this.noDateSheet='その日の勤務表がありません。';
             this.noRangeSheet='その時間範囲以内には勤務表がありません。';
-            this.noStatusSheet='その審査状態の勤務表がありません。';
+            this.noStatusSheet='その承認状態の勤務表がありません。';
+            this.noRangeAndStatusSheet = 'その承認状態と時間範囲内には勤務表がありません';
             this.reviewStr = '承認済み';
             this.notReviewStr = '承認待ち';
         }
@@ -240,11 +245,17 @@ methods:{
         })
         .catch(err => console.log(err))
     },
+    doubleStatus(){
+        if(this.hasntThisReviewStatusInfo === true && this.hasntThisTimeFrameInfo === true){
+            this.hasntThisTimeFrameAndReviewStatusInfo = true;
+        }
+    },
     renderList(){
         this.workDayInfoList = [];
         this.hasntThisTimeFrameInfo = false;
         this.hasntThisReviewStatusInfo = false;
         this.workDayInfo.workDayInfoList.forEach((workDayInfo)=>{
+            console.log(workDayInfo.employeeId.employeeId)
             let approvedStr = "";
             if(workDayInfo.approved === true){
                 approvedStr =  this.reviewStr;
@@ -263,7 +274,8 @@ methods:{
                 status : workDayInfo.status,
                 approved : workDayInfo.approved,
                 approvedStr : approvedStr,
-                workingHoursIsNotEnough : workingHoursIsNotEnough
+                workingHoursIsNotEnough : workingHoursIsNotEnough,
+                idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
             })
             console.log(workDayInfo.date)
         })
@@ -289,7 +301,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -319,7 +332,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -349,7 +363,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -379,7 +394,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date ]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -411,7 +427,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -441,7 +458,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -471,7 +489,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -501,7 +520,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisReviewStatusInfo = true;
                 }
@@ -536,7 +556,8 @@ methods:{
                     status : workDayInfo.status,
                     approved : workDayInfo.approved,
                     approvedStr : approvedStr,
-                    workingHoursIsNotEnough : workingHoursIsNotEnough
+                    workingHoursIsNotEnough : workingHoursIsNotEnough,
+                    idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                 })
                 hasThisDateInfo = true;
             }
@@ -575,7 +596,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -602,7 +624,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -628,7 +651,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -668,7 +692,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -695,7 +720,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -721,7 +747,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -761,7 +788,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -788,7 +816,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -814,7 +843,8 @@ methods:{
                         status : workDayInfo.status,
                         approved : workDayInfo.approved,
                         approvedStr : approvedStr,
-                        workingHoursIsNotEnough : workingHoursIsNotEnough
+                        workingHoursIsNotEnough : workingHoursIsNotEnough,
+                        idAndDate : [ workDayInfo.employeeId.employeeId , workDayInfo.date]
                     })
                     hasThisTimeFrameInfo = true;
                 }
@@ -828,30 +858,14 @@ methods:{
     },
     //查看此日期的workHoursInfo 同時檢查是否被審核
     workHoursInfo(event){
+        let idAndDate = event.target.value;
+        let idAndDateArr = idAndDate.split(",");
+        let id = idAndDateArr[0];
+        let date = idAndDateArr[1]
+        console.log(id)
         let reqBody = {
-            employeeId : this.employeeId
+            employeeId : id
         }
-
-        //先看此日期此張工時表是否已審核 , 決定可否編輯
-        fetch("http://localhost:3000/getWorkDayInfoByEmployeeId" ,{
-        method:"put",
-        body: JSON.stringify(reqBody),
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-        }).then(res => res.json())
-        .then((data)=>{
-            data.workDayInfoList.forEach((workDayInfo) =>{
-                if(workDayInfo.date === event.target.value){
-                    if(workDayInfo.approved === true){
-                        this.hasntBeenApproved = false;
-                    }else{
-                        this.hasntBeenApproved = true;
-                    }
-                }
-            })
-        })
-        .catch(err => console.log(err))
 
         fetch("http://localhost:3000/getWorkHoursInfoByEmployeeId" ,{
             method:"put",
@@ -861,6 +875,7 @@ methods:{
             }
         }).then(res => res.json())
         .then((data)=>{
+            console.log(data);
             //將工時表以時間最早的開始排序 (原本順序是先輸入的越前面)
             let container = null;
             for(let i = data.workHoursInfoList.length - 1 ; i > 0 ; i --){
@@ -893,7 +908,7 @@ methods:{
             console.log(this.workHoursInfoData);
             this.showWorkHoursInfo = true;
             setTimeout(()=>{
-                this.queryDate = event.target.value;
+                this.queryDate = date;
                 let workHoursInfoFrame = document.getElementById("workHoursInfoFrame");
                 let deco1 = document.getElementById("deco1");
                 let deco2 = document.getElementById("deco2");
@@ -902,7 +917,7 @@ methods:{
                 deco1.style.left = "110%";
                 deco2.style.left = "150%";
             },100);
-            this.workHoursInfoByDate(event.target.value);
+            this.workHoursInfoByDate(date);
             if(data.success === true){
                 this.message = data.message;
             }else{
@@ -962,6 +977,9 @@ methods:{
 watch:{
     //監看searchDate的值變化 , date則是回遞該變數值
     searchDate(date){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(date);
         if(date === ''){
             this.hasntThisDateInfo = false;
@@ -969,8 +987,12 @@ watch:{
         }else{
             this.renderListByDate(date);
         }
+        this.doubleStatus();
     },
     reviewStatusSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -981,8 +1003,12 @@ watch:{
         if(newValue === 'false'){
             this.renderListLimitedNotApproved();
         }
+        this.doubleStatus();
     },
     timeFrameSelect(newValue){
+        this.hasntThisTimeFrameAndReviewStatusInfo = false;
+        this.hasntThisTimeFrameInfo = false;
+        this.hasntThisDateInfo = false;
         console.log(newValue);
         if(newValue === 'default'){
             this.renderList();
@@ -996,6 +1022,7 @@ watch:{
         if(newValue === '30days'){
             this.renderListWhitin30Days();
         }
+        this.doubleStatus();
     },
 },
 created() {
@@ -1112,7 +1139,6 @@ mounted(){
                                     :data-bs-target="'#flush-collapse' + index" aria-expanded="false"
                                     aria-controls="flush-collapseOne">
                                     {{dateText}}:{{ workDayInfo.date }} {{emploIdText}}:{{ workDayInfo.employeeId }}
-                                    
                                     <p :class="{'hasntApproved' : !workDayInfo.approved , 'hasApproved' : workDayInfo.approved }">{{ workDayInfo.approvedStr }}</p>
                                     <div class="approvedStrFrame" :style="{ backgroundColor: workDayInfo.approved ? 'rgb(95, 130, 154)' : 'rgb(181, 60, 60)' }"></div>
                                 </button>
@@ -1126,15 +1152,16 @@ mounted(){
                                     <p :class="{'notEnough' : workDayInfo.workingHoursIsNotEnough}">{{hourText}}: {{ workDayInfo.workingHours }}</p>
                                     <p>{{attendText}}: {{ workDayInfo.status }}</p>
                                     <p :class="{'hasntApproved' : !workDayInfo.approved}">{{approveText}}: {{ workDayInfo.approvedStr }}</p>
-                                    <button @click="workHoursInfo($event)" :value="workDayInfo.date" class="viewBtn" type="button">{{checkBtn}}</button>
+                                    <button @click="workHoursInfo($event)" :value="workDayInfo.idAndDate" class="viewBtn" type="button">{{checkBtn}}</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <h3 v-if="!hasAnyWorkDayInfo" class="emptyTitle">{{ noAnySheet }}</h3>
                     <h3 v-if="hasntThisDateInfo" class="emptyTitle">{{ noDateSheet }}</h3>
-                    <h3 v-if="hasntThisTimeFrameInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
-                    <h3 v-if="hasntThisReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeSheet }}</h3>
+                    <h3 v-if="hasntThisReviewStatusInfo && !hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noStatusSheet }}</h3>
+                    <h3 v-if="hasntThisTimeFrameAndReviewStatusInfo" class="emptyTitle">{{ noRangeAndStatusSheet }}</h3>
                 </div>
                 <RouterLink to="/systemHome"><button type="button" class="back">{{ backBtn }}</button></RouterLink>
             </div>
@@ -1553,6 +1580,7 @@ mounted(){
                     }
 
                     .hasntApproved{
+                        word-spacing: 0.1vw;
                         position: absolute;
                         right: 10%;
                         top: 50%;
