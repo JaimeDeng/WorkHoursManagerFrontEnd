@@ -8,26 +8,30 @@ export default {
             editemploInfo: '',
             checkAllTimeSheet: '',
             backBtn: '',
-            langValue:''
+            langValue:'',
+            administrator:''
         }
     },
     methods: {
         changeLanguage() {
             if (this.langValue === 'ch') {
                 this.addEmploList = '新增人員名單',
-                    this.editemploInfo = '修改人員資料',
-                    this.checkAllTimeSheet = '查看所有人員工時表',
-                    this.backBtn = '返回首頁';
+                this.editemploInfo = '修改人員資料',
+                this.checkAllTimeSheet = '查看所有人員工時表',
+                this.backBtn = '返回首頁';
+                this.administrator = '管理員';
             } else if (this.langValue === 'en') {
                 this.addEmploList = 'Create an employee information',
-                    this.editemploInfo = 'Edit employee information',
-                    this.checkAllTimeSheet = 'Check all timesheets',
-                    this.backBtn = 'Back to homepage';
+                this.editemploInfo = 'Edit employee information',
+                this.checkAllTimeSheet = 'Check all timesheets',
+                this.backBtn = 'Back to homepage';
+                this.administrator = 'Administrator';
             } else if (this.langValue === 'jp') {
                 this.addEmploList = '人員情報追加',
-                    this.editemploInfo = '人員情報編集',
-                    this.checkAllTimeSheet = '勤務表一覧',
-                    this.backBtn = '戻る';
+                this.editemploInfo = '人員情報編集',
+                this.checkAllTimeSheet = '勤務表一覧',
+                this.backBtn = '戻る';
+                this.administrator = '管理者';
             }
         }
     },
@@ -45,7 +49,7 @@ export default {
 <template>
     <div class="main">
         <div class="all">
-            <h4>管理員,Welcome !</h4>
+            <h4>{{ administrator }},Welcome !</h4>
             <div class="funtionArea">
                 <!-- 上排 -->
                 <div class="area1">

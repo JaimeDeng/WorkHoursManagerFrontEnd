@@ -2,6 +2,7 @@
 import { computeStyles } from '@popperjs/core'
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import bcrypt from 'bcryptjs'
 export default {
     components: {
         RouterLink,
@@ -39,8 +40,8 @@ export default {
     },
     methods: {
         resetPsd() {
-             //先檢查密碼格式
-             let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
+            //先檢查密碼格式
+            let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
             let pwd = this.$refs.password.value;
             let rePassword = this.$refs.rePassword.value;
             let error = false;
@@ -101,13 +102,29 @@ export default {
                     this.errorPopup();
                     return;
                 }
+            }
+            //新密碼與舊密碼不可相同
+            let newPwdSameAsOld = bcrypt.compareSync(this.newPsd , this.getOldPsd);
+            if (newPwdSameAsOld) {
+                if (this.langValue === 'ch') {
+                    this.message = "新密碼不可與舊密碼相同";
+                } else if (this.langValue === 'en') {
+                    this.message = "New password can not same as the old password.";
+                } else if (this.langValue === 'jp') {
+                    this.message = "現在のパスワードは新しいパスワードと同じではいけません";
+                }
+                error = true;
+                if (error) {
+                    this.errorPopup();
+                    return;
+                }
             } else {
 
-                //密碼加密為Base64再存入資料庫
-                let securePwd = btoa(this.newPsd);
-                let pwdCheck = atob(securePwd);
-                console.log(securePwd);
-                console.log(pwdCheck);
+                //密碼以bcrypt加密
+                let Pwd = this.newPsd;
+                let salt = bcrypt.genSaltSync(10);
+                let hashPwd = bcrypt.hashSync(Pwd , salt);
+                console.log(hashPwd);
 
                 fetch("http://localhost:3000/changePassword", {
                     method: "PUT",
@@ -116,7 +133,7 @@ export default {
                     },
                     body: JSON.stringify({
                         "accountId": sessionStorage.getItem("changePwdAccount"),
-                        "newPassword": securePwd
+                        "newPassword": hashPwd
                     })
                 })
                     .then(res => res.json())
@@ -175,6 +192,7 @@ export default {
             }, 100);
             // 删除sessionStorage 帳號資料
             sessionStorage.removeItem('changePwdAccount');
+            sessionStorage.removeItem('changePwdEmployeeId');
         },
         errorPopup() {
             if (this.langValue === 'ch') {
@@ -253,6 +271,24 @@ export default {
         showOldPwdOrNot() {
             this.showOldPwd = !this.showOldPwd;
         }
+    },
+    beforeCreate() {
+        //fetch舊密碼Hash
+        fetch("http://localhost:3000/getAccountByEmployeeId", {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "employeeId": sessionStorage.getItem('changePwdEmployeeId')
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data.password)
+            this.getOldPsd = data.password;
+
+        })
     },
     mounted() {
         //檢查及切換語言
