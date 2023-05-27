@@ -48,8 +48,18 @@ export default (await import('vue')).defineComponent({
                 { label: "IT部", value: "IT部" },
                 { label: "營業部", value: "營業部" },
                 { label: "製造部", value: "製造部" }],
-
             position: "職稱",
+            positionValue: 'default',
+            positionSelect: "請選擇職稱",
+            positionOptions: [
+                { label: "工程師", value: "工程師" },
+                { label: "營業", value: "營業" },
+                { label: "助理", value: "助理" },
+                { label: "設計師", value: "設計師" },
+                { label: "總務", value: "總務" },
+                { label: "倉管", value: "倉管" },
+                { label: "財務", value: "財務" },
+                { label: "法務", value: "法務" }],
             level: "職等",
             levelValue: 'default',
             levelSelect: "請選擇職等",
@@ -69,7 +79,7 @@ export default (await import('vue')).defineComponent({
             langValue: 'ch',
             nameInput: '',
             emailInput: '',
-            positionInput: '',
+            positionValue: '',
             supervisorInput: '',
             phoneInput: "",
             modelIsInvalid: false,
@@ -182,7 +192,7 @@ export default (await import('vue')).defineComponent({
                     this.genderValue = this.getResp.gender;
                     this.emailInput = this.getResp.email;
                     this.departmentValue = this.getResp.department;
-                    this.positionInput = this.getResp.position;
+                    this.positionValue = this.getResp.position;
                     this.levelValue = this.getResp.level;
                     this.supervisorInput = this.getResp.supervisor;
                     this.phoneInput = this.getResp.phone;
@@ -194,7 +204,7 @@ export default (await import('vue')).defineComponent({
 
             if (this.nameInput.toString() === this.getResp.name && this.genderValue.toString() === this.getResp.gender
                 && this.emailInput.toString() === this.getResp.email && this.departmentValue.toString() === this.getResp.department
-                && this.positionInput.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
+                && this.positionValue.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
                 this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone) {
                 if (this.langValue === 'ch') {
                     this.editMessage = "資料尚未進行任何修改";
@@ -259,19 +269,19 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
-            //職稱
-            if (this.positionInput.length === 0) {
-                if (this.langValue === 'ch') {
-                    this.editMessage = "請輸入職稱";
-                } else if (this.langValue === 'en') {
-                    this.editMessage = "You haven't filled in position field yet.";
-                } else if (this.langValue === 'jp') {
-                    this.editMessage = "職名欄を入力してください。";
-                }
+            // //職稱
+            // if (this.positionInput.length === 0) {
+            //     if (this.langValue === 'ch') {
+            //         this.editMessage = "請輸入職稱";
+            //     } else if (this.langValue === 'en') {
+            //         this.editMessage = "You haven't filled in position field yet.";
+            //     } else if (this.langValue === 'jp') {
+            //         this.editMessage = "職名欄を入力してください。";
+            //     }
 
-                this.errorPopup(this.editMessage);
-                return;
-            }
+            //     this.errorPopup(this.editMessage);
+            //     return;
+            // }
 
             //姓名
             if (this.nameInput.length === 0) {
@@ -286,7 +296,20 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
-
+            //職稱
+            let positionV = this.positionValue;
+            if (positionV === "default") {
+                // positionV = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇職稱";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the position.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "職名欄を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
             //性別
             let genderV = this.genderValue;
             if (genderV === "default") {
@@ -335,7 +358,7 @@ export default (await import('vue')).defineComponent({
                 name: this.nameInput,
                 gender: this.genderValue,
                 department: this.departmentValue,
-                position: this.positionInput,
+                position: this.positionValue,
                 level: this.levelValue,
                 email: this.emailInput,
                 phone: this.phoneInput,
@@ -600,9 +623,12 @@ export default (await import('vue')).defineComponent({
                             {{ option.label }}</option>
                     </select>
                     <!-- 職稱 -->
-                    <label for="caseNo">{{ position }}</label>
-                    <input :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('caseNo')" v-model="positionInput" type="text" id="caseNo">
+                    <label for="">{{ position }}</label>
+                    <select v-model="positionValue">
+                        <option value="default" selected>{{ positionSelect }}</option>
+                        <option v-for="(option, index) in positionOptions" :value="option.value" :key="index">
+                            {{ option.label }}</option>
+                    </select>
                     <!-- 職等 -->
                     <label for="">{{ level }}</label>
                     <select v-model="levelValue">
