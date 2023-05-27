@@ -448,13 +448,14 @@ export default {
                                         <p>{{ nameText }}: {{ workHoursInfoData.name }}</p>
                                         <p>{{ genderText }}: {{ workHoursInfoData.gender }}</p>
                                         <p>{{ emailText }}: {{ workHoursInfoData.email }}</p>
-                                        <p>{{ departmentText }}: {{ workHoursInfoData.department }}</p>
+                                        <p>{{ phone }}: {{ workHoursInfoData.phone }}</p>
                                     </div>
                                     <div>
+                                        <p>{{ departmentText }}: {{ workHoursInfoData.department }}</p>
                                         <p>{{ positionText }}: {{ workHoursInfoData.position }}</p>
                                         <p>{{ levelText }}: {{ workHoursInfoData.level }}</p>
                                         <p>{{ supervisorIdText }}: {{ workHoursInfoData.supervisor }}</p>
-                                        <p>{{ phone }}: {{ workHoursInfoData.phone }}</p>
+                                       
                                     </div>
 
 
@@ -497,11 +498,12 @@ export default {
                                     <p>{{ nameText }}: {{ empInfo.name }}</p>
                                     <p>{{ genderText }}: {{ empInfo.gender }}</p>
                                     <p>{{ emailText }}: {{ empInfo.email }}</p>
+                                    <p>{{ phone }}: {{ empInfo.phone }}</p>
                                     <p>{{ departmentText }}: {{ empInfo.department }}</p>
                                     <p>{{ positionText }}: {{ empInfo.position }}</p>
                                     <p>{{ levelText }}: {{ empInfo.level }}</p>
                                     <p>{{ supervisorIdText }}: {{ empInfo.supervisor }}</p>
-                                    <p>{{ phone }}: {{ empInfo.phone }}</p>
+                                    
                                     <button @click="workHoursInfo($event)" :value="empInfo.employeeId" class="viewBtn"
                                         type="button">{{ checkBtn }}</button>
                                 </div>

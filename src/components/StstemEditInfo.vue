@@ -235,31 +235,31 @@ export default (await import('vue')).defineComponent({
             }
             //電話
             let phonePattern = /^[0-9]{7,10}$/;
-            if(this.phoneInput.length === 0){
-            if(this.langValue === 'ch'){
-                this.editMessage = "請輸入電話";
-            }
-            else if(this.langValue === 'en'){
-                this.editMessage = "You haven't filled in phone field yet";
-            }else if(this.langValue === 'jp'){
-                this.editMessage = "電話番号欄を入力してください";
-            }       
-            this.errorPopup(this.editMessage);
+            if (this.phoneInput.length === 0) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請輸入電話";
+                }
+                else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in phone field yet";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "電話番号欄を入力してください";
+                }
+                this.errorPopup(this.editMessage);
                 return;
-        }
-        if(!phonePattern.test(this.phoneInput)){
-            if(this.langValue === 'ch'){
-                this.editMessage = "電話格式錯誤";
             }
-            else if(this.langValue === 'en'){
-                this.editMessage = "Phone format is not correct";
-            }else if(this.langValue === 'jp'){
-                this.editMessage = "電話番号の形式が正しくありません";
-            }     
-            this.errorPopup(this.editMessage);
+            if (!phonePattern.test(this.phoneInput)) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "電話格式錯誤";
+                }
+                else if (this.langValue === 'en') {
+                    this.editMessage = "Phone format is not correct";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "電話番号の形式が正しくありません";
+                }
+                this.errorPopup(this.editMessage);
                 return;
-        }
-        //職稱
+            }
+            //職稱
             if (this.positionInput.length === 0) {
                 if (this.langValue === 'ch') {
                     this.editMessage = "請輸入職稱";
@@ -570,10 +570,10 @@ export default (await import('vue')).defineComponent({
                     <!-- 姓名 -->
                     <label for="caseNo">{{ name }}</label>
                     <input :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('caseNo')" v-model="nameInput" type="text" id="caseNo">
+                        @input="checkLength('caseNo')" v-model="nameInput" type="text" id="caseNo" disabled>
                     <!-- 性別 -->
                     <label for="">{{ gender }}</label>
-                    <select v-model="genderValue">
+                    <select v-model="genderValue" disabled>
                         <option value="default" selected>{{ genderselect }}</option>
                         <option v-for="(option, index) in genderOptions" :value="option.value" :key="index">
                             {{ option.label }}</option>
@@ -581,7 +581,17 @@ export default (await import('vue')).defineComponent({
                     <!-- 信箱 -->
                     <label for="model">{{ email }}</label>
                     <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('model')" v-model="emailInput" type="text" id="model">
+                        @input="checkLength('model')" v-model="emailInput" type="text" id="model" disabled>
+                    <!-- 電話 -->
+                    <label for="model">{{ phone }}</label>
+                    <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
+                        @input="checkLength('model')" v-model="phoneInput" type="text" id="model" disabled>
+
+
+
+                </div>
+                <!-- 右側填寫區 -->
+                <div class="timeFrame">
                     <!-- 部門 -->
                     <label for="">{{ department }}</label>
                     <select v-model="departmentValue">
@@ -589,11 +599,6 @@ export default (await import('vue')).defineComponent({
                         <option v-for="(option, index) in departmentOptions" :value="option.value" :key="index">
                             {{ option.label }}</option>
                     </select>
-
-
-                </div>
-                <!-- 右側填寫區 -->
-                <div class="timeFrame">
                     <!-- 職稱 -->
                     <label for="caseNo">{{ position }}</label>
                     <input :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
@@ -610,10 +615,7 @@ export default (await import('vue')).defineComponent({
                     <label for="model">{{ supervisor }}</label>
                     <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
                         @input="checkLength('model')" v-model="supervisorInput" type="text" id="model">
-                    <!-- 電話 -->
-                    <label for="model">{{ phone }}</label>
-                    <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('model')" v-model="phoneInput" type="text" id="model">
+
                 </div>
             </div>
 
@@ -633,6 +635,18 @@ export default (await import('vue')).defineComponent({
 
 <style lang="scss" scoped>
 .main {
+
+    /* input和select禁用狀態樣式 */
+    select:disabled,
+    input:disabled {
+        background-color: #d4d4d4;
+        color: #000;
+        appearance: none;
+        padding-left: 8px;
+        border: none;
+        outline: none;
+    }
+
     flex-grow: 1;
     display: flex;
     flex-direction: column;

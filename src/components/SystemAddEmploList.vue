@@ -504,7 +504,14 @@ components: {
                     :style="{ backgroundColor: isInputInvalid === 3 ? 'rgb(238, 198, 198)' : '' }"
                     @input="checkInputLegth('email')" ref="email" v-model="email" 
                     id="setEmail" :placeholder="emailPHStr" type="text"
-                    >                  
+                    >               
+                    <!-- 電話輸入 -->
+                    <label for="">{{ phoneStr }}*</label>
+                    <input 
+                    :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(238, 198, 198)' : '' }"
+                    maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
+                    id="setPhone" :placeholder="phonePHStr" type="text"
+                    >   
                 </div>
                 <!-- 右側填寫區 -->
                 <div class="detail">
@@ -547,13 +554,7 @@ components: {
                     v-model="supervisor" id="supervisorId" :placeholder="supervisorPHStr" type="text"
                     >
 
-                    <!-- 電話輸入 -->
-                    <label for="">{{ phoneStr }}*</label>
-                    <input 
-                    :style="{ backgroundColor: isInputInvalid === 6 ? 'rgb(238, 198, 198)' : '' }"
-                    maxlength="10" @input="checkInputLegth('phone')" ref="phone" v-model="phone" 
-                    id="setPhone" :placeholder="phonePHStr" type="text"
-                    >
+                    
                 </div>
             </div>
             <!-- 底部按鈕 -->
