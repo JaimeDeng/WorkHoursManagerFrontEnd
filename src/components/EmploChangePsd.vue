@@ -2,6 +2,7 @@
 import { computeStyles } from '@popperjs/core'
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import bcrypt from 'bcryptjs'
 export default {
     components: {
         RouterLink,
@@ -22,7 +23,7 @@ export default {
             oldPassword: '',
             message: "",
             isInputInvalid: 0,
-            origiPwdInput: '',
+            originPwdInput: '',
             //接舊密碼
             getOldPsd: '',
             //切換語言相關
@@ -43,20 +44,19 @@ export default {
     },
     methods: {
         changePsd() {
-             //先檢查密碼格式
-             let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
+            //先檢查密碼格式
+            let pwdPattern = /^[a-zA-Z0-9]{8,20}$/;
             let pwd = this.$refs.password.value;
             let rePassword = this.$refs.rePassword.value;
             let error = false;
-
-            //新密碼與舊密碼不可相同
-            if (this.origiPwdInput === this.newPsd) {
+            
+            if (this.originPwdInput.length === 0) {
                 if (this.langValue === 'ch') {
-                    this.message = "新密碼不可與舊密碼相同";
+                    this.message = "請輸入舊密碼欄位";
                 } else if (this.langValue === 'en') {
-                    this.message = "New password can not same as the old password.";
+                    this.message = "You haven't filled in old password field yet";
                 } else if (this.langValue === 'jp') {
-                    this.message = "現在のパスワードは新しいパスワードと同じではいけません";
+                    this.message = "元のパスワード欄を入力してください";
                 }
                 error = true;
                 if (error) {
@@ -65,26 +65,6 @@ export default {
                 }
             }
 
-
-            //舊密碼輸入錯誤
-            if (this.origiPwdInput !== this.getOldPsd) {
-                console.log(this.origiPwdInput);
-                console.log(this.getOldPsd);
-                if (this.langValue === 'ch') {
-                    this.message = "舊密碼不正確";
-                } else if (this.langValue === 'en') {
-                    this.message = "The passwords you typed don't match. Please retype the password.";
-                } else if (this.langValue === 'jp') {
-                    this.message = "現在のパスワードが一致しません。現在のパスワードを再入力してください。";
-                }
-                error = true;
-                if (error) {
-                    this.errorPopup();
-                    return;
-                }
-            }
-
-            //
             if (this.newPsd.length === 0) {
                 if (this.langValue === 'ch') {
                     this.message = "請輸入新密碼欄位";
@@ -99,6 +79,7 @@ export default {
                     return;
                 }
             }
+
             if (this.againNewPsd.length === 0) {
                 if (this.langValue === 'ch') {
                     this.message = "請輸入再次輸入密碼欄位";
@@ -106,6 +87,26 @@ export default {
                     this.message = "You haven't filled in repeat password field yet";
                 } else if (this.langValue === 'jp') {
                     this.message = "パスワード（確認）欄を入力してください";
+                }
+                error = true;
+                if (error) {
+                    this.errorPopup();
+                    return;
+                }
+            }
+
+            //舊密碼輸入錯誤
+            let isCorrectPwd = bcrypt.compareSync(this.originPwdInput , this.getOldPsd);
+            console.log(isCorrectPwd);
+            if (!isCorrectPwd) {
+                console.log(this.originPwdInput);
+                console.log(this.getOldPsd);
+                if (this.langValue === 'ch') {
+                    this.message = "舊密碼不正確";
+                } else if (this.langValue === 'en') {
+                    this.message = "The passwords you typed don't match. Please retype the password.";
+                } else if (this.langValue === 'jp') {
+                    this.message = "現在のパスワードが一致しません。現在のパスワードを再入力してください。";
                 }
                 error = true;
                 if (error) {
@@ -128,6 +129,22 @@ export default {
                     return;
                 }
             }
+            //新密碼與舊密碼不可相同
+            let newPwdSameAsOld = bcrypt.compareSync(this.newPsd , this.getOldPsd);
+            if (newPwdSameAsOld) {
+                if (this.langValue === 'ch') {
+                    this.message = "新密碼不可與舊密碼相同";
+                } else if (this.langValue === 'en') {
+                    this.message = "New password can not same as the old password.";
+                } else if (this.langValue === 'jp') {
+                    this.message = "現在のパスワードは新しいパスワードと同じではいけません";
+                }
+                error = true;
+                if (error) {
+                    this.errorPopup();
+                    return;
+                }
+            }
             if (pwd !== rePassword) {
                 if (this.langValue === 'ch') {
                     this.message = "重複輸入的密碼與設定的密碼不符!";
@@ -143,11 +160,11 @@ export default {
                 }
             } else {
 
-                //密碼加密為Base64再存入資料庫
-                let securePwd = btoa(this.newPsd);
-                let a = atob(securePwd);
-                console.log(securePwd);
-                console.log(a);
+                //密碼以bcrypt加密
+                let Pwd = this.newPsd;
+                let salt = bcrypt.genSaltSync(10);
+                let hashPwd = bcrypt.hashSync(Pwd , salt);
+                console.log(hashPwd);
 
                 fetch("http://localhost:3000/changePassword", {
                     method: "PUT",
@@ -156,7 +173,7 @@ export default {
                     },
                     body: JSON.stringify({
                         "accountId": sessionStorage.getItem("accountId") || localStorage.getItem("accountId"),
-                        "newPassword": securePwd
+                        "newPassword": hashPwd
                     })
                 })
                     .then(res => res.json())
@@ -264,7 +281,7 @@ export default {
                     }
                     break;
                 case 'oldPassword':
-                    if (this.origiPwdInput.length < 8) {
+                    if (this.originPwdInput.length < 8) {
                         this.isInputInvalid = 2;
                     } else {
                         this.isInputInvalid = 0;
@@ -321,25 +338,22 @@ export default {
             this.$router.push('/login')
 
         }
-        //fetch舊密碼
+        //fetch舊密碼Hash
         fetch("http://localhost:3000/getAccountByEmployeeId", {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "employeeId": sessionStorage.getItem('employeeId') || localStorage.getItem('employeeId')
-                })
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "employeeId": sessionStorage.getItem('employeeId') || localStorage.getItem('employeeId')
             })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data.password)
-                    //解密
-                    let origiPwd = atob(data.password);
-                    console.log(origiPwd);
-                    this.getOldPsd = origiPwd;
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data.password)
+            this.getOldPsd = data.password;
 
-                })
+        })
     },
     mounted() {
         //檢查及切換語言
@@ -370,7 +384,7 @@ export default {
                     <div class="oldPsdInput">
                         <i class="fa-sharp fa-solid fa-key"></i>
                         <input id="oldPsd" :placeholder="oldPsdPHStr" :type="showOldPwd ? 'text' : 'password'"
-                            v-model="origiPwdInput" ref="oldPassword"
+                            v-model="originPwdInput" ref="oldPassword"
                             :style="{ backgroundColor: isInputInvalid === 2 ? 'rgb(238, 198, 198)' : '' }" maxlength="20"
                             @input="checkInputLegth('oldPassword')">
                         <i @click="showOldPwdOrNot"

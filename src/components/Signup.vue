@@ -1,6 +1,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import bcrypt from 'bcryptjs'
 export default (await import('vue')).defineComponent({
 components: {
     RouterLink,
@@ -188,17 +189,15 @@ methods: {
                 return;
             }
         }else{
-
-             //密碼加密為Base64再存入資料庫
-            let securePwd = btoa(pwd);
-            let a = atob(securePwd);
-            console.log(securePwd);
-            console.log(a);
-
+            //密碼以bcrypt加密
+            let Pwd = this.password;
+            let salt = bcrypt.genSaltSync(10);
+            let hashPwd = bcrypt.hashSync(Pwd , salt);
+            console.log(hashPwd);
             let reqbody = {
                 employeeId : employeeId,
                 accountId : account,
-                password : securePwd
+                password : hashPwd
             };
             fetch("http://localhost:3000/setAccount" ,{
                 method:"post",
@@ -219,8 +218,11 @@ methods: {
                 }
             })
             .catch(err => console.log(err))
-
-            
+            //  //密碼加密為Base64再存入資料庫
+            // let securePwd = btoa(pwd);
+            // let a = atob(securePwd);
+            // console.log(securePwd);
+            // console.log(a);
         }
     },
     closePopup(){

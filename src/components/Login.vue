@@ -1,6 +1,7 @@
 <script>
 import { RouterLink, RouterView } from 'vue-router'
 import popup from './popup.vue'
+import bcrypt from 'bcryptjs'
 export default {
     components: {
         RouterLink,
@@ -50,6 +51,8 @@ export default {
                 .then(res => res.json())
                 .then(data => {
                     console.log(data)
+                    let isCorrectPwd = bcrypt.compareSync(this.password , data.password);
+                    console.log(isCorrectPwd);
                     if (this.password.length === 0 && this.employeeId.length === 0) {
                         if (this.langValue === 'ch') {
                             this.message = "請輸入員工ID或帳號及密碼";
@@ -86,7 +89,7 @@ export default {
                             this.message = "社員番号またはアカウントは存在しません";
                         }
                         this.errorPopup()
-                    } else if (this.password !== atob(data.password)) {
+                    } else if (!isCorrectPwd) {
                         if (this.langValue === 'ch') {
                             this.message = "密碼錯誤";
                         } else if (this.langValue === 'en') {
@@ -95,7 +98,7 @@ export default {
                             this.message = "パスワードが違います";
                         }
                         this.errorPopup()
-                    } else if (this.password === atob(data.password) && data.success === true) {
+                    } else if (isCorrectPwd && data.success === true) {
                         if (this.keepLogin === true) {
                             //有勾選keepLogin長存
                             localStorage.setItem("employeeId", this.employeeId)
@@ -137,8 +140,11 @@ export default {
                         if (data.accounts[i].accountId === this.employeeId ||
                             data.accounts[i].employeeId.employeeId === this.employeeId) {
 
+                            let isCorrectPwd = bcrypt.compareSync(this.password , data.accounts[i].password);
+                            console.log(isCorrectPwd);
+
                             //帳密正確
-                            if (atob(data.accounts[i].password) === this.password) {
+                            if (isCorrectPwd) {
 
                                 if (this.keepLogin === true) {
                                     //有勾選keepLogin長存
@@ -155,7 +161,7 @@ export default {
                                 }
                                 this.$emit('login');
                                 console.log('login event emitted');
-                            } else if( atob(data.accounts[i].password) !== this.password){
+                            } else if( !isCorrectPwd ){
                                 //帳號對，密碼錯
                                 if (this.langValue === 'ch') {
                                     this.message = "密碼錯誤";
@@ -168,7 +174,7 @@ export default {
                                 return;
                             }
                         }
-                        if (data.accounts[i].accountId !== this.employeeId &&
+                        if (data.accounts[i].accountId !== this.accountId &&
                             data.accounts[i].employeeId.employeeId !== this.employeeId
                             && this.employeeId.length !== 0) {
                             if (this.langValue === 'ch') {
@@ -296,7 +302,7 @@ export default {
                 this.titleStr = 'ログイン';
                 this.employeeIdPHStr = '社員番号またはアカウント';
                 this.pwdPHStr = 'パスワードを入力してください';
-                this.commitBtnStr = 'アカウント登録';
+                this.commitBtnStr = '新規登録';
                 this.loginBtnStr = 'ログイン'
                 this.keepLog = 'ログイン状態を保持する';
                 this.forgetPsdStr = 'パスワードを忘れた場合'

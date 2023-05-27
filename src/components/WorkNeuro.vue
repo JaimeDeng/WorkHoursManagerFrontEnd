@@ -395,7 +395,7 @@ watch: {
             <div class="titleFrame">
                 <h3 class="title">WorkNeuro</h3>
                 <p> 您的效率分析工具 </p>
-                <router-link class="personalData" id="personalData" to="">查看您的個人數據</router-link>
+                <!-- <router-link class="personalData" id="personalData" to="">查看您的個人數據</router-link> -->
             </div>
             <div class="contentFrame">
                 <div class="selectFrame">

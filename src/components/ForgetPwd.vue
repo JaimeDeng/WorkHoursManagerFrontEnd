@@ -171,6 +171,7 @@ components: {
                     } 
                     this.verifySuccess = true;
                     sessionStorage.setItem("changePwdAccount", data.accountsForVerify[i].account);
+                    sessionStorage.setItem("changePwdEmployeeId", data.accountsForVerify[i].employeeId);
                     this.successPopup();
                     return;
                 }         
