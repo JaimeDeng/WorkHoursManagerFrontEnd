@@ -70,7 +70,7 @@ export default {
         background-color: rgba(255, 255, 255, 1);
         border-radius: 10px;
         border: 2px solid rgb(177, 208, 224);
-        overflow: auto;
+        overflow: hidden;
         z-index: 1;
         transition: 0.5s;
 
