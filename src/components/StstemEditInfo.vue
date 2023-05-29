@@ -48,8 +48,18 @@ export default (await import('vue')).defineComponent({
                 { label: "IT部", value: "IT部" },
                 { label: "營業部", value: "營業部" },
                 { label: "製造部", value: "製造部" }],
-
             position: "職稱",
+            positionValue: 'default',
+            positionSelect: "請選擇職稱",
+            positionOptions: [
+                { label: "工程師", value: "工程師" },
+                { label: "營業", value: "營業" },
+                { label: "助理", value: "助理" },
+                { label: "設計師", value: "設計師" },
+                { label: "總務", value: "總務" },
+                { label: "倉管", value: "倉管" },
+                { label: "財務", value: "財務" },
+                { label: "法務", value: "法務" }],
             level: "職等",
             status: "在職狀況",
             statusSelect: "",
@@ -76,7 +86,7 @@ export default (await import('vue')).defineComponent({
             langValue: 'ch',
             nameInput: '',
             emailInput: '',
-            positionInput: '',
+            positionValue: '',
             supervisorInput: '',
             phoneInput: "",
             modelIsInvalid: false,
@@ -196,7 +206,7 @@ export default (await import('vue')).defineComponent({
                     this.genderValue = this.getResp.gender;
                     this.emailInput = this.getResp.email;
                     this.departmentValue = this.getResp.department;
-                    this.positionInput = this.getResp.position;
+                    this.positionValue = this.getResp.position;
                     this.levelValue = this.getResp.level;
                     this.supervisorInput = this.getResp.supervisor;
                     this.phoneInput = this.getResp.phone;
@@ -209,7 +219,7 @@ export default (await import('vue')).defineComponent({
 
             if (this.nameInput.toString() === this.getResp.name && this.genderValue.toString() === this.getResp.gender
                 && this.emailInput.toString() === this.getResp.email && this.departmentValue.toString() === this.getResp.department
-                && this.positionInput.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
+                && this.positionValue === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
                 this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone &&
                 this.statusValue === this.getResp.status) {
                 if (this.langValue === 'ch') {
@@ -276,18 +286,42 @@ export default (await import('vue')).defineComponent({
                     return;
             }
             //職稱
-            if (this.positionInput.length === 0) {
+            if (this.positionValue === "default") {
                 if (this.langValue === 'ch') {
                     this.editMessage = "請輸入職稱";
-                } else if (this.langValue === 'en') {
-                    this.editMessage = "You haven't filled in position field yet.";
+                }else if (this.langValue === 'en') {
+                    this.editMessage = "You haven't filled in position field yet";
                 } else if (this.langValue === 'jp') {
-                    this.editMessage = "職名欄を入力してください。";
+                    this.editMessage = "職名欄を入力してください";
                 }
-
                 this.errorPopup(this.editMessage);
                 return;
             }
+            if (!phonePattern.test(this.phoneInput)) {
+                if (this.langValue === 'ch') {
+                    this.editMessage = "電話格式錯誤";
+                }
+                else if (this.langValue === 'en') {
+                    this.editMessage = "Phone format is not correct";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "電話番号の形式が正しくありません";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+            // //職稱
+            // if (this.positionInput.length === 0) {
+            //     if (this.langValue === 'ch') {
+            //         this.editMessage = "請輸入職稱";
+            //     } else if (this.langValue === 'en') {
+            //         this.editMessage = "You haven't filled in position field yet.";
+            //     } else if (this.langValue === 'jp') {
+            //         this.editMessage = "職名欄を入力してください。";
+            //     }
+
+            //     this.errorPopup(this.editMessage);
+            //     return;
+            // }
 
             //姓名
             if (this.nameInput.length === 0) {
@@ -302,7 +336,20 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
-
+            //職稱
+            let positionV = this.positionValue;
+            if (positionV === "default") {
+                // positionV = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇職稱";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the position.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "職名欄を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
             //性別
             let genderV = this.genderValue;
             if (genderV === "default") {
@@ -372,7 +419,7 @@ export default (await import('vue')).defineComponent({
                 name: this.nameInput,
                 gender: this.genderValue,
                 department: this.departmentValue,
-                position: this.positionInput,
+                position: this.positionValue,
                 level: this.levelValue,
                 email: this.emailInput,
                 phone: this.phoneInput,
@@ -706,10 +753,10 @@ export default (await import('vue')).defineComponent({
                     <!-- 姓名 -->
                     <label for="caseNo">{{ name }}</label>
                     <input :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('caseNo')" v-model="nameInput" type="text" id="caseNo">
+                        @input="checkLength('caseNo')" v-model="nameInput" type="text" id="caseNo" disabled>
                     <!-- 性別 -->
                     <label for="">{{ gender }}</label>
-                    <select v-model="genderValue">
+                    <select v-model="genderValue" disabled>
                         <option value="default" selected>{{ genderselect }}</option>
                         <option v-for="(option, index) in genderOptions" :value="option.value" :key="index">
                             {{ option.label }}</option>
@@ -717,7 +764,17 @@ export default (await import('vue')).defineComponent({
                     <!-- 信箱 -->
                     <label for="model">{{ email }}</label>
                     <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('model')" v-model="emailInput" type="text" id="model">
+                        @input="checkLength('model')" v-model="emailInput" type="text" id="model" disabled>
+                    <!-- 電話 -->
+                    <label for="model">{{ phone }}</label>
+                    <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
+                        @input="checkLength('model')" v-model="phoneInput" type="text" id="model" disabled>
+
+
+
+                </div>
+                <!-- 右側填寫區 -->
+                <div class="timeFrame">
                     <!-- 部門 -->
                     <label for="">{{ department }}</label>
                     <select v-model="departmentValue">
@@ -725,15 +782,13 @@ export default (await import('vue')).defineComponent({
                         <option v-for="(option, index) in departmentOptions" :value="option.value" :key="index">
                             {{ option.label }}</option>
                     </select>
-
-
-                </div>
-                <!-- 右側填寫區 -->
-                <div class="timeFrame">
                     <!-- 職稱 -->
-                    <label for="caseNo">{{ position }}</label>
-                    <input :style="{ backgroundColor: caseNoIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
-                        @input="checkLength('caseNo')" v-model="positionInput" type="text" id="caseNo">
+                    <label for="">{{ position }}</label>
+                    <select v-model="positionValue">
+                        <option value="default" selected>{{ positionSelect }}</option>
+                        <option v-for="(option, index) in positionOptions" :value="option.value" :key="index">
+                            {{ option.label }}</option>
+                    </select>
                     <!-- 職等 -->
                     <label for="">{{ level }}</label>
                     <select v-model="levelValue">
@@ -777,6 +832,18 @@ export default (await import('vue')).defineComponent({
 
 <style lang="scss" scoped>
 .main {
+
+    /* input和select禁用狀態樣式 */
+    select:disabled,
+    input:disabled {
+        background-color: #d4d4d4;
+        color: #000;
+        appearance: none;
+        padding-left: 8px;
+        border: none;
+        outline: none;
+    }
+
     flex-grow: 1;
     display: flex;
     flex-direction: column;
