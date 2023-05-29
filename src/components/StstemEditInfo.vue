@@ -51,6 +51,13 @@ export default (await import('vue')).defineComponent({
 
             position: "職稱",
             level: "職等",
+            status: "在職狀況",
+            statusSelect: "",
+            statusValue: "default",
+            statusOptions: [
+                { label: "在職中", value: "incumbent" },
+                { label: "已離職", value: "resigned" },
+                { label: "留職停薪", value: "leave" }],
             levelValue: 'default',
             levelSelect: "請選擇職等",
             levelOptions: [
@@ -79,6 +86,7 @@ export default (await import('vue')).defineComponent({
             deleteMessage: "",
             timeOptions: [],
             hasRendered: false,
+            removeOrResign: "",
 
             //resp
             getResp: [],
@@ -101,6 +109,8 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "Choose your level"
                 this.supervisor = "Supervisor ID";
                 this.phone = "Phone";
+                this.status = "status";
+                this.statusSelect = "Select the status";
                 this.back = "Back";
                 this.commit = "Commit";
                 this.popupData.backBtn = "Back";
@@ -120,6 +130,8 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "職級を選択してください"
                 this.supervisor = "主管ID";
                 this.phone = "電話番号";
+                this.status = "在籍状況";
+                this.statusSelect = "在籍状況を選択ください";
                 this.back = "戻る";
                 this.commit = "編集";
                 this.popupData.backBtn = "戻る";
@@ -139,6 +151,8 @@ export default (await import('vue')).defineComponent({
                 this.levelSelect = "請選擇職等"
                 this.supervisor = "主管ID";
                 this.phone = "電話";
+                this.status = "在職狀態";
+                this.statusSelect = "請選擇在職狀態";
                 this.back = "返回";
                 this.commit = "確認";
                 this.popupData.backBtn = "返回";
@@ -186,6 +200,7 @@ export default (await import('vue')).defineComponent({
                     this.levelValue = this.getResp.level;
                     this.supervisorInput = this.getResp.supervisor;
                     this.phoneInput = this.getResp.phone;
+                    this.statusValue = this.getResp.status;
                     this.hasRendered = true;
                 })
                 .catch(err => console.log(err))
@@ -195,7 +210,8 @@ export default (await import('vue')).defineComponent({
             if (this.nameInput.toString() === this.getResp.name && this.genderValue.toString() === this.getResp.gender
                 && this.emailInput.toString() === this.getResp.email && this.departmentValue.toString() === this.getResp.department
                 && this.positionInput.toString() === this.getResp.position && this.levelValue.toString() === this.getResp.level &&
-                this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone) {
+                this.supervisorInput === this.getResp.supervisor && this.phoneInput.toString() === this.getResp.phone &&
+                this.statusValue === this.getResp.status) {
                 if (this.langValue === 'ch') {
                     this.editMessage = "資料尚未進行任何修改";
                 } else if (this.langValue === 'en') {
@@ -236,30 +252,30 @@ export default (await import('vue')).defineComponent({
             //電話
             let phonePattern = /^[0-9]{7,10}$/;
             if(this.phoneInput.length === 0){
-            if(this.langValue === 'ch'){
-                this.editMessage = "請輸入電話";
+                if(this.langValue === 'ch'){
+                    this.editMessage = "請輸入電話";
+                }
+                else if(this.langValue === 'en'){
+                    this.editMessage = "You haven't filled in phone field yet";
+                }else if(this.langValue === 'jp'){
+                    this.editMessage = "電話番号欄を入力してください";
+                }       
+                this.errorPopup(this.editMessage);
+                    return;
             }
-            else if(this.langValue === 'en'){
-                this.editMessage = "You haven't filled in phone field yet";
-            }else if(this.langValue === 'jp'){
-                this.editMessage = "電話番号欄を入力してください";
-            }       
-            this.errorPopup(this.editMessage);
-                return;
-        }
-        if(!phonePattern.test(this.phoneInput)){
-            if(this.langValue === 'ch'){
-                this.editMessage = "電話格式錯誤";
+            if(!phonePattern.test(this.phoneInput)){
+                if(this.langValue === 'ch'){
+                    this.editMessage = "電話格式錯誤";
+                }
+                else if(this.langValue === 'en'){
+                    this.editMessage = "Phone format is not correct";
+                }else if(this.langValue === 'jp'){
+                    this.editMessage = "電話番号の形式が正しくありません";
+                }     
+                this.errorPopup(this.editMessage);
+                    return;
             }
-            else if(this.langValue === 'en'){
-                this.editMessage = "Phone format is not correct";
-            }else if(this.langValue === 'jp'){
-                this.editMessage = "電話番号の形式が正しくありません";
-            }     
-            this.errorPopup(this.editMessage);
-                return;
-        }
-        //職稱
+            //職稱
             if (this.positionInput.length === 0) {
                 if (this.langValue === 'ch') {
                     this.editMessage = "請輸入職稱";
@@ -330,6 +346,27 @@ export default (await import('vue')).defineComponent({
                 this.errorPopup(this.editMessage);
                 return;
             }
+
+            //在職狀態
+            let status = this.statusValue;
+            if (status === "default") {
+                // levelV = null;
+                if (this.langValue === 'ch') {
+                    this.editMessage = "請選擇在職狀態";
+                } else if (this.langValue === 'en') {
+                    this.editMessage = "Please select the status.";
+                } else if (this.langValue === 'jp') {
+                    this.editMessage = "在籍状況を選択してください。";
+                }
+                this.errorPopup(this.editMessage);
+                return;
+            }
+
+            //在職狀態
+            if (status === "resigned") {
+                this.confirmResign();
+                return;
+            }
             let reqbody = {
                 employeeId: this.sysEditEmployeeInfo,
                 name: this.nameInput,
@@ -339,7 +376,8 @@ export default (await import('vue')).defineComponent({
                 level: this.levelValue,
                 email: this.emailInput,
                 phone: this.phoneInput,
-                supervisor: this.supervisorInput
+                supervisor: this.supervisorInput,
+                status: this.statusValue
             };
             console.log(reqbody);
             fetch("http://localhost:3000/editEmployeeInfo", {
@@ -363,6 +401,7 @@ export default (await import('vue')).defineComponent({
                 .catch(err => console.log(err))
         },
         confirmRemove() {
+            this.removeOrResign = "";
             if (this.langValue === 'ch') {
                 this.checkPopupData.title = "警告";
                 this.checkPopupData.content = "您即將刪除此人員資訊 , 刪除後無法復原";
@@ -374,6 +413,7 @@ export default (await import('vue')).defineComponent({
                 this.checkPopupData.content = "削除後は元に戻すことはできません。"
             }
 
+            this.removeOrResign = "remove";
             this.showCheckPopup = true;
             setTimeout(() => {
                 let checkPopup = this.$refs.checkPopup;
@@ -391,46 +431,142 @@ export default (await import('vue')).defineComponent({
                 checkPopup.$el.style.bottom = "0%";
             }, 100);
         },
-        removeReq() {
+        confirmResign() {
+            this.removeOrResign = "";
+            if (this.langValue === 'ch') {
+                this.checkPopupData.title = "警告";
+                this.checkPopupData.content = "您即將設定此員工為離職 , 設定後無法復原";
+            } else if (this.langValue === 'en') {
+                this.checkPopupData.title = "Warning";
+                this.checkPopupData.content = "Do you want to set this employee's status to resigned? you will can not return it.";
+            } else if (this.langValue === 'jp') {
+                this.checkPopupData.title = "注意";
+                this.checkPopupData.content = "社員の在籍状況を退社に変更する後は元に戻すことはできません。"
+            }
+
+            this.removeOrResign = "resign";
+            this.showCheckPopup = true;
+            setTimeout(() => {
+                let checkPopup = this.$refs.checkPopup;
+                console.log(checkPopup);
+                let checkPopupEl = checkPopup.$el;
+                let checkPopupIcon = checkPopupEl.querySelector("i");
+                console.log(checkPopupIcon);
+                let iconStr1 = "fa-solid";
+                let iconStr2 = "fa-triangle-exclamation";
+                checkPopupIcon.classList.add(iconStr1);
+                checkPopupIcon.classList.add(iconStr2);
+                checkPopupIcon.style.color = "#ae3737";
+                console.log(checkPopupIcon);
+                checkPopup.$el.style.opacity = "1";
+                checkPopup.$el.style.bottom = "0%";
+            }, 100);
+        },
+        removeOrResignReq() {
             this.showCheckPopup = false;
-            let reqbody = {
-                employeeId: this.sysEditEmployeeInfo,
 
-            };
-            console.log(reqbody);
-            fetch("http://localhost:3000/deleteEmployeeInfo", {
-                method: "POST",
-                body: JSON.stringify(reqbody),
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            }).then(res => res.json())
-                .then((data) => {
-                    console.log(this.sysEditEmployeeInfo);
-                    this.deleteResp = data;
-                    console.log(this.deleteResp);
-                    if (data.success === true) {
-                        if (this.langValue === 'ch') {
-                            this.successPopup("刪除成功");
-                        } else if (this.langValue === 'en') {
-                            this.successPopup("Deletion completed.");
-                        } else if (this.langValue === 'jp') {
-                            this.successPopup("削除成功");
+            if(this.removeOrResign === "remove"){
+                let confirm = window.prompt("請輸入欲刪除的人員ID");
+            
+                if(confirm === this.sysEditEmployeeInfo){
+                    let reqbody = {
+                        employeeId: this.sysEditEmployeeInfo,
+
+                    };
+                    console.log(reqbody);
+                    fetch("http://localhost:3000/deleteEmployeeInfo", {
+                        method: "POST",
+                        body: JSON.stringify(reqbody),
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
                         }
+                    }).then(res => res.json())
+                    .then((data) => {
+                        console.log(this.sysEditEmployeeInfo);
+                        this.deleteResp = data;
+                        console.log(this.deleteResp);
+                        if (data.success === true) {
+                            if (this.langValue === 'ch') {
+                                this.successPopup("刪除成功");
+                            } else if (this.langValue === 'en') {
+                                this.successPopup("Deletion completed.");
+                            } else if (this.langValue === 'jp') {
+                                this.successPopup("削除成功");
+                            }
 
-                    } else {
-                        this.deleteMessage = this.deleteResp.message;
-                        if (this.langValue === 'ch') {
-                            this.errorPopup("刪除失敗");
-                        } else if (this.langValue === 'en') {
-                            this.errorPopup("Delete failed.");
-                        } else if (this.langValue === 'jp') {
-                            this.errorPopup("削除が失敗しました。");
+                        } else {
+                            this.deleteMessage = this.deleteResp.message;
+                            if (this.langValue === 'ch') {
+                                this.errorPopup("刪除失敗");
+                            } else if (this.langValue === 'en') {
+                                this.errorPopup("Delete failed.");
+                            } else if (this.langValue === 'jp') {
+                                this.errorPopup("削除が失敗しました。");
+                            }
+
                         }
+                    })
+                    .catch(err => console.log(err))
+                
+                }else{
+                    this.errorPopup("輸入的員工ID錯誤");
+                }    
+            }
+            if(this.removeOrResign === "resign"){
+                let confirm = window.prompt("請輸入離職的人員ID");
+            
+                if(confirm === this.sysEditEmployeeInfo){
+                    let reqbody = {
+                        employeeId: this.sysEditEmployeeInfo,
+                        name: this.nameInput,
+                        gender: this.genderValue,
+                        department: this.departmentValue,
+                        position: this.positionInput,
+                        level: this.levelValue,
+                        email: this.emailInput,
+                        phone: this.phoneInput,
+                        supervisor: this.supervisorInput,
+                        status: this.statusValue
+                    };
+                    console.log(reqbody);
+                    fetch("http://localhost:3000/editEmployeeInfo", {
+                        method: "PUT",
+                        body: JSON.stringify(reqbody),
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    }).then(res => res.json())
+                    .then((data) => {
+                        console.log(this.sysEditEmployeeInfo);
+                        this.deleteResp = data;
+                        console.log(this.deleteResp);
+                        if (data.success === true) {
+                            if (this.langValue === 'ch') {
+                                this.successPopup("設定成功");
+                            } else if (this.langValue === 'en') {
+                                this.successPopup("status has been set.");
+                            } else if (this.langValue === 'jp') {
+                                this.successPopup("設定完了");
+                            }
 
-                    }
-                })
-                .catch(err => console.log(err))
+                        } else {
+                            this.deleteMessage = this.deleteResp.message;
+                            if (this.langValue === 'ch') {
+                                this.errorPopup("設定失敗");
+                            } else if (this.langValue === 'en') {
+                                this.errorPopup("status setting failed.");
+                            } else if (this.langValue === 'jp') {
+                                this.errorPopup("設定が失敗しました。");
+                            }
+
+                        }
+                    })
+                    .catch(err => console.log(err))
+                
+                }else{
+                    this.errorPopup("輸入的員工ID錯誤");
+                } 
+            }
         },
         closePopup() {
             this.showPopup = false;
@@ -555,7 +691,7 @@ export default (await import('vue')).defineComponent({
         <!--子元件要使用v-model綁定props變數 , 綁定命名的部分使用橫槓命名規則-->
         <popup ref="popup" class="popup" :popup-data="popupData" :show-popup="showPopup" @close="closePopup"></popup>
         <checkPopup ref="checkPopup" class="checkPopup" :checkPopup-data="checkPopupData" :show-checkPopup="showCheckPopup"
-            @close="closeCheckPopup" @confirm="removeReq"></checkPopup>
+            @close="closeCheckPopup" @confirm="removeOrResignReq"></checkPopup>
         <div v-if="showPopup || showCheckPopup" ref="mask" class="mask"></div>
 
         <div v-if="hasRendered" class="add">
@@ -614,6 +750,14 @@ export default (await import('vue')).defineComponent({
                     <label for="model">{{ phone }}</label>
                     <input :style="{ backgroundColor: modelIsInvalid === true ? 'rgb(255, 205, 205)' : '' }"
                         @input="checkLength('model')" v-model="phoneInput" type="text" id="model">
+                    <!-- 職等 -->
+                    <label for="">{{ status }}</label>
+                    <select v-model="statusValue">
+                        <option value="default" selected>{{ statusSelect }}</option>
+                        <option v-for="(option, index) in statusOptions" :value="option.value" :key="index">{{ option.label
+                        }}
+                        </option>
+                    </select>
                 </div>
             </div>
 

@@ -45,6 +45,7 @@ export default {
             supervisorIdText: '',
             emploIdText: '',
             phone: '',
+            status: '',
             nameIdPHStr: '',
             noAnySheet:'',
             noDateSheet:'',
@@ -78,6 +79,7 @@ export default {
                 this.levelText = '職等',
                 this.supervisorIdText = '主管ID',
                 this.phone = '電話',
+                this.status = '在職狀態',
                 this.emploIdText = '員工ID',
                 this.backBtn = '返回';
                 this.nameIdPHStr = '請輸入姓名或是員工ID進行搜尋';
@@ -99,6 +101,7 @@ export default {
                 this.levelText = 'Level',
                 this.supervisorIdText = 'SupervisorID',
                 this.phone = 'Phone',
+                this.status = 'status',
                 this.emploIdText = 'EmployeeID',
                 this.backBtn = 'Back';
                 this.nameIdPHStr = 'Search by name or employeeId';
@@ -120,6 +123,7 @@ export default {
                 this.levelText = '職級',
                 this.supervisorIdText = '主管ID',
                 this.phone = '電話番号',
+                this.status = '在籍状況',
                 this.emploIdText = '社員番号',
                 this.backBtn = '戻る';
                 this.nameIdPHStr = '名前または社員番号で検索';
@@ -138,8 +142,12 @@ export default {
                 }
             }).then(res => res.json())
                 .then((data) => {
-
-                    this.workDayInfo = data.employeeInfoList;
+                    
+                    data.employeeInfoList.forEach((employeeInfo)=>{
+                        if(employeeInfo.status !== "resigned"){
+                            this.workDayInfo.push(employeeInfo)
+                        }
+                    })
                     //搜尋
                     console.log(this.workDayInfo);
                     if (this.workDayInfo.length !== 0) {
@@ -455,6 +463,7 @@ export default {
                                         <p>{{ levelText }}: {{ workHoursInfoData.level }}</p>
                                         <p>{{ supervisorIdText }}: {{ workHoursInfoData.supervisor }}</p>
                                         <p>{{ phone }}: {{ workHoursInfoData.phone }}</p>
+                                        <p>{{ status }}: {{ workHoursInfoData.status }}</p>
                                     </div>
 
 
@@ -486,7 +495,7 @@ export default {
                                     aria-controls="flush-collapseOne">
                                     <p class="pId">{{ emploIdText }}:{{ empInfo.employeeId }}</p>
                                     <p class="pName">{{ nameText }}:{{ empInfo.name }}</p>
-                                    <div class="approvedStrFrame"></div>
+                                    <div :style="{background : empInfo.status !== 'incumbent' ? 'rgb(100, 100, 100)' : ''}"  class="approvedStrFrame"></div>
                                 </button>
                             </h2>
                             <!--手風琴內容-->
@@ -502,6 +511,7 @@ export default {
                                     <p>{{ levelText }}: {{ empInfo.level }}</p>
                                     <p>{{ supervisorIdText }}: {{ empInfo.supervisor }}</p>
                                     <p>{{ phone }}: {{ empInfo.phone }}</p>
+                                    <p>{{ status }}: {{ empInfo.status }}</p>
                                     <button @click="workHoursInfo($event)" :value="empInfo.employeeId" class="viewBtn"
                                         type="button">{{ checkBtn }}</button>
                                 </div>
@@ -960,27 +970,9 @@ export default {
                             color: white;
                         }
 
-                        .hasntApproved {
-                            position: absolute;
-                            right: 10%;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            font-weight: 600;
-                            color: rgb(199, 32, 32);
-                        }
-
-                        .hasApproved {
-                            position: absolute;
-                            right: 10%;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            font-weight: 600;
-                            color: rgb(71, 106, 167);
-                        }
-
                         .approvedStrFrame {
                             position: absolute;
-                            background: linear-gradient(to top, rgba(52, 48, 113, 0.7) 60%, rgba(124, 71, 167, 0.7));
+                            background: linear-gradient(to top, rgba(150, 212, 134, 0.7), rgba(250, 243, 103, 0.7));
                             right: 0;
                             top: 50%;
                             transform: translateY(-50%);

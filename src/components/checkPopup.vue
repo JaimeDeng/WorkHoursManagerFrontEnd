@@ -59,6 +59,7 @@ export default {
 
 <style lang="scss" scoped>
     .frame{
+        position: relative;
         transform: translateY(-50%);
         display: flex;
         flex-direction: column;
@@ -77,11 +78,15 @@ export default {
         
 
         .contentFrame{
+            position: relative;
+            height: 80%;
+            margin: 0;
             .fa-circle-xmark , .fa-check , .fa-triangle-exclamation{
                 font-size: 6vh;
-                margin-bottom: 10%;
+                margin-top: 20%;
             }
             h3{
+                margin-top: 5%;
                 font-size: 4vh;
             }
             h5{
@@ -95,7 +100,7 @@ export default {
             justify-content: space-between;
             margin-top: 10%;
             width: 60%;
-            height: auto;
+            height: 20%;
             margin-bottom: 2vh;
             .back{
                 background-color: rgb(39, 46, 67);

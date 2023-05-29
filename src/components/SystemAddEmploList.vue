@@ -190,8 +190,7 @@ components: {
         if(!emailPattern.test(this.email)){
             if(this.langValue === 'ch'){
                 this.message = "信箱格式錯誤";
-            }
-            else if(this.langValue === 'en'){
+            }else if(this.langValue === 'en'){
                 this.message = "Email format is not correct";
             }else if(this.langValue === 'jp'){
                 this.message = "メールの形式が正しくありません";
@@ -203,7 +202,7 @@ components: {
             }
         }
 
-        if(this.department==="請選擇部門"||this.department==="default"){
+        if(this.langValue === 'ch' && this.department==="請選擇部門"||this.department==="default"){
             this.message = "請選擇部門";
             error = true;
             if(error){
@@ -211,7 +210,7 @@ components: {
                 return;
             }
         }
-        if(this.department==="Please choose the positon"||this.department==="default"){
+        if(this.langValue === 'en' && this.department==="Please choose the positon"||this.department==="default"){
             this.message = "Please choose the positon";
             error = true;
             if(error){
@@ -219,7 +218,7 @@ components: {
                 return;
             }
         }
-        if(this.department==="部署名を選択してください"||this.department==="default"){
+        if(this.langValue === 'jp' && this.department==="部署名を選択してください"||this.department==="default"){
             this.message = "部署名を選択してください";
             error = true;
             if(error){
@@ -231,8 +230,7 @@ components: {
         if(this.position.length === 0){
             if(this.langValue === 'ch'){
                 this.message = "請輸入職稱";
-            }
-            else if(this.langValue === 'en'){
+            }else if(this.langValue === 'en'){
                 this.message = "You haven't filled in position field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "職名欄を入力してください";
@@ -270,8 +268,7 @@ components: {
         if(this.phone.length === 0){
             if(this.langValue === 'ch'){
                 this.message = "請輸入電話";
-            }
-            else if(this.langValue === 'en'){
+            }else if(this.langValue === 'en'){
                 this.message = "You haven't filled in phone field yet";
             }else if(this.langValue === 'jp'){
                 this.message = "電話番号欄を入力してください";
@@ -285,8 +282,7 @@ components: {
         if(!phonePattern.test(this.phone)){
             if(this.langValue === 'ch'){
                 this.message = "電話格式錯誤";
-            }
-            else if(this.langValue === 'en'){
+            }else if(this.langValue === 'en'){
                 this.message = "Phone format is not correct";
             }else if(this.langValue === 'jp'){
                 this.message = "電話番号の形式が正しくありません";
